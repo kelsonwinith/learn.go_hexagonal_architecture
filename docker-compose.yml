@@ -1,0 +1,37 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=hexagonal_go
+      - DB_SSLMODE=disable
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hexagonal_go
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Auto-run migrations on init NOT recommended for production, but convenient for dev
+      # For this task, we will handle migrations via the app or manual script.
+      # The app currently doesn't run migrations automatically on start.
+      # Adding a logical volume mapping for init scripts if we wanted to use docker entrypoint initdb
+      # - ./migrations:/docker-entrypoint-initdb.d
+      # But requirements say "App must auto-run migrations at startup".
+      # I need to add migration logic to the app bootstrap.
+
+volumes:
+  postgres_data:
