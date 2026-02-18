@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/env"
@@ -28,6 +29,11 @@ func Run() {
 
 	// Middleware
 	app.Use(logger.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// Initialize Modules
