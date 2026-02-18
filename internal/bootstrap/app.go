@@ -5,9 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
-	_ "github.com/kelsonwinith/learn.go-hexagonal-architecture/docs"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/env"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/migrations"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
@@ -29,7 +27,6 @@ func Run() {
 	app := fiber.New()
 
 	// Middleware
-	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Get("/swagger/*", swagger.HandlerDefault)
 

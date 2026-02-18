@@ -1,6 +1,9 @@
 package main
 
-import "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/bootstrap"
+import (
+	_ "github.com/kelsonwinith/learn.go-hexagonal-architecture/docs"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/bootstrap"
+)
 
 // @title Hexagonal Architecture Go API
 // @version 1.0
