@@ -4,15 +4,14 @@ import (
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type GetExampleByIDHandler struct {
-	useCase *application.GetExampleByIDUseCase
+	useCase domain.GetExampleByIDUseCase
 }
 
-func NewGetExampleByIDHandler(useCase *application.GetExampleByIDUseCase) *GetExampleByIDHandler {
+func NewGetExampleByIDHandler(useCase domain.GetExampleByIDUseCase) *GetExampleByIDHandler {
 	return &GetExampleByIDHandler{useCase: useCase}
 }
 
@@ -22,7 +21,7 @@ func NewGetExampleByIDHandler(useCase *application.GetExampleByIDUseCase) *GetEx
 // @Tags examples
 // @Produce json
 // @Param id path string true "Example ID"
-// @Success 200 {object} domain.Example
+// @Success 200 {object} exampleResponse
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /examples/{id} [get]
@@ -36,5 +35,5 @@ func (h *GetExampleByIDHandler) Handle(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(res)
+	return c.Status(fiber.StatusOK).JSON(toExampleResponse(res))
 }

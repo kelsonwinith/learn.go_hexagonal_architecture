@@ -2,10 +2,22 @@ package domain
 
 import "context"
 
-type ExampleRepository interface {
-	Create(ctx context.Context, example *Example) error
-	GetAll(ctx context.Context) ([]*Example, error)
-	GetByID(ctx context.Context, id string) (*Example, error)
-	Update(ctx context.Context, example *Example) error
-	Delete(ctx context.Context, id string) error
+type ExampleCreateRepository interface {
+	Execute(ctx context.Context, example *Example) error
+}
+
+type ExampleUpdateRepository interface {
+	Execute(ctx context.Context, example *Example) error
+}
+
+type ExampleDeleteRepository interface {
+	Execute(ctx context.Context, id string) error
+}
+
+type ExampleGetByIDRepository interface {
+	Execute(ctx context.Context, id string) (*Example, error)
+}
+
+type ExampleGetAllRepository interface {
+	Execute(ctx context.Context) ([]*Example, error)
 }

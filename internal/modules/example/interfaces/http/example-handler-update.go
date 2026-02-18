@@ -4,15 +4,14 @@ import (
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type UpdateExampleHandler struct {
-	useCase *application.UpdateExampleUseCase
+	useCase domain.UpdateExampleUseCase
 }
 
-func NewUpdateExampleHandler(useCase *application.UpdateExampleUseCase) *UpdateExampleHandler {
+func NewUpdateExampleHandler(useCase domain.UpdateExampleUseCase) *UpdateExampleHandler {
 	return &UpdateExampleHandler{useCase: useCase}
 }
 
@@ -23,21 +22,23 @@ func NewUpdateExampleHandler(useCase *application.UpdateExampleUseCase) *UpdateE
 // @Accept json
 // @Produce json
 // @Param id path string true "Example ID"
-// @Param example body application.UpdateExampleInput true "Update Example"
-// @Success 200 {object} domain.Example
+// @Param example body updateRequest true "Update Example"
+// @Success 200 {object} exampleResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /examples/{id} [put]
 func (h *UpdateExampleHandler) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
-	var req application.UpdateExampleInput
+	var req updateRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
-	req.ID = id
 
-	res, err := h.useCase.Execute(c.Context(), req)
+	domainReq := req.toDomain()
+	domainReq.ID = id
+
+	res, err := h.useCase.Execute(c.Context(), domainReq)
 	if err != nil {
 		if errors.Is(err, domain.ErrExampleNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Example not found"})
@@ -45,5 +46,17 @@ func (h *UpdateExampleHandler) Handle(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(res)
+	return c.Status(fiber.StatusOK).JSON(toExampleResponse(res))
+}
+
+type updateRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func (e *updateRequest) toDomain() domain.Example {
+	return domain.Example{
+		Name:        e.Name,
+		Description: e.Description,
+	}
 }

@@ -7,23 +7,21 @@ import (
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type UpdateExampleInput struct {
-	ID          string
-	Name        string
-	Description string
-}
-
 type UpdateExampleUseCase struct {
-	Repo domain.ExampleRepository
+	Repo        domain.ExampleUpdateRepository
+	GetByIDRepo domain.ExampleGetByIDRepository
 }
 
-func NewUpdateExampleUseCase(repo domain.ExampleRepository) *UpdateExampleUseCase {
-	return &UpdateExampleUseCase{Repo: repo}
+func NewUpdateExampleUseCase(repo domain.ExampleUpdateRepository, getByIDRepo domain.ExampleGetByIDRepository) domain.UpdateExampleUseCase {
+	return &UpdateExampleUseCase{
+		Repo:        repo,
+		GetByIDRepo: getByIDRepo,
+	}
 }
 
-func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input UpdateExampleInput) (*domain.Example, error) {
+func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input domain.Example) (*domain.Example, error) {
 	// Check if exists
-	existing, err := uc.Repo.GetByID(ctx, input.ID)
+	existing, err := uc.GetByIDRepo.Execute(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +30,7 @@ func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input UpdateExample
 	existing.Description = input.Description
 	existing.UpdatedAt = time.Now().UTC()
 
-	if err := uc.Repo.Update(ctx, existing); err != nil {
+	if err := uc.Repo.Execute(ctx, existing); err != nil {
 		return nil, err
 	}
 

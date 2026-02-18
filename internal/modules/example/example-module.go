@@ -3,21 +3,27 @@ package example
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/postgresql"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/repository"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/interfaces/http"
 )
 
 func Init(app *fiber.App, db *sqlx.DB) {
-	// Adapters (Repository)
-	repo := postgresql.NewExampleRepository(db)
+	// Repository
+	baseRepo := repository.NewExampleRepository(db)
+	createRepo := repository.NewExampleCreateRepository(baseRepo)
+	getAllRepo := repository.NewExampleGetAllRepository(baseRepo)
+	getByIDRepo := repository.NewExampleGetByIDRepository(baseRepo)
+	updateRepo := repository.NewExampleUpdateRepository(baseRepo)
+	deleteRepo := repository.NewExampleDeleteRepository(baseRepo)
 
 	// Use Cases
-	createUseCase := application.NewCreateExampleUseCase(repo)
-	getAllUseCase := application.NewGetAllExamplesUseCase(repo)
-	getByIDUseCase := application.NewGetExampleByIDUseCase(repo)
-	updateUseCase := application.NewUpdateExampleUseCase(repo)
-	deleteUseCase := application.NewDeleteExampleUseCase(repo)
+	var createUseCase domain.CreateExampleUseCase = application.NewCreateExampleUseCase(createRepo)
+	var getAllUseCase domain.GetAllExamplesUseCase = application.NewGetAllExamplesUseCase(getAllRepo)
+	var getByIDUseCase domain.GetExampleByIDUseCase = application.NewGetExampleByIDUseCase(getByIDRepo)
+	var updateUseCase domain.UpdateExampleUseCase = application.NewUpdateExampleUseCase(updateRepo, getByIDRepo)
+	var deleteUseCase domain.DeleteExampleUseCase = application.NewDeleteExampleUseCase(deleteRepo)
 
 	// Handlers
 	createHandler := http.NewCreateExampleHandler(createUseCase)
