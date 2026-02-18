@@ -8,11 +8,11 @@ import (
 )
 
 type ExampleGetAllRepository struct {
-	*Repository
+	*ExampleRepository
 }
 
-func NewExampleGetAllRepository(r *Repository) *ExampleGetAllRepository {
-	return &ExampleGetAllRepository{Repository: r}
+func NewExampleGetAllRepository(r *ExampleRepository) *ExampleGetAllRepository {
+	return &ExampleGetAllRepository{ExampleRepository: r}
 }
 
 func (r *ExampleGetAllRepository) Execute(ctx context.Context) ([]*domain.Example, error) {

@@ -7,17 +7,17 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Repository struct {
+type ExampleRepository struct {
 	db *sqlx.DB
 }
 
-func NewExampleRepository(db *sqlx.DB) *Repository {
-	return &Repository{
+func NewExampleRepository(db *sqlx.DB) *ExampleRepository {
+	return &ExampleRepository{
 		db: db,
 	}
 }
 
-func (r *Repository) WithTransaction(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
+func (r *ExampleRepository) WithTransaction(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
 	tx, err := r.db.BeginTxx(ctx, nil)
 	if err != nil {
 		return err

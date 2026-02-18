@@ -8,11 +8,11 @@ import (
 )
 
 type ExampleGetByIDRepository struct {
-	*Repository
+	*ExampleRepository
 }
 
-func NewExampleGetByIDRepository(r *Repository) *ExampleGetByIDRepository {
-	return &ExampleGetByIDRepository{Repository: r}
+func NewExampleGetByIDRepository(r *ExampleRepository) *ExampleGetByIDRepository {
+	return &ExampleGetByIDRepository{ExampleRepository: r}
 }
 
 func (r *ExampleGetByIDRepository) Execute(ctx context.Context, id string) (*domain.Example, error) {

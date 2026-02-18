@@ -7,11 +7,11 @@ import (
 )
 
 type ExampleDeleteRepository struct {
-	*Repository
+	*ExampleRepository
 }
 
-func NewExampleDeleteRepository(r *Repository) *ExampleDeleteRepository {
-	return &ExampleDeleteRepository{Repository: r}
+func NewExampleDeleteRepository(r *ExampleRepository) *ExampleDeleteRepository {
+	return &ExampleDeleteRepository{ExampleRepository: r}
 }
 
 func (r *ExampleDeleteRepository) Execute(ctx context.Context, id string) error {

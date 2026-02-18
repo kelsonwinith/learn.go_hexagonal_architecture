@@ -8,11 +8,11 @@ import (
 )
 
 type ExampleCreateRepository struct {
-	*Repository
+	*ExampleRepository
 }
 
-func NewExampleCreateRepository(r *Repository) *ExampleCreateRepository {
-	return &ExampleCreateRepository{Repository: r}
+func NewExampleCreateRepository(r *ExampleRepository) *ExampleCreateRepository {
+	return &ExampleCreateRepository{ExampleRepository: r}
 }
 
 func (r *ExampleCreateRepository) Execute(ctx context.Context, example *domain.Example) error {
