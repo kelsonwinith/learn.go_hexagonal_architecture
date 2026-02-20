@@ -5,7 +5,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/repository"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/interfaces/http"
 )
 
@@ -19,11 +18,11 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	deleteRepo := repository.NewExampleDeleteRepository(baseRepo)
 
 	// Use Cases
-	var createUseCase domain.CreateExampleUseCase = application.NewCreateExampleUseCase(createRepo)
-	var getAllUseCase domain.GetAllExamplesUseCase = application.NewGetAllExamplesUseCase(getAllRepo)
-	var getByIDUseCase domain.GetExampleByIDUseCase = application.NewGetExampleByIDUseCase(getByIDRepo)
-	var updateUseCase domain.UpdateExampleUseCase = application.NewUpdateExampleUseCase(updateRepo, getByIDRepo)
-	var deleteUseCase domain.DeleteExampleUseCase = application.NewDeleteExampleUseCase(deleteRepo)
+	createUseCase := application.NewCreateExampleUseCase(createRepo)
+	getAllUseCase := application.NewGetAllExamplesUseCase(getAllRepo)
+	getByIDUseCase := application.NewGetExampleByIDUseCase(getByIDRepo)
+	updateUseCase := application.NewUpdateExampleUseCase(updateRepo, getByIDRepo)
+	deleteUseCase := application.NewDeleteExampleUseCase(deleteRepo)
 
 	// Handlers
 	createHandler := http.NewCreateExampleHandler(createUseCase)
