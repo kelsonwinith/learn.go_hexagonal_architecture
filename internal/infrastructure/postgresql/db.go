@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/env"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 	_ "github.com/lib/pq"
 )
 
-func NewDBConnection(cfg *env.Config) (*sqlx.DB, error) {
+func NewDBConnection(cfg *config.Config) (*sqlx.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName, cfg.DBSSLMode)
 

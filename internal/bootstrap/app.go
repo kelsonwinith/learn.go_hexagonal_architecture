@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/env"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/migrations"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example"
@@ -15,10 +15,10 @@ import (
 
 func Run() {
 	// Load Config
-	cfg := env.LoadConfig()
+	config := config.LoadConfig()
 
 	// Connect Database
-	db, err := postgresql.NewDBConnection(cfg)
+	db, err := postgresql.NewDBConnection(config)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
@@ -40,11 +40,11 @@ func Run() {
 	example.Init(app, db)
 
 	// Run Migrations
-	migrations.RunMigrations(cfg)
+	migrations.RunMigrations(config)
 
 	// Start Server
-	log.Printf("Server listening on port %s", cfg.AppPort)
-	if err := app.Listen(":" + cfg.AppPort); err != nil {
+	log.Printf("Server listening on port %s", config.AppPort)
+	if err := app.Listen(":" + config.AppPort); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

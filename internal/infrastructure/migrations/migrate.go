@@ -6,10 +6,10 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/env"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 )
 
-func RunMigrations(config *env.Config) {
+func RunMigrations(config *config.Config) {
 	dbURL := "postgres://" + config.DBUser + ":" + config.DBPassword + "@" + config.DBHost + ":" + config.DBPort + "/" + config.DBName + "?sslmode=" + config.DBSSLMode
 
 	m, err := migrate.New(
