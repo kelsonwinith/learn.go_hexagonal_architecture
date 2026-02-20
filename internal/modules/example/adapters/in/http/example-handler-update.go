@@ -5,13 +5,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 type UpdateExampleHandler struct {
-	useCase domain.UpdateExampleUseCase
+	useCase ports.UpdateExampleUseCase
 }
 
-func NewUpdateExampleHandler(useCase domain.UpdateExampleUseCase) *UpdateExampleHandler {
+func NewUpdateExampleHandler(useCase ports.UpdateExampleUseCase) *UpdateExampleHandler {
 	return &UpdateExampleHandler{useCase: useCase}
 }
 

@@ -5,16 +5,17 @@ import (
 	"time"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 type UpdateExampleUseCase struct {
-	Repo        domain.ExampleUpdateRepository
-	GetByIDRepo domain.ExampleGetByIDRepository
+	UpdateRepo  ports.ExampleUpdateRepository
+	GetByIDRepo ports.ExampleGetByIDRepository
 }
 
-func NewUpdateExampleUseCase(repo domain.ExampleUpdateRepository, getByIDRepo domain.ExampleGetByIDRepository) domain.UpdateExampleUseCase {
+func NewUpdateExampleUseCase(updateRepo ports.ExampleUpdateRepository, getByIDRepo ports.ExampleGetByIDRepository) ports.UpdateExampleUseCase {
 	return &UpdateExampleUseCase{
-		Repo:        repo,
+		UpdateRepo:  updateRepo,
 		GetByIDRepo: getByIDRepo,
 	}
 }
@@ -30,7 +31,7 @@ func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input domain.Exampl
 	existing.Description = input.Description
 	existing.UpdatedAt = time.Now().UTC()
 
-	if err := uc.Repo.Execute(ctx, existing); err != nil {
+	if err := uc.UpdateRepo.Execute(ctx, existing); err != nil {
 		return nil, err
 	}
 

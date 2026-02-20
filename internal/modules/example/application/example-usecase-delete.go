@@ -3,17 +3,17 @@ package application
 import (
 	"context"
 
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 // Ensure DeleteExampleUseCase implements domain.DeleteExampleUseCase
-var _ domain.DeleteExampleUseCase = (*DeleteExampleUseCase)(nil)
+var _ ports.DeleteExampleUseCase = (*DeleteExampleUseCase)(nil)
 
 type DeleteExampleUseCase struct {
-	Repo domain.ExampleDeleteRepository
+	Repo ports.ExampleDeleteRepository
 }
 
-func NewDeleteExampleUseCase(repo domain.ExampleDeleteRepository) domain.DeleteExampleUseCase {
+func NewDeleteExampleUseCase(repo ports.ExampleDeleteRepository) ports.DeleteExampleUseCase {
 	return &DeleteExampleUseCase{Repo: repo}
 }
 

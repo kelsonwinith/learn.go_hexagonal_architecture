@@ -1,25 +1,26 @@
-package repository
+package postgresql
 
 import (
 	"context"
 	"time"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 type ExampleGetAllRepository struct {
-	*ExampleRepository
+	*sharedpostgresql.Repository
 }
 
-func NewExampleGetAllRepository(r *ExampleRepository) *ExampleGetAllRepository {
-	return &ExampleGetAllRepository{ExampleRepository: r}
+func NewExampleGetAllRepository(r *sharedpostgresql.Repository) *ExampleGetAllRepository {
+	return &ExampleGetAllRepository{Repository: r}
 }
 
 func (r *ExampleGetAllRepository) Execute(ctx context.Context) ([]*domain.Example, error) {
 	var dtos []exampleGetAllDTO
 	query := `SELECT id, name, description, created_at, updated_at FROM examples ORDER BY created_at DESC`
 
-	err := r.db.SelectContext(ctx, &dtos, query)
+	err := r.DB.SelectContext(ctx, &dtos, query)
 	if err != nil {
 		return nil, err
 	}

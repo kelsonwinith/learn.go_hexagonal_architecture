@@ -4,16 +4,17 @@ import (
 	"context"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 // Ensure GetAllExamplesUseCase implements domain.GetAllExamplesUseCase
-var _ domain.GetAllExamplesUseCase = (*GetAllExamplesUseCase)(nil)
+var _ ports.GetAllExamplesUseCase = (*GetAllExamplesUseCase)(nil)
 
 type GetAllExamplesUseCase struct {
-	Repo domain.ExampleGetAllRepository
+	Repo ports.ExampleGetAllRepository
 }
 
-func NewGetAllExamplesUseCase(repo domain.ExampleGetAllRepository) domain.GetAllExamplesUseCase {
+func NewGetAllExamplesUseCase(repo ports.ExampleGetAllRepository) ports.GetAllExamplesUseCase {
 	return &GetAllExamplesUseCase{Repo: repo}
 }
 

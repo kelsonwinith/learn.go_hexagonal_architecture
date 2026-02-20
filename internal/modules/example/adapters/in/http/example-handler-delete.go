@@ -5,13 +5,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 type DeleteExampleHandler struct {
-	useCase domain.DeleteExampleUseCase
+	useCase ports.DeleteExampleUseCase
 }
 
-func NewDeleteExampleHandler(useCase domain.DeleteExampleUseCase) *DeleteExampleHandler {
+func NewDeleteExampleHandler(useCase ports.DeleteExampleUseCase) *DeleteExampleHandler {
 	return &DeleteExampleHandler{useCase: useCase}
 }
 

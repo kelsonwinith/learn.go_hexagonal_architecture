@@ -1,25 +1,26 @@
-package repository
+package postgresql
 
 import (
 	"context"
 	"time"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 type ExampleGetByIDRepository struct {
-	*ExampleRepository
+	*sharedpostgresql.Repository
 }
 
-func NewExampleGetByIDRepository(r *ExampleRepository) *ExampleGetByIDRepository {
-	return &ExampleGetByIDRepository{ExampleRepository: r}
+func NewExampleGetByIDRepository(r *sharedpostgresql.Repository) *ExampleGetByIDRepository {
+	return &ExampleGetByIDRepository{Repository: r}
 }
 
 func (r *ExampleGetByIDRepository) Execute(ctx context.Context, id string) (*domain.Example, error) {
 	var dto exampleGetByIDDTO
 	query := `SELECT id, name, description, created_at, updated_at FROM examples WHERE id = $1`
 
-	err := r.db.GetContext(ctx, &dto, query, id)
+	err := r.DB.GetContext(ctx, &dto, query, id)
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
 			return nil, domain.ErrExampleNotFound

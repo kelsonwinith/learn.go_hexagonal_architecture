@@ -5,13 +5,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 type GetExampleByIDHandler struct {
-	useCase domain.GetExampleByIDUseCase
+	useCase ports.GetExampleByIDUseCase
 }
 
-func NewGetExampleByIDHandler(useCase domain.GetExampleByIDUseCase) *GetExampleByIDHandler {
+func NewGetExampleByIDHandler(useCase ports.GetExampleByIDUseCase) *GetExampleByIDHandler {
 	return &GetExampleByIDHandler{useCase: useCase}
 }
 

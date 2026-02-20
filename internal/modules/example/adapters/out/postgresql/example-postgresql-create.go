@@ -1,18 +1,19 @@
-package repository
+package postgresql
 
 import (
 	"context"
 	"time"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 type ExampleCreateRepository struct {
-	*ExampleRepository
+	*sharedpostgresql.Repository
 }
 
-func NewExampleCreateRepository(r *ExampleRepository) *ExampleCreateRepository {
-	return &ExampleCreateRepository{ExampleRepository: r}
+func NewExampleCreateRepository(r *sharedpostgresql.Repository) *ExampleCreateRepository {
+	return &ExampleCreateRepository{Repository: r}
 }
 
 func (r *ExampleCreateRepository) Execute(ctx context.Context, example *domain.Example) error {
@@ -20,7 +21,7 @@ func (r *ExampleCreateRepository) Execute(ctx context.Context, example *domain.E
 	query := `INSERT INTO examples (id, name, description, created_at, updated_at) 
 			  VALUES (:id, :name, :description, :created_at, :updated_at)`
 
-	_, err := r.db.NamedExecContext(ctx, query, dto)
+	_, err := r.DB.NamedExecContext(ctx, query, dto)
 	return err
 }
 

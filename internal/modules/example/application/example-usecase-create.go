@@ -6,13 +6,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 type CreateExampleUseCase struct {
-	Repo domain.ExampleCreateRepository
+	Repo ports.ExampleCreateRepository
 }
 
-func NewCreateExampleUseCase(repo domain.ExampleCreateRepository) domain.CreateExampleUseCase {
+func NewCreateExampleUseCase(repo ports.ExampleCreateRepository) ports.CreateExampleUseCase {
 	return &CreateExampleUseCase{Repo: repo}
 }
 

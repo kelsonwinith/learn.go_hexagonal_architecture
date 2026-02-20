@@ -2,16 +2,14 @@ package http
 
 import (
 	"github.com/gofiber/fiber/v2"
-	dm "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
-var _ = dm.Example{}
-
 type GetAllExamplesHandler struct {
-	useCase dm.GetAllExamplesUseCase
+	useCase ports.GetAllExamplesUseCase
 }
 
-func NewGetAllExamplesHandler(useCase dm.GetAllExamplesUseCase) *GetAllExamplesHandler {
+func NewGetAllExamplesHandler(useCase ports.GetAllExamplesUseCase) *GetAllExamplesHandler {
 	return &GetAllExamplesHandler{useCase: useCase}
 }
 

@@ -3,19 +3,20 @@ package example
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/repository"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/in/http"
+	examplerepository "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/out/postgresql"
+	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/interfaces/http"
 )
 
 func Init(app *fiber.App, db *sqlx.DB) {
 	// Repository
-	baseRepo := repository.NewExampleRepository(db)
-	createRepo := repository.NewExampleCreateRepository(baseRepo)
-	getAllRepo := repository.NewExampleGetAllRepository(baseRepo)
-	getByIDRepo := repository.NewExampleGetByIDRepository(baseRepo)
-	updateRepo := repository.NewExampleUpdateRepository(baseRepo)
-	deleteRepo := repository.NewExampleDeleteRepository(baseRepo)
+	sharedRepo := sharedpostgresql.NewRepository(db)
+	createRepo := examplerepository.NewExampleCreateRepository(sharedRepo)
+	getAllRepo := examplerepository.NewExampleGetAllRepository(sharedRepo)
+	getByIDRepo := examplerepository.NewExampleGetByIDRepository(sharedRepo)
+	updateRepo := examplerepository.NewExampleUpdateRepository(sharedRepo)
+	deleteRepo := examplerepository.NewExampleDeleteRepository(sharedRepo)
 
 	// Use Cases
 	createUseCase := application.NewCreateExampleUseCase(createRepo)

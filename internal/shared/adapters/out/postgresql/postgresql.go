@@ -1,4 +1,4 @@
-package repository
+package postgresql
 
 import (
 	"context"
@@ -7,18 +7,18 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type ExampleRepository struct {
-	db *sqlx.DB
+type Repository struct {
+	DB *sqlx.DB
 }
 
-func NewExampleRepository(db *sqlx.DB) *ExampleRepository {
-	return &ExampleRepository{
-		db: db,
+func NewRepository(db *sqlx.DB) *Repository {
+	return &Repository{
+		DB: db,
 	}
 }
 
-func (r *ExampleRepository) WithTransaction(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
-	tx, err := r.db.BeginTxx(ctx, nil)
+func (r *Repository) WithTransaction(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
+	tx, err := r.DB.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}

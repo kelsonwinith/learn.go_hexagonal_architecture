@@ -4,16 +4,17 @@ import (
 	"context"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
 // Ensure GetExampleByIDUseCase implements domain.GetExampleByIDUseCase
-var _ domain.GetExampleByIDUseCase = (*GetExampleByIDUseCase)(nil)
+var _ ports.GetExampleByIDUseCase = (*GetExampleByIDUseCase)(nil)
 
 type GetExampleByIDUseCase struct {
-	Repo domain.ExampleGetByIDRepository
+	Repo ports.ExampleGetByIDRepository
 }
 
-func NewGetExampleByIDUseCase(repo domain.ExampleGetByIDRepository) domain.GetExampleByIDUseCase {
+func NewGetExampleByIDUseCase(repo ports.ExampleGetByIDRepository) ports.GetExampleByIDUseCase {
 	return &GetExampleByIDUseCase{Repo: repo}
 }
 

@@ -3,16 +3,14 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	dm "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
 )
 
-var _ = dm.Example{}
-
 type CreateExampleHandler struct {
-	useCase domain.CreateExampleUseCase
+	useCase ports.CreateExampleUseCase
 }
 
-func NewCreateExampleHandler(useCase domain.CreateExampleUseCase) *CreateExampleHandler {
+func NewCreateExampleHandler(useCase ports.CreateExampleUseCase) *CreateExampleHandler {
 	return &CreateExampleHandler{useCase: useCase}
 }
 
