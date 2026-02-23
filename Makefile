@@ -18,7 +18,7 @@ migration-down:
 
 # Generate Swagger Docs
 swagger:
-	go run github.com/swaggo/swag/cmd/swag init -g cmd/main.go --parseDependency --parseInternal
+	$$(go env GOPATH)/bin/swag init -g cmd/main.go --parseDependency --parseInternal
 
 # Start Database only
 db-up:

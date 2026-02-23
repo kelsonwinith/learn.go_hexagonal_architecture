@@ -12,7 +12,7 @@ import (
 
 func NewDBConnection(cfg *config.Config) (*sqlx.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName, cfg.DBSSLMode)
+		cfg.PostgreSQL.DBHost, cfg.PostgreSQL.DBPort, cfg.PostgreSQL.DBUser, cfg.PostgreSQL.DBPassword, cfg.PostgreSQL.DBName, cfg.PostgreSQL.DBSSLMode)
 
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {

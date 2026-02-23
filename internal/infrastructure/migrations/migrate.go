@@ -10,7 +10,7 @@ import (
 )
 
 func RunMigrations(config *config.Config) {
-	dbURL := "postgres://" + config.DBUser + ":" + config.DBPassword + "@" + config.DBHost + ":" + config.DBPort + "/" + config.DBName + "?sslmode=" + config.DBSSLMode
+	dbURL := "postgres://" + config.PostgreSQL.DBUser + ":" + config.PostgreSQL.DBPassword + "@" + config.PostgreSQL.DBHost + ":" + config.PostgreSQL.DBPort + "/" + config.PostgreSQL.DBName + "?sslmode=" + config.PostgreSQL.DBSSLMode
 
 	m, err := migrate.New(
 		"file://migrations",

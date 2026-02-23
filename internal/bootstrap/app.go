@@ -14,10 +14,13 @@ import (
 )
 
 func Run() {
-	// Load Config
-	config := config.LoadConfig()
+	// Config
+	config, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
+	}
 
-	// Connect Database
+	// PostgreSQL
 	db, err := postgresql.NewDBConnection(config)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -43,8 +46,8 @@ func Run() {
 	migrations.RunMigrations(config)
 
 	// Start Server
-	log.Printf("Server listening on port %s", config.AppPort)
-	if err := app.Listen(":" + config.AppPort); err != nil {
+	log.Printf("Server listening on port %s", config.App.Port)
+	if err := app.Listen(":" + config.App.Port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
