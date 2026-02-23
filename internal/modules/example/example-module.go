@@ -10,7 +10,7 @@ import (
 )
 
 func Init(app *fiber.App, db *sqlx.DB) {
-	// Repository
+	// Adapters Out - PostgreSQL
 	postgresql := sharedpostgresql.NewPostgresql(db)
 	createRepo := examplerepository.NewExampleCreate(postgresql)
 	getAllRepo := examplerepository.NewExampleGetAll(postgresql)
@@ -25,14 +25,13 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	updateUseCase := application.NewUpdateExampleUseCase(updateRepo, getByIDRepo)
 	deleteUseCase := application.NewDeleteExampleUseCase(deleteRepo)
 
-	// Handlers
+	// Adapters In - Http
 	createHandler := http.NewCreateExampleHandler(createUseCase)
 	getAllHandler := http.NewGetAllExamplesHandler(getAllUseCase)
 	getByIDHandler := http.NewGetExampleByIDHandler(getByIDUseCase)
 	updateHandler := http.NewUpdateExampleHandler(updateUseCase)
 	deleteHandler := http.NewDeleteExampleHandler(deleteUseCase)
 
-	// Routes
 	routes := app.Group("/examples")
 	routes.Post("/", createHandler.Handle)
 	routes.Get("/", getAllHandler.Handle)
