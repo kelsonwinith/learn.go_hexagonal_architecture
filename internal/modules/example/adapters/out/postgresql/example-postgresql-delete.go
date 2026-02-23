@@ -4,21 +4,21 @@ import (
 	"context"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleDeleteRepository struct {
-	*sharedpostgresql.Repository
+type ExampleDelete struct {
+	*postgresql.Postgresql
 }
 
-func NewExampleDeleteRepository(r *sharedpostgresql.Repository) *ExampleDeleteRepository {
-	return &ExampleDeleteRepository{Repository: r}
+func NewExampleDelete(p *postgresql.Postgresql) *ExampleDelete {
+	return &ExampleDelete{Postgresql: p}
 }
 
-func (r *ExampleDeleteRepository) Execute(ctx context.Context, id string) error {
+func (e *ExampleDelete) Execute(ctx context.Context, id string) error {
 	query := `DELETE FROM examples WHERE id = $1`
 
-	result, err := r.DB.ExecContext(ctx, query, id)
+	result, err := e.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		return err
 	}

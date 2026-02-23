@@ -11,10 +11,10 @@ import (
 var _ ports.GetExampleByIDUseCase = (*GetExampleByIDUseCase)(nil)
 
 type GetExampleByIDUseCase struct {
-	Repo ports.ExampleGetByIDRepository
+	Repo ports.ExampleGetByID
 }
 
-func NewGetExampleByIDUseCase(repo ports.ExampleGetByIDRepository) ports.GetExampleByIDUseCase {
+func NewGetExampleByIDUseCase(repo ports.ExampleGetByID) ports.GetExampleByIDUseCase {
 	return &GetExampleByIDUseCase{Repo: repo}
 }
 

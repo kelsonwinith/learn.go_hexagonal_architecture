@@ -10,10 +10,10 @@ import (
 var _ ports.DeleteExampleUseCase = (*DeleteExampleUseCase)(nil)
 
 type DeleteExampleUseCase struct {
-	Repo ports.ExampleDeleteRepository
+	Repo ports.ExampleDelete
 }
 
-func NewDeleteExampleUseCase(repo ports.ExampleDeleteRepository) ports.DeleteExampleUseCase {
+func NewDeleteExampleUseCase(repo ports.ExampleDelete) ports.DeleteExampleUseCase {
 	return &DeleteExampleUseCase{Repo: repo}
 }
 

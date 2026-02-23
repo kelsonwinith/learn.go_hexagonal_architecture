@@ -7,18 +7,18 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Repository struct {
+type Postgresql struct {
 	DB *sqlx.DB
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{
+func NewPostgresql(db *sqlx.DB) *Postgresql {
+	return &Postgresql{
 		DB: db,
 	}
 }
 
-func (r *Repository) WithTransaction(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
-	tx, err := r.DB.BeginTxx(ctx, nil)
+func (p *Postgresql) WithTransaction(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
+	tx, err := p.DB.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}

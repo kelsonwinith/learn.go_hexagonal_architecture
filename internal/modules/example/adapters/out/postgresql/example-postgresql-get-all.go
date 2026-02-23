@@ -5,22 +5,22 @@ import (
 	"time"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleGetAllRepository struct {
-	*sharedpostgresql.Repository
+type ExampleGetAll struct {
+	*postgresql.Postgresql
 }
 
-func NewExampleGetAllRepository(r *sharedpostgresql.Repository) *ExampleGetAllRepository {
-	return &ExampleGetAllRepository{Repository: r}
+func NewExampleGetAll(p *postgresql.Postgresql) *ExampleGetAll {
+	return &ExampleGetAll{Postgresql: p}
 }
 
-func (r *ExampleGetAllRepository) Execute(ctx context.Context) ([]*domain.Example, error) {
+func (e *ExampleGetAll) Execute(ctx context.Context) ([]*domain.Example, error) {
 	var dtos []exampleGetAllDTO
 	query := `SELECT id, name, description, created_at, updated_at FROM examples ORDER BY created_at DESC`
 
-	err := r.DB.SelectContext(ctx, &dtos, query)
+	err := e.DB.SelectContext(ctx, &dtos, query)
 	if err != nil {
 		return nil, err
 	}

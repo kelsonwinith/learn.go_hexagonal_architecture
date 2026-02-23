@@ -5,23 +5,23 @@ import (
 	"time"
 
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedpostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleUpdateRepository struct {
-	*sharedpostgresql.Repository
+type ExampleUpdate struct {
+	*postgresql.Postgresql
 }
 
-func NewExampleUpdateRepository(r *sharedpostgresql.Repository) *ExampleUpdateRepository {
-	return &ExampleUpdateRepository{Repository: r}
+func NewExampleUpdate(p *postgresql.Postgresql) *ExampleUpdate {
+	return &ExampleUpdate{Postgresql: p}
 }
 
-func (r *ExampleUpdateRepository) Execute(ctx context.Context, example *domain.Example) error {
+func (e *ExampleUpdate) Execute(ctx context.Context, example *domain.Example) error {
 	dto := fromExampleUpdateDomain(example)
 	query := `UPDATE examples SET name = :name, description = :description, updated_at = :updated_at 
 			  WHERE id = :id`
 
-	result, err := r.DB.NamedExecContext(ctx, query, dto)
+	result, err := e.DB.NamedExecContext(ctx, query, dto)
 	if err != nil {
 		return err
 	}

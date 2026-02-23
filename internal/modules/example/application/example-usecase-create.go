@@ -10,10 +10,10 @@ import (
 )
 
 type CreateExampleUseCase struct {
-	Repo ports.ExampleCreateRepository
+	Repo ports.ExampleCreate
 }
 
-func NewCreateExampleUseCase(repo ports.ExampleCreateRepository) ports.CreateExampleUseCase {
+func NewCreateExampleUseCase(repo ports.ExampleCreate) ports.CreateExampleUseCase {
 	return &CreateExampleUseCase{Repo: repo}
 }
 

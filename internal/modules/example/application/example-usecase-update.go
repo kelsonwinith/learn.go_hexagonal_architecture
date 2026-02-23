@@ -9,11 +9,11 @@ import (
 )
 
 type UpdateExampleUseCase struct {
-	UpdateRepo  ports.ExampleUpdateRepository
-	GetByIDRepo ports.ExampleGetByIDRepository
+	UpdateRepo  ports.ExampleUpdate
+	GetByIDRepo ports.ExampleGetByID
 }
 
-func NewUpdateExampleUseCase(updateRepo ports.ExampleUpdateRepository, getByIDRepo ports.ExampleGetByIDRepository) ports.UpdateExampleUseCase {
+func NewUpdateExampleUseCase(updateRepo ports.ExampleUpdate, getByIDRepo ports.ExampleGetByID) ports.UpdateExampleUseCase {
 	return &UpdateExampleUseCase{
 		UpdateRepo:  updateRepo,
 		GetByIDRepo: getByIDRepo,
