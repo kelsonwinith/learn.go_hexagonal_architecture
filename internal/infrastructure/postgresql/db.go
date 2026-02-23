@@ -1,13 +1,12 @@
 package postgresql
 
 import (
-	"fmt"
-	"log"
-	"time"
+	fmt "fmt"
+	log "log"
+	time "time"
 
-	"github.com/jmoiron/sqlx"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
-	_ "github.com/lib/pq"
+	sqlx "github.com/jmoiron/sqlx"
+	config "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 )
 
 func NewDBConnection(cfg *config.Config) (*sqlx.DB, error) {

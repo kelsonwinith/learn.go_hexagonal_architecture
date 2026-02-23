@@ -1,10 +1,10 @@
 package config
 
 import (
-	"log"
+	log "log"
 
-	"github.com/joho/godotenv"
-	"github.com/kelseyhightower/envconfig"
+	godotenv "github.com/joho/godotenv"
+	envconfig "github.com/kelseyhightower/envconfig"
 )
 
 func LoadConfig() (*Config, error) {

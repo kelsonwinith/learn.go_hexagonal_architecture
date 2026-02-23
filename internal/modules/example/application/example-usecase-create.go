@@ -1,20 +1,19 @@
 package application
 
 import (
-	"context"
-	"time"
+	context "context"
+	time "time"
 
-	"github.com/google/uuid"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
+	uuid "github.com/google/uuid"
+	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type CreateExampleUseCase struct {
-	Repo ports.ExampleCreate
+	exampleCreatePostgres domain.ExampleCreatePostgres
 }
 
-func NewCreateExampleUseCase(repo ports.ExampleCreate) ports.CreateExampleUseCase {
-	return &CreateExampleUseCase{Repo: repo}
+func NewCreateExampleUseCase(exampleCreatePostgres domain.ExampleCreatePostgres) domain.CreateExampleUseCase {
+	return &CreateExampleUseCase{exampleCreatePostgres: exampleCreatePostgres}
 }
 
 func (uc *CreateExampleUseCase) Execute(ctx context.Context, input domain.Example) (*domain.Example, error) {
@@ -26,7 +25,7 @@ func (uc *CreateExampleUseCase) Execute(ctx context.Context, input domain.Exampl
 		UpdatedAt:   time.Now().UTC(),
 	}
 
-	err := uc.Repo.Execute(ctx, example)
+	err := uc.exampleCreatePostgres.Execute(ctx, example)
 	if err != nil {
 		return nil, err
 	}

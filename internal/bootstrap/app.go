@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/migrations"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example"
 )
@@ -27,6 +26,9 @@ func Run() {
 	}
 	defer db.Close()
 
+	// PostgreSQL Migrations
+	postgresql.RunMigrations(config)
+
 	// Initialize Fiber App
 	app := fiber.New()
 
@@ -41,9 +43,6 @@ func Run() {
 
 	// Initialize Modules
 	example.Init(app, db)
-
-	// Run Migrations
-	migrations.RunMigrations(config)
 
 	// Start Server
 	log.Printf("Server listening on port %s", config.App.Port)

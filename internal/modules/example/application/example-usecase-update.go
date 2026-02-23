@@ -1,28 +1,27 @@
 package application
 
 import (
-	"context"
-	"time"
+	context "context"
+	time "time"
 
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
+	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type UpdateExampleUseCase struct {
-	UpdateRepo  ports.ExampleUpdate
-	GetByIDRepo ports.ExampleGetByID
+	exampleUpdatePostgres  domain.ExampleUpdatePostgres
+	exampleGetByIDPostgres domain.ExampleGetByIDPostgres
 }
 
-func NewUpdateExampleUseCase(updateRepo ports.ExampleUpdate, getByIDRepo ports.ExampleGetByID) ports.UpdateExampleUseCase {
+func NewUpdateExampleUseCase(update domain.ExampleUpdatePostgres, getByID domain.ExampleGetByIDPostgres) domain.UpdateExampleUseCase {
 	return &UpdateExampleUseCase{
-		UpdateRepo:  updateRepo,
-		GetByIDRepo: getByIDRepo,
+		exampleUpdatePostgres:  update,
+		exampleGetByIDPostgres: getByID,
 	}
 }
 
 func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input domain.Example) (*domain.Example, error) {
 	// Check if exists
-	existing, err := uc.GetByIDRepo.Execute(ctx, input.ID)
+	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +30,7 @@ func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input domain.Exampl
 	existing.Description = input.Description
 	existing.UpdatedAt = time.Now().UTC()
 
-	if err := uc.UpdateRepo.Execute(ctx, existing); err != nil {
+	if err := uc.exampleUpdatePostgres.Execute(ctx, existing); err != nil {
 		return nil, err
 	}
 

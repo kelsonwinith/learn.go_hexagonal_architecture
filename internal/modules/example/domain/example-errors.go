@@ -3,5 +3,5 @@ package domain
 import "errors"
 
 var (
-	ErrExampleNotFound = errors.New("example not found")
+	ErrExampleNotFound = errors.New("example not found.")
 )

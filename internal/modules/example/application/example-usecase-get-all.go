@@ -1,23 +1,22 @@
 package application
 
 import (
-	"context"
+	context "context"
 
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/ports"
+	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 // Ensure GetAllExamplesUseCase implements domain.GetAllExamplesUseCase
-var _ ports.GetAllExamplesUseCase = (*GetAllExamplesUseCase)(nil)
+var _ domain.GetAllExamplesUseCase = (*GetAllExamplesUseCase)(nil)
 
 type GetAllExamplesUseCase struct {
-	Repo ports.ExampleGetAll
+	exampleGetAllPostgres domain.ExampleGetAllPostgres
 }
 
-func NewGetAllExamplesUseCase(repo ports.ExampleGetAll) ports.GetAllExamplesUseCase {
-	return &GetAllExamplesUseCase{Repo: repo}
+func NewGetAllExamplesUseCase(exampleGetAllPostgres domain.ExampleGetAllPostgres) domain.GetAllExamplesUseCase {
+	return &GetAllExamplesUseCase{exampleGetAllPostgres: exampleGetAllPostgres}
 }
 
 func (uc *GetAllExamplesUseCase) Execute(ctx context.Context) ([]*domain.Example, error) {
-	return uc.Repo.Execute(ctx)
+	return uc.exampleGetAllPostgres.Execute(ctx)
 }
