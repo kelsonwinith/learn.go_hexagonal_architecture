@@ -18,7 +18,7 @@ func NewUpdateExampleHandler(useCase domain.UpdateExampleUseCase) *UpdateExample
 // Handle UpdateExample
 // @Summary Update an example
 // @Description Update an example by ID
-// @Tags examples
+// @Tags example
 // @Accept json
 // @Produce json
 // @Param id path string true "Example ID"
