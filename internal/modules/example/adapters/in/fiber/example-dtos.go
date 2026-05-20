@@ -19,9 +19,45 @@ func toExampleResponse(e *domain.Example) exampleResponse {
 }
 
 func toExampleResponses(examples []*domain.Example) []exampleResponse {
-	dtos := make([]exampleResponse, len(examples))
+	res := make([]exampleResponse, len(examples))
 	for i, e := range examples {
-		dtos[i] = toExampleResponse(e)
+		res[i] = toExampleResponse(e)
 	}
-	return dtos
+	return res
+}
+
+type createRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func (e createRequest) toDomain() domain.Example {
+	return domain.Example{
+		Name:        e.Name,
+		Description: e.Description,
+	}
+}
+
+type createMultipleRequest struct {
+	Examples []createRequest `json:"examples"`
+}
+
+func (r createMultipleRequest) toDomain() []domain.Example {
+	examples := make([]domain.Example, len(r.Examples))
+	for i, e := range r.Examples {
+		examples[i] = e.toDomain()
+	}
+	return examples
+}
+
+type updateRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func (e *updateRequest) toDomain() domain.Example {
+	return domain.Example{
+		Name:        e.Name,
+		Description: e.Description,
+	}
 }

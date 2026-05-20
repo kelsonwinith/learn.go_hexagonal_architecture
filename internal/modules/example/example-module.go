@@ -17,6 +17,7 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	getByIDPostgresql := examplePostgresql.NewExampleGetByID(postgresql)
 	updatePostgresql := examplePostgresql.NewExampleUpdate(postgresql)
 	deletePostgresql := examplePostgresql.NewExampleDelete(postgresql)
+	createMultiplePostgresql := examplePostgresql.NewExampleCreateMultiple(postgresql)
 
 	// Use Cases
 	createUseCase := exampleUseCase.NewCreateExampleUseCase(createPostgresql)
@@ -24,6 +25,7 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	getByIDUseCase := exampleUseCase.NewGetExampleByIDUseCase(getByIDPostgresql)
 	updateUseCase := exampleUseCase.NewUpdateExampleUseCase(updatePostgresql, getByIDPostgresql)
 	deleteUseCase := exampleUseCase.NewDeleteExampleUseCase(deletePostgresql)
+	createMultipleUseCase := exampleUseCase.NewCreateMultipleExamplesUseCase(createMultiplePostgresql, postgresql)
 
 	// Adapters In - Fiber
 	createHandler := exampleFiber.NewCreateExampleHandler(createUseCase)
@@ -31,9 +33,11 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	getByIDHandler := exampleFiber.NewGetExampleByIDHandler(getByIDUseCase)
 	updateHandler := exampleFiber.NewUpdateExampleHandler(updateUseCase)
 	deleteHandler := exampleFiber.NewDeleteExampleHandler(deleteUseCase)
+	createMultipleHandler := exampleFiber.NewCreateMultipleExamplesHandler(createMultipleUseCase)
 
 	routes := app.Group("/example")
 	routes.Post("/", createHandler.Handle)
+	routes.Post("/batch", createMultipleHandler.Handle)
 	routes.Get("/", getAllHandler.Handle)
 	routes.Get("/:id", getByIDHandler.Handle)
 	routes.Put("/:id", updateHandler.Handle)

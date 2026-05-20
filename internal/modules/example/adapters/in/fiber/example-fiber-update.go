@@ -48,15 +48,3 @@ func (h *UpdateExampleHandler) Handle(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(toExampleResponse(res))
 }
-
-type updateRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-func (e *updateRequest) toDomain() domain.Example {
-	return domain.Example{
-		Name:        e.Name,
-		Description: e.Description,
-	}
-}
