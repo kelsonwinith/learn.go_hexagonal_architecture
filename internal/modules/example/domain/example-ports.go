@@ -2,8 +2,6 @@ package domain
 
 import (
 	"context"
-
-	"github.com/jmoiron/sqlx"
 )
 
 // Usecase Ports
@@ -32,7 +30,7 @@ type ExampleCreatePostgres interface {
 }
 
 type ExampleCreateMultiplePostgres interface {
-	Execute(ctx context.Context, db sqlx.ExtContext, examples []*Example) error
+	Execute(ctx context.Context, examples []*Example) error
 }
 
 type ExampleUpdatePostgres interface {
@@ -47,3 +45,5 @@ type ExampleGetByIDPostgres interface {
 type ExampleGetAllPostgres interface {
 	Execute(ctx context.Context) ([]*Example, error)
 }
+
+

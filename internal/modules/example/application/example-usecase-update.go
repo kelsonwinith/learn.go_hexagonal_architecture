@@ -20,7 +20,6 @@ func NewUpdateExampleUseCase(update domain.ExampleUpdatePostgres, getByID domain
 }
 
 func (uc *UpdateExampleUseCase) Execute(ctx context.Context, input domain.Example) (*domain.Example, error) {
-	// Check if exists
 	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, input.ID)
 	if err != nil {
 		return nil, err

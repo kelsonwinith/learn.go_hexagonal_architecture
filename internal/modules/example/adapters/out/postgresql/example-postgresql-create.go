@@ -1,10 +1,10 @@
 package postgresql
 
 import (
-	"context"
-	"time"
+	context "context"
+	time "time"
 
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
@@ -16,12 +16,12 @@ func NewExampleCreate(p *postgresql.Postgresql) *ExampleCreate {
 	return &ExampleCreate{Postgresql: p}
 }
 
-func (e *ExampleCreate) Execute(ctx context.Context, example *domain.Example) error {
+func (e *ExampleCreate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	dto := fromExampleCreateDomain(example)
 	query := `INSERT INTO examples (id, name, description, created_at, updated_at) 
 			  VALUES (:id, :name, :description, :created_at, :updated_at)`
 
-	_, err := e.DB.NamedExecContext(ctx, query, dto)
+	_, err := e.GetExecutor(ctx).NamedExecContext(ctx, query, dto)
 	return err
 }
 
@@ -33,7 +33,7 @@ type exampleCreateDTO struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 }
 
-func fromExampleCreateDomain(e *domain.Example) *exampleCreateDTO {
+func fromExampleCreateDomain(e *exampleDomain.Example) *exampleCreateDTO {
 	return &exampleCreateDTO{
 		ID:          e.ID,
 		Name:        e.Name,

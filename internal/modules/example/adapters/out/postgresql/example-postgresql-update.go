@@ -1,10 +1,10 @@
 package postgresql
 
 import (
-	"context"
-	"time"
+	context "context"
+	time "time"
 
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
@@ -16,12 +16,12 @@ func NewExampleUpdate(p *postgresql.Postgresql) *ExampleUpdate {
 	return &ExampleUpdate{Postgresql: p}
 }
 
-func (e *ExampleUpdate) Execute(ctx context.Context, example *domain.Example) error {
+func (e *ExampleUpdate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	dto := fromExampleUpdateDomain(example)
 	query := `UPDATE examples SET name = :name, description = :description, updated_at = :updated_at 
 			  WHERE id = :id`
 
-	result, err := e.DB.NamedExecContext(ctx, query, dto)
+	result, err := e.GetExecutor(ctx).NamedExecContext(ctx, query, dto)
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func (e *ExampleUpdate) Execute(ctx context.Context, example *domain.Example) er
 	}
 
 	if rows == 0 {
-		return domain.ErrExampleNotFound
+		return exampleDomain.ErrExampleNotFound
 	}
 
 	return nil
@@ -45,7 +45,7 @@ type exampleUpdateDTO struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 }
 
-func fromExampleUpdateDomain(e *domain.Example) *exampleUpdateDTO {
+func fromExampleUpdateDomain(e *exampleDomain.Example) *exampleUpdateDTO {
 	return &exampleUpdateDTO{
 		ID:          e.ID,
 		Name:        e.Name,

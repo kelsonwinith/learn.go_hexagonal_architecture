@@ -1,10 +1,10 @@
 package postgresql
 
 import (
-	"context"
-	"time"
+	context "context"
+	time "time"
 
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
@@ -16,16 +16,16 @@ func NewExampleGetAll(p *postgresql.Postgresql) *ExampleGetAll {
 	return &ExampleGetAll{Postgresql: p}
 }
 
-func (e *ExampleGetAll) Execute(ctx context.Context) ([]*domain.Example, error) {
+func (e *ExampleGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
 	var dtos []exampleGetAllDTO
 	query := `SELECT id, name, description, created_at, updated_at FROM examples ORDER BY created_at DESC`
 
-	err := e.DB.SelectContext(ctx, &dtos, query)
+	err := e.GetExecutor(ctx).SelectContext(ctx, &dtos, query)
 	if err != nil {
 		return nil, err
 	}
 
-	examples := make([]*domain.Example, len(dtos))
+	examples := make([]*exampleDomain.Example, len(dtos))
 	for i, dto := range dtos {
 		examples[i] = dto.toDomain()
 	}
@@ -41,8 +41,8 @@ type exampleGetAllDTO struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 }
 
-func (d *exampleGetAllDTO) toDomain() *domain.Example {
-	return &domain.Example{
+func (d *exampleGetAllDTO) toDomain() *exampleDomain.Example {
+	return &exampleDomain.Example{
 		ID:          d.ID,
 		Name:        d.Name,
 		Description: d.Description,

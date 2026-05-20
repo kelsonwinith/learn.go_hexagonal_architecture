@@ -1,38 +1,46 @@
 package application
 
 import (
-	"context"
-	"time"
+	context "context"
+	time "time"
 
-	"github.com/jmoiron/sqlx"
-	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	uuid "github.com/google/uuid"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 type CreateMultipleExamplesUseCase struct {
-	createMultiplePostgres domain.ExampleCreateMultiplePostgres
-	postgres               *postgresql.Postgresql
+	createMultiplePostgres exampleDomain.ExampleCreateMultiplePostgres
+	txManager              sharedDomain.TransactionManagerPostgresql
 }
 
-func NewCreateMultipleExamplesUseCase(createMultiplePostgres domain.ExampleCreateMultiplePostgres, postgres *postgresql.Postgresql) domain.CreateMultipleExamplesUseCase {
+func NewCreateMultipleExamplesUseCase(
+	createMultiplePostgres exampleDomain.ExampleCreateMultiplePostgres,
+	txManager sharedDomain.TransactionManagerPostgresql,
+) exampleDomain.CreateMultipleExamplesUseCase {
 	return &CreateMultipleExamplesUseCase{
 		createMultiplePostgres: createMultiplePostgres,
-		postgres:               postgres,
+		txManager:              txManager,
 	}
 }
 
-func (uc *CreateMultipleExamplesUseCase) Execute(ctx context.Context, examples []domain.Example) ([]*domain.Example, error) {
-	var createdExamples []*domain.Example
+func (uc *CreateMultipleExamplesUseCase) Execute(ctx context.Context, examples []exampleDomain.Example) ([]*exampleDomain.Example, error) {
+	var createdExamples []*exampleDomain.Example
 
-	err := uc.postgres.WithTransaction(ctx, func(tx *sqlx.Tx) error {
+	err := uc.txManager.WithinTransaction(ctx, func(ctx context.Context) error {
 		now := time.Now().UTC()
+		createdExamples = make([]*exampleDomain.Example, len(examples))
 		for i := range examples {
-			examples[i].CreatedAt = now
-			examples[i].UpdatedAt = now
+			createdExamples[i] = &exampleDomain.Example{
+				ID:          uuid.New().String(),
+				Name:        examples[i].Name,
+				Description: examples[i].Description,
+				CreatedAt:   now,
+				UpdatedAt:   now,
+			}
 		}
 
-		createdExamples = make([]*domain.Example, len(examples))
-		if err := uc.createMultiplePostgres.Execute(ctx, tx, createdExamples); err != nil {
+		if err := uc.createMultiplePostgres.Execute(ctx, createdExamples); err != nil {
 			return err
 		}
 
