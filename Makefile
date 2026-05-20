@@ -1,5 +1,3 @@
-.PHONY: compose-up compose-down down swagger run migration-up migration-down db-up
-
 # Docker Compose Up
 compose-up:
 	docker-compose up --build --remove-orphans
@@ -23,6 +21,10 @@ swagger:
 # Start Database only
 db-up:
 	docker-compose up -d db --remove-orphans
+
+# Build Application
+build:
+	go build -o bin/app cmd/main.go
 
 # Run Application (Generates Swagger docs first, ensures DB is up)
 run: swagger db-up
