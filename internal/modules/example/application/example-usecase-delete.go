@@ -6,9 +6,6 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-// Ensure DeleteExampleUseCase implements exampleDomain.DeleteExampleUseCase
-var _ exampleDomain.DeleteExampleUseCase = (*DeleteExampleUseCase)(nil)
-
 type DeleteExampleUseCase struct {
 	exampleDeletePostgres exampleDomain.ExampleDeletePostgres
 }

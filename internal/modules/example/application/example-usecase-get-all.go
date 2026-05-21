@@ -6,9 +6,6 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-// Ensure GetAllExamplesUseCase implements exampleDomain.GetAllExamplesUseCase
-var _ exampleDomain.GetAllExamplesUseCase = (*GetAllExamplesUseCase)(nil)
-
 type GetAllExamplesUseCase struct {
 	exampleGetAllPostgres exampleDomain.ExampleGetAllPostgres
 }

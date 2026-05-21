@@ -6,9 +6,6 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-// Ensure GetExampleByIDUseCase implements exampleDomain.GetExampleByIDUseCase
-var _ exampleDomain.GetExampleByIDUseCase = (*GetExampleByIDUseCase)(nil)
-
 type GetExampleByIDUseCase struct {
 	exampleGetByIDPostgres exampleDomain.ExampleGetByIDPostgres
 }
