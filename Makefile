@@ -22,6 +22,10 @@ swagger:
 db-up:
 	docker-compose up -d db --remove-orphans
 
+# Test
+test:
+	go test -v ./...
+
 # Build Application
 build:
 	go build -o bin/app cmd/main.go
