@@ -8,15 +8,15 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type CreateExampleUseCase struct {
-	exampleCreatePostgres exampleDomain.ExampleCreatePostgres
+type ExampleUsecaseCreate struct {
+	exampleCreatePostgres exampleDomain.ExamplePostgresqlCreate
 }
 
-func NewCreateExampleUseCase(exampleCreatePostgres exampleDomain.ExampleCreatePostgres) exampleDomain.CreateExampleUseCase {
-	return &CreateExampleUseCase{exampleCreatePostgres: exampleCreatePostgres}
+func NewExampleUsecaseCreate(exampleCreatePostgres exampleDomain.ExamplePostgresqlCreate) exampleDomain.ExampleUsecaseCreate {
+	return &ExampleUsecaseCreate{exampleCreatePostgres: exampleCreatePostgres}
 }
 
-func (uc *CreateExampleUseCase) Execute(ctx context.Context, input exampleDomain.Example) (*exampleDomain.Example, error) {
+func (uc *ExampleUsecaseCreate) Execute(ctx context.Context, input exampleDomain.Example) (*exampleDomain.Example, error) {
 	example := &exampleDomain.Example{
 		ID:          uuid.New().String(),
 		Name:        input.Name,

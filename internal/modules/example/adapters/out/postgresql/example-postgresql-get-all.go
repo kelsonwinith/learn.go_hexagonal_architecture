@@ -8,15 +8,15 @@ import (
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleGetAll struct {
+type ExamplePostgresqlGetAll struct {
 	*postgresql.Postgresql
 }
 
-func NewExampleGetAll(p *postgresql.Postgresql) *ExampleGetAll {
-	return &ExampleGetAll{Postgresql: p}
+func NewExamplePostgresqlGetAll(p *postgresql.Postgresql) *ExamplePostgresqlGetAll {
+	return &ExamplePostgresqlGetAll{Postgresql: p}
 }
 
-func (e *ExampleGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
+func (e *ExamplePostgresqlGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
 	var dtos []exampleGetAllDTO
 	query := `SELECT id, name, description, created_at, updated_at FROM examples ORDER BY created_at DESC`
 

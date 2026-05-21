@@ -10,15 +10,15 @@ import (
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleGetByID struct {
+type ExamplePostgresqlGetByID struct {
 	*postgresql.Postgresql
 }
 
-func NewExampleGetByID(p *postgresql.Postgresql) *ExampleGetByID {
-	return &ExampleGetByID{Postgresql: p}
+func NewExamplePostgresqlGetByID(p *postgresql.Postgresql) *ExamplePostgresqlGetByID {
+	return &ExamplePostgresqlGetByID{Postgresql: p}
 }
 
-func (e *ExampleGetByID) Execute(ctx context.Context, id string) (*exampleDomain.Example, error) {
+func (e *ExamplePostgresqlGetByID) Execute(ctx context.Context, id string) (*exampleDomain.Example, error) {
 	var dto exampleGetByIDDTO
 	query := `SELECT id, name, description, created_at, updated_at FROM examples WHERE id = $1`
 

@@ -8,15 +8,15 @@ import (
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleUpdate struct {
+type ExamplePostgresqlUpdate struct {
 	*postgresql.Postgresql
 }
 
-func NewExampleUpdate(p *postgresql.Postgresql) *ExampleUpdate {
-	return &ExampleUpdate{Postgresql: p}
+func NewExamplePostgresqlUpdate(p *postgresql.Postgresql) *ExamplePostgresqlUpdate {
+	return &ExamplePostgresqlUpdate{Postgresql: p}
 }
 
-func (e *ExampleUpdate) Execute(ctx context.Context, example *exampleDomain.Example) error {
+func (e *ExamplePostgresqlUpdate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	dto := fromExampleUpdateDomain(example)
 	query := `UPDATE examples SET name = :name, description = :description, updated_at = :updated_at 
 			  WHERE id = :id`

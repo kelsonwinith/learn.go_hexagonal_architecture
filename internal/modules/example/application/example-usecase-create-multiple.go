@@ -9,22 +9,22 @@ import (
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
-type CreateMultipleExamplesUseCase struct {
-	createMultiplePostgres exampleDomain.ExampleCreateMultiplePostgres
+type ExampleUsecaseCreateMultiple struct {
+	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple
 	txManager              sharedDomain.TransactionManagerPostgresql
 }
 
-func NewCreateMultipleExamplesUseCase(
-	createMultiplePostgres exampleDomain.ExampleCreateMultiplePostgres,
+func NewExampleUsecaseCreateMultiple(
+	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple,
 	txManager sharedDomain.TransactionManagerPostgresql,
-) exampleDomain.CreateMultipleExamplesUseCase {
-	return &CreateMultipleExamplesUseCase{
+) exampleDomain.ExampleUsecaseCreateMultiple {
+	return &ExampleUsecaseCreateMultiple{
 		createMultiplePostgres: createMultiplePostgres,
 		txManager:              txManager,
 	}
 }
 
-func (uc *CreateMultipleExamplesUseCase) Execute(ctx context.Context, examples []exampleDomain.Example) ([]*exampleDomain.Example, error) {
+func (uc *ExampleUsecaseCreateMultiple) Execute(ctx context.Context, examples []exampleDomain.Example) ([]*exampleDomain.Example, error) {
 	var createdExamples []*exampleDomain.Example
 
 	err := uc.txManager.WithinTransaction(ctx, func(ctx context.Context) error {

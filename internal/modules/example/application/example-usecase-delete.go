@@ -6,14 +6,14 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type DeleteExampleUseCase struct {
-	exampleDeletePostgres exampleDomain.ExampleDeletePostgres
+type ExampleUsecaseDelete struct {
+	exampleDeletePostgres exampleDomain.ExamplePostgresqlDelete
 }
 
-func NewDeleteExampleUseCase(exampleDeletePostgres exampleDomain.ExampleDeletePostgres) exampleDomain.DeleteExampleUseCase {
-	return &DeleteExampleUseCase{exampleDeletePostgres: exampleDeletePostgres}
+func NewExampleUsecaseDelete(exampleDeletePostgres exampleDomain.ExamplePostgresqlDelete) exampleDomain.ExampleUsecaseDelete {
+	return &ExampleUsecaseDelete{exampleDeletePostgres: exampleDeletePostgres}
 }
 
-func (uc *DeleteExampleUseCase) Execute(ctx context.Context, id string) error {
+func (uc *ExampleUsecaseDelete) Execute(ctx context.Context, id string) error {
 	return uc.exampleDeletePostgres.Execute(ctx, id)
 }

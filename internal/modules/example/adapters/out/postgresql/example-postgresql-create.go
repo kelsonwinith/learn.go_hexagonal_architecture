@@ -8,15 +8,15 @@ import (
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
-type ExampleCreate struct {
+type ExamplePostgresqlCreate struct {
 	*postgresql.Postgresql
 }
 
-func NewExampleCreate(p *postgresql.Postgresql) *ExampleCreate {
-	return &ExampleCreate{Postgresql: p}
+func NewExamplePostgresqlCreate(p *postgresql.Postgresql) *ExamplePostgresqlCreate {
+	return &ExamplePostgresqlCreate{Postgresql: p}
 }
 
-func (e *ExampleCreate) Execute(ctx context.Context, example *exampleDomain.Example) error {
+func (e *ExamplePostgresqlCreate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	dto := fromExampleCreateDomain(example)
 	query := `INSERT INTO examples (id, name, description, created_at, updated_at) 
 			  VALUES (:id, :name, :description, :created_at, :updated_at)`

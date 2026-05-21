@@ -7,12 +7,12 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type DeleteExampleHandler struct {
-	useCase exampleDomain.DeleteExampleUseCase
+type ExampleHandlerDelete struct {
+	useCase exampleDomain.ExampleUsecaseDelete
 }
 
-func NewDeleteExampleHandler(useCase exampleDomain.DeleteExampleUseCase) *DeleteExampleHandler {
-	return &DeleteExampleHandler{useCase: useCase}
+func NewExampleHandlerDelete(useCase exampleDomain.ExampleUsecaseDelete) *ExampleHandlerDelete {
+	return &ExampleHandlerDelete{useCase: useCase}
 }
 
 // Handle DeleteExample
@@ -25,7 +25,7 @@ func NewDeleteExampleHandler(useCase exampleDomain.DeleteExampleUseCase) *Delete
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /example/{id} [delete]
-func (h *DeleteExampleHandler) Handle(c *fiber.Ctx) error {
+func (h *ExampleHandlerDelete) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	err := h.useCase.Execute(c.Context(), id)

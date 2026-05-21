@@ -5,43 +5,43 @@ import (
 )
 
 // Usecase Ports
-type CreateExampleUseCase interface {
+type ExampleUsecaseCreate interface {
 	Execute(ctx context.Context, input Example) (*Example, error)
 }
-type CreateMultipleExamplesUseCase interface {
+type ExampleUsecaseCreateMultiple interface {
 	Execute(ctx context.Context, examples []Example) ([]*Example, error)
 }
-type GetExampleByIDUseCase interface {
+type ExampleUsecaseGetByID interface {
 	Execute(ctx context.Context, id string) (*Example, error)
 }
-type GetAllExamplesUseCase interface {
+type ExampleUsecaseGetAll interface {
 	Execute(ctx context.Context) ([]*Example, error)
 }
-type UpdateExampleUseCase interface {
+type ExampleUsecaseUpdate interface {
 	Execute(ctx context.Context, input Example) (*Example, error)
 }
-type DeleteExampleUseCase interface {
+type ExampleUsecaseDelete interface {
 	Execute(ctx context.Context, id string) error
 }
 
 // PostgreSQL Ports
-type ExampleCreatePostgres interface {
+type ExamplePostgresqlCreate interface {
 	Execute(ctx context.Context, example *Example) error
 }
 
-type ExampleCreateMultiplePostgres interface {
+type ExamplePostgresqlCreateMultiple interface {
 	Execute(ctx context.Context, examples []*Example) error
 }
 
-type ExampleUpdatePostgres interface {
+type ExamplePostgresqlUpdate interface {
 	Execute(ctx context.Context, example *Example) error
 }
-type ExampleDeletePostgres interface {
+type ExamplePostgresqlDelete interface {
 	Execute(ctx context.Context, id string) error
 }
-type ExampleGetByIDPostgres interface {
+type ExamplePostgresqlGetByID interface {
 	Execute(ctx context.Context, id string) (*Example, error)
 }
-type ExampleGetAllPostgres interface {
+type ExamplePostgresqlGetAll interface {
 	Execute(ctx context.Context) ([]*Example, error)
 }

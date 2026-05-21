@@ -6,14 +6,14 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type GetAllExamplesUseCase struct {
-	exampleGetAllPostgres exampleDomain.ExampleGetAllPostgres
+type ExampleUsecaseGetAll struct {
+	exampleGetAllPostgres exampleDomain.ExamplePostgresqlGetAll
 }
 
-func NewGetAllExamplesUseCase(exampleGetAllPostgres exampleDomain.ExampleGetAllPostgres) exampleDomain.GetAllExamplesUseCase {
-	return &GetAllExamplesUseCase{exampleGetAllPostgres: exampleGetAllPostgres}
+func NewExampleUsecaseGetAll(exampleGetAllPostgres exampleDomain.ExamplePostgresqlGetAll) exampleDomain.ExampleUsecaseGetAll {
+	return &ExampleUsecaseGetAll{exampleGetAllPostgres: exampleGetAllPostgres}
 }
 
-func (uc *GetAllExamplesUseCase) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
+func (uc *ExampleUsecaseGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
 	return uc.exampleGetAllPostgres.Execute(ctx)
 }
