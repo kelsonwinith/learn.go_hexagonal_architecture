@@ -3,17 +3,17 @@ package application
 import (
 	context "context"
 
-	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-// Ensure DeleteExampleUseCase implements domain.DeleteExampleUseCase
-var _ domain.DeleteExampleUseCase = (*DeleteExampleUseCase)(nil)
+// Ensure DeleteExampleUseCase implements exampleDomain.DeleteExampleUseCase
+var _ exampleDomain.DeleteExampleUseCase = (*DeleteExampleUseCase)(nil)
 
 type DeleteExampleUseCase struct {
-	exampleDeletePostgres domain.ExampleDeletePostgres
+	exampleDeletePostgres exampleDomain.ExampleDeletePostgres
 }
 
-func NewDeleteExampleUseCase(exampleDeletePostgres domain.ExampleDeletePostgres) domain.DeleteExampleUseCase {
+func NewDeleteExampleUseCase(exampleDeletePostgres exampleDomain.ExampleDeletePostgres) exampleDomain.DeleteExampleUseCase {
 	return &DeleteExampleUseCase{exampleDeletePostgres: exampleDeletePostgres}
 }
 

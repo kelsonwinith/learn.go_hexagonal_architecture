@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"time"
+	time "time"
 )
 
 type Example struct {

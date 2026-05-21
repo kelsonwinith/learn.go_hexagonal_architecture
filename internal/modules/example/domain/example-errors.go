@@ -1,6 +1,8 @@
 package domain
 
-import "errors"
+import (
+	errors "errors"
+)
 
 var (
 	ErrExampleNotFound = errors.New("example not found.")

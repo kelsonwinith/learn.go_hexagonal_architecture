@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"context"
+	context "context"
 )
 
 // Usecase Ports
@@ -45,5 +45,3 @@ type ExampleGetByIDPostgres interface {
 type ExampleGetAllPostgres interface {
 	Execute(ctx context.Context) ([]*Example, error)
 }
-
-
