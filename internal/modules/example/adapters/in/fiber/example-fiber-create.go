@@ -2,14 +2,14 @@ package fiber
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type CreateExampleHandler struct {
-	useCase domain.CreateExampleUseCase
+	useCase exampleDomain.CreateExampleUseCase
 }
 
-func NewCreateExampleHandler(useCase domain.CreateExampleUseCase) *CreateExampleHandler {
+func NewCreateExampleHandler(useCase exampleDomain.CreateExampleUseCase) *CreateExampleHandler {
 	return &CreateExampleHandler{useCase: useCase}
 }
 

@@ -4,14 +4,14 @@ import (
 	errors "errors"
 
 	fiber "github.com/gofiber/fiber/v2"
-	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type UpdateExampleHandler struct {
-	useCase domain.UpdateExampleUseCase
+	useCase exampleDomain.UpdateExampleUseCase
 }
 
-func NewUpdateExampleHandler(useCase domain.UpdateExampleUseCase) *UpdateExampleHandler {
+func NewUpdateExampleHandler(useCase exampleDomain.UpdateExampleUseCase) *UpdateExampleHandler {
 	return &UpdateExampleHandler{useCase: useCase}
 }
 
@@ -40,7 +40,7 @@ func (h *UpdateExampleHandler) Handle(c *fiber.Ctx) error {
 
 	res, err := h.useCase.Execute(c.Context(), domainReq)
 	if err != nil {
-		if errors.Is(err, domain.ErrExampleNotFound) {
+		if errors.Is(err, exampleDomain.ErrExampleNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Example not found"})
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})

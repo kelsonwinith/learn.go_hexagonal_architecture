@@ -2,14 +2,14 @@ package fiber
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type GetAllExamplesHandler struct {
-	useCase domain.GetAllExamplesUseCase
+	useCase exampleDomain.GetAllExamplesUseCase
 }
 
-func NewGetAllExamplesHandler(useCase domain.GetAllExamplesUseCase) *GetAllExamplesHandler {
+func NewGetAllExamplesHandler(useCase exampleDomain.GetAllExamplesUseCase) *GetAllExamplesHandler {
 	return &GetAllExamplesHandler{useCase: useCase}
 }
 

@@ -1,16 +1,16 @@
 package fiber
 
 import (
-	domain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 type exampleResponse struct {
-	ID          string `json:"id" example:"uuid"`
-	Name        string `json:"name" example:"Example Name"`
-	Description string `json:"description" example:"Example Description"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
-func toExampleResponse(e *domain.Example) exampleResponse {
+func toExampleResponse(e *exampleDomain.Example) exampleResponse {
 	return exampleResponse{
 		ID:          e.ID,
 		Name:        e.Name,
@@ -18,7 +18,7 @@ func toExampleResponse(e *domain.Example) exampleResponse {
 	}
 }
 
-func toExampleResponses(examples []*domain.Example) []exampleResponse {
+func toExampleResponses(examples []*exampleDomain.Example) []exampleResponse {
 	res := make([]exampleResponse, len(examples))
 	for i, e := range examples {
 		res[i] = toExampleResponse(e)
@@ -31,8 +31,8 @@ type createRequest struct {
 	Description string `json:"description"`
 }
 
-func (e createRequest) toDomain() domain.Example {
-	return domain.Example{
+func (e createRequest) toDomain() exampleDomain.Example {
+	return exampleDomain.Example{
 		Name:        e.Name,
 		Description: e.Description,
 	}
@@ -42,8 +42,8 @@ type createMultipleRequest struct {
 	Examples []createRequest `json:"examples"`
 }
 
-func (r createMultipleRequest) toDomain() []domain.Example {
-	examples := make([]domain.Example, len(r.Examples))
+func (r createMultipleRequest) toDomain() []exampleDomain.Example {
+	examples := make([]exampleDomain.Example, len(r.Examples))
 	for i, e := range r.Examples {
 		examples[i] = e.toDomain()
 	}
@@ -55,8 +55,8 @@ type updateRequest struct {
 	Description string `json:"description"`
 }
 
-func (e *updateRequest) toDomain() domain.Example {
-	return domain.Example{
+func (e *updateRequest) toDomain() exampleDomain.Example {
+	return exampleDomain.Example{
 		Name:        e.Name,
 		Description: e.Description,
 	}
