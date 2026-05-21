@@ -6,12 +6,12 @@ import (
 	exampleFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/in/fiber"
 	examplePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/out/postgresql"
 	exampleUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
-	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 func Init(app *fiber.App, db *sqlx.DB) {
 	// Adapters Out - PostgreSQL
-	postgresql := postgresql.NewPostgresql(db)
+	postgresql := sharedPostgresql.NewPostgresql(db)
 	createPostgresql := examplePostgresql.NewExampleCreate(postgresql)
 	getAllPostgresql := examplePostgresql.NewExampleGetAll(postgresql)
 	getByIDPostgresql := examplePostgresql.NewExampleGetByID(postgresql)
