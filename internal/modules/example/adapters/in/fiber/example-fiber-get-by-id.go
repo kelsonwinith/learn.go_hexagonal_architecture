@@ -7,12 +7,12 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type ExampleHandlerGetByID struct {
+type ExampleFiberGetByID struct {
 	useCase exampleDomain.ExampleUsecaseGetByID
 }
 
-func NewExampleHandlerGetByID(useCase exampleDomain.ExampleUsecaseGetByID) *ExampleHandlerGetByID {
-	return &ExampleHandlerGetByID{useCase: useCase}
+func NewExampleFiberGetByID(useCase exampleDomain.ExampleUsecaseGetByID) *ExampleFiberGetByID {
+	return &ExampleFiberGetByID{useCase: useCase}
 }
 
 // Handle GetExampleByID
@@ -25,7 +25,7 @@ func NewExampleHandlerGetByID(useCase exampleDomain.ExampleUsecaseGetByID) *Exam
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /example/{id} [get]
-func (h *ExampleHandlerGetByID) Handle(c *fiber.Ctx) error {
+func (h *ExampleFiberGetByID) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 	res, err := h.useCase.Execute(c.Context(), id)
 	if err != nil {

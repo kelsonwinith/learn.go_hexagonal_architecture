@@ -28,12 +28,12 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	exampleUsecaseCreateMultiple := exampleUseCase.NewExampleUsecaseCreateMultiple(examplePostgresqlCreateMultiple, postgresql)
 
 	// Adapters In - Fiber
-	exampleFiberCreate := exampleFiber.NewExampleHandlerCreate(exampleUsecaseCreate)
-	exampleFiberGetAll := exampleFiber.NewExampleHandlerGetAll(exampleUsecaseGetAll)
-	exampleFiberGetByID := exampleFiber.NewExampleHandlerGetByID(exampleUsecaseGetByID)
-	exampleFiberUpdate := exampleFiber.NewExampleHandlerUpdate(exampleUsecaseUpdate)
-	exampleFiberDelete := exampleFiber.NewExampleHandlerDelete(exampleUsecaseDelete)
-	exampleFiberCreateMultiple := exampleFiber.NewExampleHandlerCreateMultiple(exampleUsecaseCreateMultiple)
+	exampleFiberCreate := exampleFiber.NewExampleFiberCreate(exampleUsecaseCreate)
+	exampleFiberGetAll := exampleFiber.NewExampleFiberGetAll(exampleUsecaseGetAll)
+	exampleFiberGetByID := exampleFiber.NewExampleFiberGetByID(exampleUsecaseGetByID)
+	exampleFiberUpdate := exampleFiber.NewExampleFiberUpdate(exampleUsecaseUpdate)
+	exampleFiberDelete := exampleFiber.NewExampleFiberDelete(exampleUsecaseDelete)
+	exampleFiberCreateMultiple := exampleFiber.NewExampleFiberCreateMultiple(exampleUsecaseCreateMultiple)
 
 	routes := app.Group("/example")
 	routes.Post("/", exampleFiberCreate.Handle)

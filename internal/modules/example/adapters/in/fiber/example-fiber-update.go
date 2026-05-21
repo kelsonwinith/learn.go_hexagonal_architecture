@@ -7,12 +7,12 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type ExampleHandlerUpdate struct {
+type ExampleFiberUpdate struct {
 	useCase exampleDomain.ExampleUsecaseUpdate
 }
 
-func NewExampleHandlerUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *ExampleHandlerUpdate {
-	return &ExampleHandlerUpdate{useCase: useCase}
+func NewExampleFiberUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *ExampleFiberUpdate {
+	return &ExampleFiberUpdate{useCase: useCase}
 }
 
 // Handle UpdateExample
@@ -28,7 +28,7 @@ func NewExampleHandlerUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *Exampl
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /example/{id} [put]
-func (h *ExampleHandlerUpdate) Handle(c *fiber.Ctx) error {
+func (h *ExampleFiberUpdate) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var req updateRequest
 	if err := c.BodyParser(&req); err != nil {

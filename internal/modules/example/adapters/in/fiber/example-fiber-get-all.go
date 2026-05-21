@@ -5,12 +5,12 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type ExampleHandlerGetAll struct {
+type ExampleFiberGetAll struct {
 	useCase exampleDomain.ExampleUsecaseGetAll
 }
 
-func NewExampleHandlerGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *ExampleHandlerGetAll {
-	return &ExampleHandlerGetAll{useCase: useCase}
+func NewExampleFiberGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *ExampleFiberGetAll {
+	return &ExampleFiberGetAll{useCase: useCase}
 }
 
 // Handle GetAllExamples
@@ -21,7 +21,7 @@ func NewExampleHandlerGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *Exampl
 // @Success 200 {array} exampleResponse
 // @Failure 500 {object} map[string]string
 // @Router /example [get]
-func (h *ExampleHandlerGetAll) Handle(c *fiber.Ctx) error {
+func (h *ExampleFiberGetAll) Handle(c *fiber.Ctx) error {
 	res, err := h.useCase.Execute(c.Context())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})

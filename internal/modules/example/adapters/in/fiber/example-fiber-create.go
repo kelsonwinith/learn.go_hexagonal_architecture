@@ -5,12 +5,12 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-type ExampleHandlerCreate struct {
+type ExampleFiberCreate struct {
 	useCase exampleDomain.ExampleUsecaseCreate
 }
 
-func NewExampleHandlerCreate(useCase exampleDomain.ExampleUsecaseCreate) *ExampleHandlerCreate {
-	return &ExampleHandlerCreate{useCase: useCase}
+func NewExampleFiberCreate(useCase exampleDomain.ExampleUsecaseCreate) *ExampleFiberCreate {
+	return &ExampleFiberCreate{useCase: useCase}
 }
 
 // Handle CreateExample
@@ -24,7 +24,7 @@ func NewExampleHandlerCreate(useCase exampleDomain.ExampleUsecaseCreate) *Exampl
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /example [post]
-func (h *ExampleHandlerCreate) Handle(c *fiber.Ctx) error {
+func (h *ExampleFiberCreate) Handle(c *fiber.Ctx) error {
 	var req createRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
