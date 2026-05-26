@@ -27,7 +27,7 @@ func NewExampleFiberUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *ExampleF
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /example/{id} [put]
+// @Router /api/v1/example/{id} [put]
 func (h *ExampleFiberUpdate) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var req updateRequest

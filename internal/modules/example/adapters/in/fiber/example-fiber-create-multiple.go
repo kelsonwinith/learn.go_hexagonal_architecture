@@ -23,7 +23,7 @@ func NewExampleFiberCreateMultiple(useCase exampleDomain.ExampleUsecaseCreateMul
 // @Success 201 {object} []exampleResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /example/batch [post]
+// @Router /api/v1/example/batch [post]
 func (h *ExampleFiberCreateMultiple) Handle(c *fiber.Ctx) error {
 	var req createMultipleRequest
 	if err := c.BodyParser(&req); err != nil {

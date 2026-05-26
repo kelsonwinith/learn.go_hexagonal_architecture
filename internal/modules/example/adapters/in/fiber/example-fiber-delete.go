@@ -24,7 +24,7 @@ func NewExampleFiberDelete(useCase exampleDomain.ExampleUsecaseDelete) *ExampleF
 // @Success 204
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /example/{id} [delete]
+// @Router /api/v1/example/{id} [delete]
 func (h *ExampleFiberDelete) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 

@@ -37,7 +37,7 @@ func Init(app *fiber.App, db *gorm.DB) {
 	exampleFiberDelete := exampleFiber.NewExampleFiberDelete(exampleUsecaseDelete)
 	exampleFiberCreateMultiple := exampleFiber.NewExampleFiberCreateMultiple(exampleUsecaseCreateMultiple)
 
-	routes := app.Group("/example")
+	routes := app.Group("/api/v1/example")
 	routes.Post("/", exampleFiberCreate.Handle)
 	routes.Post("/batch", exampleFiberCreateMultiple.Handle)
 	routes.Get("/", exampleFiberGetAll.Handle)

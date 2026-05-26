@@ -23,7 +23,7 @@ func NewExampleFiberCreate(useCase exampleDomain.ExampleUsecaseCreate) *ExampleF
 // @Success 201 {object} exampleResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /example [post]
+// @Router /api/v1/example [post]
 func (h *ExampleFiberCreate) Handle(c *fiber.Ctx) error {
 	var req createRequest
 	if err := c.BodyParser(&req); err != nil {

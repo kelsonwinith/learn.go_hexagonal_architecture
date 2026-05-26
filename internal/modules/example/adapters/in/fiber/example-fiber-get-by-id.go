@@ -24,7 +24,7 @@ func NewExampleFiberGetByID(useCase exampleDomain.ExampleUsecaseGetByID) *Exampl
 // @Success 200 {object} exampleResponse
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /example/{id} [get]
+// @Router /api/v1/example/{id} [get]
 func (h *ExampleFiberGetByID) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 	res, err := h.useCase.Execute(c.Context(), id)

@@ -20,7 +20,7 @@ func NewExampleFiberGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *ExampleF
 // @Produce json
 // @Success 200 {array} exampleResponse
 // @Failure 500 {object} map[string]string
-// @Router /example [get]
+// @Router /api/v1/example [get]
 func (h *ExampleFiberGetAll) Handle(c *fiber.Ctx) error {
 	res, err := h.useCase.Execute(c.Context())
 	if err != nil {
