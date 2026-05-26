@@ -6,28 +6,28 @@ import (
 
 	uuid "github.com/google/uuid"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 type ExampleUsecaseCreateMultiple struct {
+	postgresqlTransaction  *sharedPostgresql.PostgresqlTransaction
 	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple
-	txManager              sharedDomain.TransactionManagerPostgresql
 }
 
 func NewExampleUsecaseCreateMultiple(
+	postgresqlTransaction *sharedPostgresql.PostgresqlTransaction,
 	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple,
-	txManager sharedDomain.TransactionManagerPostgresql,
 ) exampleDomain.ExampleUsecaseCreateMultiple {
 	return &ExampleUsecaseCreateMultiple{
+		postgresqlTransaction:  postgresqlTransaction,
 		createMultiplePostgres: createMultiplePostgres,
-		txManager:              txManager,
 	}
 }
 
 func (uc *ExampleUsecaseCreateMultiple) Execute(ctx context.Context, examples []exampleDomain.Example) ([]*exampleDomain.Example, error) {
 	var createdExamples []*exampleDomain.Example
 
-	err := uc.txManager.WithinTransaction(ctx, func(ctx context.Context) error {
+	err := uc.postgresqlTransaction.WithinTransaction(ctx, func(ctx context.Context) error {
 		now := time.Now().UTC()
 		createdExamples = make([]*exampleDomain.Example, len(examples))
 		for i := range examples {

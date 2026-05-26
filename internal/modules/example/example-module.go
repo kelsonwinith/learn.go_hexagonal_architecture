@@ -12,6 +12,8 @@ import (
 func Init(app *fiber.App, db *sqlx.DB) {
 	// Adapters Out - PostgreSQL
 	postgresql := sharedPostgresql.NewPostgresql(db)
+	postgresqlTransaction := sharedPostgresql.NewPostgresqlTransaction(postgresql)
+
 	examplePostgresqlCreate := examplePostgresql.NewExamplePostgresqlCreate(postgresql)
 	examplePostgresqlGetAll := examplePostgresql.NewExamplePostgresqlGetAll(postgresql)
 	examplePostgresqlGetByID := examplePostgresql.NewExamplePostgresqlGetByID(postgresql)
@@ -25,7 +27,7 @@ func Init(app *fiber.App, db *sqlx.DB) {
 	exampleUsecaseGetByID := exampleUseCase.NewExampleUsecaseGetByID(examplePostgresqlGetByID)
 	exampleUsecaseUpdate := exampleUseCase.NewExampleUsecaseUpdate(examplePostgresqlUpdate, examplePostgresqlGetByID)
 	exampleUsecaseDelete := exampleUseCase.NewExampleUsecaseDelete(examplePostgresqlDelete)
-	exampleUsecaseCreateMultiple := exampleUseCase.NewExampleUsecaseCreateMultiple(examplePostgresqlCreateMultiple, postgresql)
+	exampleUsecaseCreateMultiple := exampleUseCase.NewExampleUsecaseCreateMultiple(postgresqlTransaction, examplePostgresqlCreateMultiple)
 
 	// Adapters In - Fiber
 	exampleFiberCreate := exampleFiber.NewExampleFiberCreate(exampleUsecaseCreate)
