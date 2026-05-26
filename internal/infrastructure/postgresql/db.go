@@ -5,24 +5,35 @@ import (
 	log "log"
 	time "time"
 
-	sqlx "github.com/jmoiron/sqlx"
 	config "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
+	postgresDriver "gorm.io/driver/postgres"
+	gorm "gorm.io/gorm"
+	schema "gorm.io/gorm/schema"
 )
 
-func NewDBConnection(cfg *config.Config) (*sqlx.DB, error) {
+func NewDBConnection(cfg *config.Config) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg.PostgreSQL.DBHost, cfg.PostgreSQL.DBPort, cfg.PostgreSQL.DBUser, cfg.PostgreSQL.DBPassword, cfg.PostgreSQL.DBName, cfg.PostgreSQL.DBSSLMode)
 
-	db, err := sqlx.Connect("postgres", dsn)
+	db, err := gorm.Open(postgresDriver.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	db.SetMaxOpenConns(25)
-	db.SetMaxIdleConns(25)
-	db.SetConnMaxLifetime(5 * time.Minute)
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get database connection: %w", err)
+	}
 
-	if err := db.Ping(); err != nil {
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(25)
+	sqlDB.SetConnMaxLifetime(5 * time.Minute)
+
+	if err := sqlDB.Ping(); err != nil {
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 

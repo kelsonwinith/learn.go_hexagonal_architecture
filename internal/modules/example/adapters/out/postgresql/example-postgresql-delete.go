@@ -3,33 +3,27 @@ package postgresql
 import (
 	context "context"
 
+	infrastructurePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 type ExamplePostgresqlDelete struct {
-	*postgresql.Postgresql
+	*sharedPostgresql.Postgresql
 }
 
-func NewExamplePostgresqlDelete(p *postgresql.Postgresql) *ExamplePostgresqlDelete {
+func NewExamplePostgresqlDelete(p *sharedPostgresql.Postgresql) *ExamplePostgresqlDelete {
 	return &ExamplePostgresqlDelete{Postgresql: p}
 }
 
 func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string) error {
-	query := `DELETE FROM examples WHERE id = $1`
-
-	result, err := e.GetExecutor(ctx).ExecContext(ctx, query, id)
-	if err != nil {
-		return err
+	result := e.GetExecutor(ctx).Where("id = ?", id).Delete(&infrastructurePostgresql.Example{})
+	if result.Error != nil {
+		return result.Error
 	}
 
-	rows, err := result.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rows == 0 {
-		return exampleDomain.ErrExampleNotFound
+	if result.RowsAffected == 0 {
+		return exampleDomain.ExampleErrNotFound
 	}
 
 	return nil

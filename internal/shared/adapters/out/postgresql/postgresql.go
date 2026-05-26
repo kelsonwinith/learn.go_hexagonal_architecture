@@ -2,35 +2,27 @@ package postgresql
 
 import (
 	context "context"
-	sql "database/sql"
 
-	sqlx "github.com/jmoiron/sqlx"
+	gorm "gorm.io/gorm"
 )
-
-type Ext interface {
-	sqlx.ExtContext
-	GetContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
-	SelectContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
-	NamedExecContext(ctx context.Context, query string, arg interface{}) (sql.Result, error)
-}
 
 type txKeyType struct{}
 
 var txKey = txKeyType{}
 
 type Postgresql struct {
-	DB *sqlx.DB
+	DB *gorm.DB
 }
 
-func NewPostgresql(db *sqlx.DB) *Postgresql {
+func NewPostgresql(db *gorm.DB) *Postgresql {
 	return &Postgresql{
 		DB: db,
 	}
 }
 
-func (p *Postgresql) GetExecutor(ctx context.Context) Ext {
-	if tx, ok := ctx.Value(txKey).(*sqlx.Tx); ok {
-		return tx
+func (p *Postgresql) GetExecutor(ctx context.Context) *gorm.DB {
+	if tx, ok := ctx.Value(txKey).(*gorm.DB); ok {
+		return tx.WithContext(ctx)
 	}
-	return p.DB
+	return p.DB.WithContext(ctx)
 }

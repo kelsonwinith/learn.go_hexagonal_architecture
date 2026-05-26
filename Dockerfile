@@ -17,10 +17,6 @@ WORKDIR /app
 
 COPY --from=builder /app/main .
 COPY --from=builder /app/.env .
-COPY --from=builder /app/migrations ./migrations
-
-# Install postgresql-client for migration check if needed, but not strictly required by app logic
-# However, we need to ensure the migration files are reachable.
 
 EXPOSE 8080
 

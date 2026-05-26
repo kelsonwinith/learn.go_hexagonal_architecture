@@ -24,10 +24,15 @@ func Run() {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	defer db.Close()
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("Failed to get database connection: %v", err)
+	}
+	defer sqlDB.Close()
 
-	// PostgreSQL Migrations
-	postgresql.RunMigrations(config)
+	// PostgreSQL Migrations and Seeders
+	postgresql.RunAutoMigrations(db)
+	postgresql.RunSeeders(db)
 
 	// Initialize Fiber App
 	app := fiber.New()

@@ -4,21 +4,17 @@ import (
 	context "context"
 
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
 
 type ExamplePostgresqlCreateMultiple struct {
-	*postgresql.Postgresql
+	*sharedPostgresql.Postgresql
 }
 
-func NewExamplePostgresqlCreateMultiple(p *postgresql.Postgresql) *ExamplePostgresqlCreateMultiple {
+func NewExamplePostgresqlCreateMultiple(p *sharedPostgresql.Postgresql) *ExamplePostgresqlCreateMultiple {
 	return &ExamplePostgresqlCreateMultiple{Postgresql: p}
 }
 
 func (e *ExamplePostgresqlCreateMultiple) Execute(ctx context.Context, examples []*exampleDomain.Example) error {
-	query := `INSERT INTO examples (id, name, description, created_at, updated_at) 
-			  VALUES (:id, :name, :description, :created_at, :updated_at)`
-
-	_, err := e.GetExecutor(ctx).NamedExecContext(ctx, query, examples)
-	return err
+	return e.GetExecutor(ctx).Create(toEntities(examples)).Error
 }

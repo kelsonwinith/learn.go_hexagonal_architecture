@@ -2,14 +2,14 @@ package example
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	sqlx "github.com/jmoiron/sqlx"
 	exampleFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/in/fiber"
 	examplePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapters/out/postgresql"
 	exampleUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	gorm "gorm.io/gorm"
 )
 
-func Init(app *fiber.App, db *sqlx.DB) {
+func Init(app *fiber.App, db *gorm.DB) {
 	// Adapters Out - PostgreSQL
 	postgresql := sharedPostgresql.NewPostgresql(db)
 	postgresqlTransaction := sharedPostgresql.NewPostgresqlTransaction(postgresql)

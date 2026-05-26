@@ -29,7 +29,7 @@ func (h *ExampleFiberGetByID) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 	res, err := h.useCase.Execute(c.Context(), id)
 	if err != nil {
-		if errors.Is(err, exampleDomain.ErrExampleNotFound) {
+		if errors.Is(err, exampleDomain.ExampleErrNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Example not found"})
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})

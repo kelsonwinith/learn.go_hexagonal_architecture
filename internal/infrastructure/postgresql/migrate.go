@@ -1,28 +1,19 @@
 package postgresql
 
 import (
-	"log"
+	log "log"
 
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
+	gorm "gorm.io/gorm"
 )
 
-func RunMigrations(config *config.Config) {
-	dbURL := "postgres://" + config.PostgreSQL.DBUser + ":" + config.PostgreSQL.DBPassword + "@" + config.PostgreSQL.DBHost + ":" + config.PostgreSQL.DBPort + "/" + config.PostgreSQL.DBName + "?sslmode=" + config.PostgreSQL.DBSSLMode
-
-	m, err := migrate.New(
-		"file://migrations",
-		dbURL,
-	)
-	if err != nil {
-		log.Fatalf("Migration failed to initialize: %v", err)
+func RunAutoMigrations(db *gorm.DB) {
+	if err := db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`).Error; err != nil {
+		log.Fatalf("UUID extension migration failed to run: %v", err)
 	}
 
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatalf("Migration failed to run: %v", err)
+	if err := db.AutoMigrate(&Example{}); err != nil {
+		log.Fatalf("Auto migration failed to run: %v", err)
 	}
 
-	log.Println("Migrations executed successfully")
+	log.Println("Auto migrations executed successfully")
 }

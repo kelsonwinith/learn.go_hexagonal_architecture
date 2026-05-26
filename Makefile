@@ -6,14 +6,6 @@ compose-up:
 compose-down:
 	docker-compose down
 
-# Run Migrations Up
-migration-up:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/hexagonal_go?sslmode=disable" -verbose up
-
-# Run Migrations Down
-migration-down:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/hexagonal_go?sslmode=disable" -verbose down
-
 # Generate Swagger Docs
 swagger:
 	$$(go env GOPATH)/bin/swag init -g cmd/main.go --parseDependency --parseInternal

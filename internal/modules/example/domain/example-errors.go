@@ -5,5 +5,5 @@ import (
 )
 
 var (
-	ErrExampleNotFound = errors.New("example not found.")
+	ExampleErrNotFound = errors.New("example not found.")
 )
