@@ -16,5 +16,5 @@ func NewExamplePostgresqlCreate(p *sharedPostgresql.Postgresql) *ExamplePostgres
 }
 
 func (e *ExamplePostgresqlCreate) Execute(ctx context.Context, example *exampleDomain.Example) error {
-	return e.GetExecutor(ctx).Create(toEntity(example)).Error
+	return e.GetExecutor(ctx).Create(toExampleEntity(example)).Error
 }

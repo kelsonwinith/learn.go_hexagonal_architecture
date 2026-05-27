@@ -3,7 +3,7 @@ package postgresql
 import (
 	context "context"
 
-	infrastructurePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
+	postgresqlEntity "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/entity"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
@@ -17,11 +17,11 @@ func NewExamplePostgresqlGetAll(p *sharedPostgresql.Postgresql) *ExamplePostgres
 }
 
 func (e *ExamplePostgresqlGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
-	var entities []*infrastructurePostgresql.Example
+	var entities []*postgresqlEntity.Example
 
 	if err := e.GetExecutor(ctx).Order("created_at DESC").Find(&entities).Error; err != nil {
 		return nil, err
 	}
 
-	return toDomains(entities), nil
+	return toExampleDomains(entities), nil
 }

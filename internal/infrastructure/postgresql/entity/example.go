@@ -1,4 +1,4 @@
-package postgresql
+package entity
 
 import (
 	time "time"

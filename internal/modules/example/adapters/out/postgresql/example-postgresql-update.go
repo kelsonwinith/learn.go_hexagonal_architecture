@@ -3,7 +3,7 @@ package postgresql
 import (
 	context "context"
 
-	infrastructurePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
+	postgresqlEntity "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/entity"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 )
@@ -18,7 +18,7 @@ func NewExamplePostgresqlUpdate(p *sharedPostgresql.Postgresql) *ExamplePostgres
 
 func (e *ExamplePostgresqlUpdate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	result := e.GetExecutor(ctx).
-		Model(&infrastructurePostgresql.Example{}).
+		Model(&postgresqlEntity.Example{}).
 		Where("id = ?", example.ID).
 		Updates(map[string]interface{}{
 			"name":        example.Name,

@@ -16,5 +16,5 @@ func NewExamplePostgresqlCreateMultiple(p *sharedPostgresql.Postgresql) *Example
 }
 
 func (e *ExamplePostgresqlCreateMultiple) Execute(ctx context.Context, examples []*exampleDomain.Example) error {
-	return e.GetExecutor(ctx).Create(toEntities(examples)).Error
+	return e.GetExecutor(ctx).Create(toExampleEntities(examples)).Error
 }

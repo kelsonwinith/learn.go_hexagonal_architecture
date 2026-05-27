@@ -4,7 +4,7 @@ import (
 	context "context"
 	errors "errors"
 
-	infrastructurePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
+	postgresqlEntity "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/entity"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
 	gorm "gorm.io/gorm"
@@ -19,7 +19,7 @@ func NewExamplePostgresqlGetByID(p *sharedPostgresql.Postgresql) *ExamplePostgre
 }
 
 func (e *ExamplePostgresqlGetByID) Execute(ctx context.Context, id string) (*exampleDomain.Example, error) {
-	var entity infrastructurePostgresql.Example
+	var entity postgresqlEntity.Example
 
 	err := e.GetExecutor(ctx).Where("id = ?", id).First(&entity).Error
 	if err != nil {
@@ -29,5 +29,5 @@ func (e *ExamplePostgresqlGetByID) Execute(ctx context.Context, id string) (*exa
 		return nil, err
 	}
 
-	return toDomain(&entity), nil
+	return toExampleDomain(&entity), nil
 }

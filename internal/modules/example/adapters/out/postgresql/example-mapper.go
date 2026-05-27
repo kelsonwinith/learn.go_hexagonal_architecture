@@ -1,12 +1,12 @@
 package postgresql
 
 import (
-	infrastructurePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
+	postgresqlEntity "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/entity"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-func toEntity(example *exampleDomain.Example) *infrastructurePostgresql.Example {
-	return &infrastructurePostgresql.Example{
+func toExampleEntity(example *exampleDomain.Example) *postgresqlEntity.Example {
+	return &postgresqlEntity.Example{
 		ID:          example.ID,
 		Name:        example.Name,
 		Description: example.Description,
@@ -15,15 +15,15 @@ func toEntity(example *exampleDomain.Example) *infrastructurePostgresql.Example 
 	}
 }
 
-func toEntities(examples []*exampleDomain.Example) []*infrastructurePostgresql.Example {
-	entities := make([]*infrastructurePostgresql.Example, len(examples))
+func toExampleEntities(examples []*exampleDomain.Example) []*postgresqlEntity.Example {
+	entities := make([]*postgresqlEntity.Example, len(examples))
 	for i, example := range examples {
-		entities[i] = toEntity(example)
+		entities[i] = toExampleEntity(example)
 	}
 	return entities
 }
 
-func toDomain(entity *infrastructurePostgresql.Example) *exampleDomain.Example {
+func toExampleDomain(entity *postgresqlEntity.Example) *exampleDomain.Example {
 	return &exampleDomain.Example{
 		ID:          entity.ID,
 		Name:        entity.Name,
@@ -33,10 +33,10 @@ func toDomain(entity *infrastructurePostgresql.Example) *exampleDomain.Example {
 	}
 }
 
-func toDomains(entities []*infrastructurePostgresql.Example) []*exampleDomain.Example {
+func toExampleDomains(entities []*postgresqlEntity.Example) []*exampleDomain.Example {
 	examples := make([]*exampleDomain.Example, len(entities))
 	for i, entity := range entities {
-		examples[i] = toDomain(entity)
+		examples[i] = toExampleDomain(entity)
 	}
 	return examples
 }
