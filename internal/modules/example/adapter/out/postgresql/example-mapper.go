@@ -2,13 +2,13 @@ package postgresql
 
 import (
 	model "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model"
-	baseModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model/base"
+	defaultModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model/default"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
 func toExampleModel(example *exampleDomain.Example) *model.Example {
 	return &model.Example{
-		BaseModel: baseModel.BaseModel{
+		BaseModel: defaultModel.BaseModel{
 			ID:        example.ID,
 			CreatedAt: example.CreatedAt,
 			UpdatedAt: example.UpdatedAt,

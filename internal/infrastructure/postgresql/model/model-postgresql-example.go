@@ -1,13 +1,13 @@
 package model
 
 import (
-	baseModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model/base"
+	defaultModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model/default"
 )
 
 const exampleTableName = "example"
 
 type Example struct {
-	baseModel.BaseModel
+	defaultModel.BaseModel
 
 	Name        string `gorm:"column:name;type:varchar(255);not null"`
 	Description string `gorm:"column:description;type:text"`
