@@ -2,7 +2,7 @@ package sharedDomain
 
 import (
 	fmt "fmt"
-	nethttp "net/http"
+	http "net/http"
 )
 
 type ErrorType string
@@ -19,9 +19,9 @@ type Status struct {
 }
 
 var (
-	BadRequest          = Status{HTTPCode: nethttp.StatusBadRequest, Type: ErrorTypeBadRequest}
-	NotFound            = Status{HTTPCode: nethttp.StatusNotFound, Type: ErrorTypeNotFound}
-	InternalServerError = Status{HTTPCode: nethttp.StatusInternalServerError, Type: ErrorTypeInternalServer}
+	BadRequest          = Status{HTTPCode: http.StatusBadRequest, Type: ErrorTypeBadRequest}
+	NotFound            = Status{HTTPCode: http.StatusNotFound, Type: ErrorTypeNotFound}
+	InternalServerError = Status{HTTPCode: http.StatusInternalServerError, Type: ErrorTypeInternalServer}
 )
 
 type Error struct {
