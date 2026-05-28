@@ -3,7 +3,7 @@ package postgresql
 import (
 	log "log"
 
-	seeder "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/seeder"
+	seed "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/seed"
 	gorm "gorm.io/gorm"
 	clause "gorm.io/gorm/clause"
 )
@@ -11,7 +11,7 @@ import (
 type seedData func() any
 
 var seeds = []seedData{
-	seeder.SeedExample,
+	seed.SeedExample,
 }
 
 func RunSeeders(db *gorm.DB) {

@@ -1,10 +1,9 @@
 package fiber
 
 import (
-	errors "errors"
-
 	fiber "github.com/gofiber/fiber/v2"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
 type ExampleFiberDelete struct {
@@ -30,11 +29,8 @@ func (h *ExampleFiberDelete) Handle(c *fiber.Ctx) error {
 
 	err := h.useCase.Execute(c.Context(), id)
 	if err != nil {
-		if errors.Is(err, exampleDomain.ExampleErrNotFound) {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Example not found"})
-		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return sharedFiber.SuccessResponse(c, fiber.StatusNoContent, nil)
 }

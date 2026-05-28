@@ -3,6 +3,8 @@ package fiber
 import (
 	fiber "github.com/gofiber/fiber/v2"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
+	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 type ExampleFiberCreateMultiple struct {
@@ -27,17 +29,17 @@ func NewExampleFiberCreateMultiple(useCase exampleDomain.ExampleUsecaseCreateMul
 func (h *ExampleFiberCreateMultiple) Handle(c *fiber.Ctx) error {
 	var req createMultipleRequest
 	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
+		return sharedFiber.ErrorResponse(c, sharedDomain.New(sharedDomain.BadRequest, "E005", "invalid request body"))
 	}
 
 	if len(req.Examples) == 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "At least one example is required"})
+		return sharedFiber.ErrorResponse(c, sharedDomain.New(sharedDomain.BadRequest, "E006", "at least one example is required"))
 	}
 
 	res, err := h.useCase.Execute(c.Context(), req.toDomain())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(toExampleResponses(res))
+	return sharedFiber.SuccessResponse(c, fiber.StatusCreated, toExampleResponses(res))
 }

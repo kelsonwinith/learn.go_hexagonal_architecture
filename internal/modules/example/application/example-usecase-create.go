@@ -2,9 +2,7 @@ package application
 
 import (
 	context "context"
-	time "time"
 
-	uuid "github.com/google/uuid"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
@@ -17,16 +15,13 @@ func NewExampleUsecaseCreate(exampleCreatePostgres exampleDomain.ExamplePostgres
 }
 
 func (uc *ExampleUsecaseCreate) Execute(ctx context.Context, input exampleDomain.Example) (*exampleDomain.Example, error) {
-	example := &exampleDomain.Example{
-		ID:          uuid.New().String(),
-		Name:        input.Name,
-		Description: input.Description,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+
+	example, err := exampleDomain.NewExample(input.Name, input.Description)
+	if err != nil {
+		return nil, err
 	}
 
-	err := uc.exampleCreatePostgres.Execute(ctx, example)
-	if err != nil {
+	if err := uc.exampleCreatePostgres.Execute(ctx, example); err != nil {
 		return nil, err
 	}
 

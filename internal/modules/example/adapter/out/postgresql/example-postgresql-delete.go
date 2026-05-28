@@ -3,9 +3,9 @@ package postgresql
 import (
 	context "context"
 
-	postgresqlEntity "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/entity"
+	postgresqlModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
 type ExamplePostgresqlDelete struct {
@@ -17,7 +17,7 @@ func NewExamplePostgresqlDelete(p *sharedPostgresql.Postgresql) *ExamplePostgres
 }
 
 func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string) error {
-	result := e.GetExecutor(ctx).Where("id = ?", id).Delete(&postgresqlEntity.Example{})
+	result := e.GetExecutor(ctx).Where("id = ?", id).Delete(&postgresqlModel.Example{})
 	if result.Error != nil {
 		return result.Error
 	}

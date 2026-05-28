@@ -2,11 +2,9 @@ package application
 
 import (
 	context "context"
-	time "time"
 
-	uuid "github.com/google/uuid"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
 type ExampleUsecaseCreateMultiple struct {
@@ -28,16 +26,13 @@ func (uc *ExampleUsecaseCreateMultiple) Execute(ctx context.Context, examples []
 	var createdExamples []*exampleDomain.Example
 
 	err := uc.postgresqlTransaction.WithinTransaction(ctx, func(ctx context.Context) error {
-		now := time.Now().UTC()
 		createdExamples = make([]*exampleDomain.Example, len(examples))
 		for i := range examples {
-			createdExamples[i] = &exampleDomain.Example{
-				ID:          uuid.New().String(),
-				Name:        examples[i].Name,
-				Description: examples[i].Description,
-				CreatedAt:   now,
-				UpdatedAt:   now,
+			example, err := exampleDomain.NewExample(examples[i].Name, examples[i].Description)
+			if err != nil {
+				return err
 			}
+			createdExamples[i] = example
 		}
 
 		if err := uc.createMultiplePostgres.Execute(ctx, createdExamples); err != nil {

@@ -4,7 +4,7 @@ import (
 	context "context"
 
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapters/out/postgresql"
+	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
 type ExamplePostgresqlCreateMultiple struct {
@@ -16,5 +16,14 @@ func NewExamplePostgresqlCreateMultiple(p *sharedPostgresql.Postgresql) *Example
 }
 
 func (e *ExamplePostgresqlCreateMultiple) Execute(ctx context.Context, examples []*exampleDomain.Example) error {
-	return e.GetExecutor(ctx).Create(toExampleEntities(examples)).Error
+	entities := toExampleModels(examples)
+	if err := e.GetExecutor(ctx).Create(entities).Error; err != nil {
+		return err
+	}
+
+	for i := range entities {
+		*examples[i] = *toExampleDomain(entities[i])
+	}
+
+	return nil
 }

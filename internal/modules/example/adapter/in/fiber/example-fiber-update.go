@@ -1,10 +1,10 @@
 package fiber
 
 import (
-	errors "errors"
-
 	fiber "github.com/gofiber/fiber/v2"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
+	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 type ExampleFiberUpdate struct {
@@ -32,7 +32,7 @@ func (h *ExampleFiberUpdate) Handle(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var req updateRequest
 	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
+		return sharedFiber.ErrorResponse(c, sharedDomain.New(sharedDomain.BadRequest, "E005", "invalid request body"))
 	}
 
 	domainReq := req.toDomain()
@@ -40,11 +40,8 @@ func (h *ExampleFiberUpdate) Handle(c *fiber.Ctx) error {
 
 	res, err := h.useCase.Execute(c.Context(), domainReq)
 	if err != nil {
-		if errors.Is(err, exampleDomain.ExampleErrNotFound) {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Example not found"})
-		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(toExampleResponse(res))
+	return sharedFiber.SuccessResponse(c, fiber.StatusOK, toExampleResponse(res))
 }

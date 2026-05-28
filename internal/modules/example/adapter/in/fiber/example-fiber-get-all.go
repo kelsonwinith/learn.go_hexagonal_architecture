@@ -3,6 +3,7 @@ package fiber
 import (
 	fiber "github.com/gofiber/fiber/v2"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
+	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
 type ExampleFiberGetAll struct {
@@ -24,8 +25,8 @@ func NewExampleFiberGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *ExampleF
 func (h *ExampleFiberGetAll) Handle(c *fiber.Ctx) error {
 	res, err := h.useCase.Execute(c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(toExampleResponses(res))
+	return sharedFiber.SuccessResponse(c, fiber.StatusOK, toExampleResponses(res))
 }
