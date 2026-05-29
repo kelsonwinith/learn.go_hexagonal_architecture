@@ -2,6 +2,7 @@ package fiber
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
+	exampleDto "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/in/fiber/dto"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
@@ -19,7 +20,7 @@ func NewExampleFiberGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *ExampleF
 // @Description Get all examples
 // @Tags example
 // @Produce json
-// @Success 200 {array} exampleResponse
+// @Success 200 {array} dto.ExampleResponse
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/example [get]
 func (h *ExampleFiberGetAll) Handle(c *fiber.Ctx) error {
@@ -28,5 +29,5 @@ func (h *ExampleFiberGetAll) Handle(c *fiber.Ctx) error {
 		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusOK, toExampleResponses(res))
+	return sharedFiber.SuccessResponse(c, fiber.StatusOK, exampleDto.ToExampleResponses(res))
 }

@@ -1,4 +1,4 @@
 package model
 
-type deleteModel struct {
+type DeleteModel struct {
 }

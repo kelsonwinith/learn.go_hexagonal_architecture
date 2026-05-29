@@ -6,14 +6,14 @@ import (
 
 const exampleTableName = "example"
 
-type Example struct {
+type ExampleModel struct {
 	defaultModel.BaseModel
 
 	Name        string `gorm:"column:name;type:varchar(255);not null"`
 	Description string `gorm:"column:description;type:text"`
 }
 
-func (Example) TableName() string {
+func (ExampleModel) TableName() string {
 	return exampleTableName
 }
 

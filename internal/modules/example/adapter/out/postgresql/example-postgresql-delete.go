@@ -17,7 +17,7 @@ func NewExamplePostgresqlDelete(p *sharedPostgresql.Postgresql) *ExamplePostgres
 }
 
 func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string) error {
-	result := e.GetExecutor(ctx).Where("id = ?", id).Delete(&postgresqlModel.Example{})
+	result := e.GetExecutor(ctx).Where("id = ?", id).Delete(&postgresqlModel.ExampleModel{})
 	if result.Error != nil {
 		return result.Error
 	}

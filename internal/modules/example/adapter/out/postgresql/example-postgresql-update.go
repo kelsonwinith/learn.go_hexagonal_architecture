@@ -18,7 +18,7 @@ func NewExamplePostgresqlUpdate(p *sharedPostgresql.Postgresql) *ExamplePostgres
 
 func (e *ExamplePostgresqlUpdate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	result := e.GetExecutor(ctx).
-		Model(&postgresqlModel.Example{}).
+		Model(&postgresqlModel.ExampleModel{}).
 		Where("id = ?", example.ID).
 		Updates(map[string]interface{}{
 			"name":        example.Name,

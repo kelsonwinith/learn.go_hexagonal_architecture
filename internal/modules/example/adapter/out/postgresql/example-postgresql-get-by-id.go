@@ -19,7 +19,7 @@ func NewExamplePostgresqlGetByID(p *sharedPostgresql.Postgresql) *ExamplePostgre
 }
 
 func (e *ExamplePostgresqlGetByID) Execute(ctx context.Context, id string) (*exampleDomain.Example, error) {
-	var entity postgresqlModel.Example
+	var entity postgresqlModel.ExampleModel
 
 	err := e.GetExecutor(ctx).Where("id = ?", id).First(&entity).Error
 	if err != nil {

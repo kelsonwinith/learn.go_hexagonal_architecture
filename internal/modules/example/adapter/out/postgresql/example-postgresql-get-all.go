@@ -17,7 +17,7 @@ func NewExamplePostgresqlGetAll(p *sharedPostgresql.Postgresql) *ExamplePostgres
 }
 
 func (e *ExamplePostgresqlGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
-	var entities []*postgresqlModel.Example
+	var entities []*postgresqlModel.ExampleModel
 
 	if err := e.GetExecutor(ctx).Order("created_at DESC").Find(&entities).Error; err != nil {
 		return nil, err

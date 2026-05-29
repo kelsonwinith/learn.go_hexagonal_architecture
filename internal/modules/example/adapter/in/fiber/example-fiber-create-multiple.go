@@ -2,6 +2,7 @@ package fiber
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
+	exampleDto "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/in/fiber/dto"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
@@ -21,13 +22,13 @@ func NewExampleFiberCreateMultiple(useCase exampleDomain.ExampleUsecaseCreateMul
 // @Tags example
 // @Accept json
 // @Produce json
-// @Param examples body createMultipleRequest true "Create Multiple Examples"
-// @Success 201 {object} []exampleResponse
+// @Param examples body dto.CreateMultipleExampleRequest true "Create Multiple Examples"
+// @Success 201 {object} []dto.ExampleResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/example/batch [post]
 func (h *ExampleFiberCreateMultiple) Handle(c *fiber.Ctx) error {
-	var req createMultipleRequest
+	var req exampleDto.CreateMultipleExampleRequest
 	if err := c.BodyParser(&req); err != nil {
 		return sharedFiber.ErrorResponse(c, sharedDomain.New(sharedDomain.BadRequest, "E005", "invalid request body"))
 	}
@@ -36,10 +37,10 @@ func (h *ExampleFiberCreateMultiple) Handle(c *fiber.Ctx) error {
 		return sharedFiber.ErrorResponse(c, sharedDomain.New(sharedDomain.BadRequest, "E006", "at least one example is required"))
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.toDomain())
+	res, err := h.useCase.Execute(c.Context(), req.ToDomain())
 	if err != nil {
 		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusCreated, toExampleResponses(res))
+	return sharedFiber.SuccessResponse(c, fiber.StatusCreated, exampleDto.ToExampleResponses(res))
 }

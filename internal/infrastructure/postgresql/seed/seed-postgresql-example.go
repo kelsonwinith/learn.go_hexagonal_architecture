@@ -10,7 +10,7 @@ import (
 func SeedExample() any {
 	now := time.Now().UTC()
 
-	return []model.Example{
+	return []model.ExampleModel{
 		{
 			BaseModel: baseModel.BaseModel{
 				ID:        "11111111-1111-1111-1111-111111111111",

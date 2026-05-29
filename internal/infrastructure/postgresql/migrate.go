@@ -12,7 +12,7 @@ func RunAutoMigrations(db *gorm.DB) {
 		log.Fatalf("UUID extension migration failed to run: %v", err)
 	}
 
-	if err := db.AutoMigrate(&postgresqlModel.Example{}); err != nil {
+	if err := db.AutoMigrate(&postgresqlModel.ExampleModel{}); err != nil {
 		log.Fatalf("Auto migration failed to run: %v", err)
 	}
 
