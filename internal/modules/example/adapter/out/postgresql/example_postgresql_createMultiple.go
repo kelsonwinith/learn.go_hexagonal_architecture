@@ -3,6 +3,7 @@ package postgresql
 import (
 	context "context"
 
+	exampleMapper "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/out/postgresql/mapper"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
@@ -16,13 +17,13 @@ func NewExamplePostgresqlCreateMultiple(p *sharedPostgresql.Postgresql) *Example
 }
 
 func (e *ExamplePostgresqlCreateMultiple) Execute(ctx context.Context, examples []*exampleDomain.Example) error {
-	entities := toExampleModels(examples)
+	entities := exampleMapper.ToExampleModels(examples)
 	if err := e.GetExecutor(ctx).Create(entities).Error; err != nil {
 		return err
 	}
 
 	for i := range entities {
-		*examples[i] = *toExampleDomain(entities[i])
+		*examples[i] = *exampleMapper.ToExampleDomain(entities[i])
 	}
 
 	return nil

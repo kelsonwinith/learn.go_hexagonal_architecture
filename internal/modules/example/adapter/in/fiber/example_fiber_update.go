@@ -1,11 +1,10 @@
 package fiber
 
 import (
-	fiber "github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v3"
 	exampleDto "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/in/fiber/dto"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
-	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 type ExampleFiberUpdate struct {
@@ -23,21 +22,20 @@ func NewExampleFiberUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *ExampleF
 // @Accept json
 // @Produce json
 // @Param id path string true "Example ID"
-// @Param example body dto.UpdateExampleRequest true "Update Example"
-// @Success 200 {object} dto.ExampleResponse
+// @Param example body exampleDto.UpdateExampleRequest true "Update Example"
+// @Success 200 {object} exampleDto.ExampleResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/example/{id} [put]
-func (h *ExampleFiberUpdate) Handle(c *fiber.Ctx) error {
-	id := c.Params("id")
-	var req exampleDto.UpdateExampleRequest
-	if err := c.BodyParser(&req); err != nil {
-		return sharedFiber.ErrorResponse(c, sharedDomain.New(sharedDomain.BadRequest, "E005", "invalid request body"))
+func (h *ExampleFiberUpdate) Handle(c fiber.Ctx) error {
+	req, err := sharedFiber.Bind[exampleDto.ExampleRequestParams, sharedFiber.Empty, exampleDto.UpdateExampleRequest](c)
+	if err != nil {
+		return sharedFiber.ErrorResponse(c, err)
 	}
 
-	domainReq := req.ToDomain()
-	domainReq.ID = id
+	domainReq := req.Body.ToDomain()
+	domainReq.ID = req.URI.ID
 
 	res, err := h.useCase.Execute(c.Context(), domainReq)
 	if err != nil {

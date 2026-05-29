@@ -3,13 +3,14 @@ package bootstrap
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/swagger"
+	"github.com/gofiber/contrib/v3/swaggo"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example"
+	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
 func Run() {
@@ -35,16 +36,18 @@ func Run() {
 	postgresql.RunSeeders(db)
 
 	// Initialize Fiber App
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		StructValidator: sharedFiber.NewValidator(),
+	})
 
 	// Middleware
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
-		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
 	}))
-	app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Get("/swagger/*", swaggo.HandlerDefault)
 
 	// Initialize Modules
 	example.Init(app, db)

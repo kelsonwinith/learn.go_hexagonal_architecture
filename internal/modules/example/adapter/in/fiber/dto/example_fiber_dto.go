@@ -10,6 +10,10 @@ type ExampleResponse struct {
 	Description string `json:"description"`
 }
 
+type ExampleRequestParams struct {
+	ID string `uri:"id" validate:"required,uuid4"`
+}
+
 func ToExampleResponse(e *exampleDomain.Example) ExampleResponse {
 	return ExampleResponse{
 		ID:          e.ID,
@@ -26,23 +30,23 @@ func ToExampleResponses(examples []*exampleDomain.Example) []ExampleResponse {
 	return res
 }
 
-type CreateExampleRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+type ExampleCreateRequest struct {
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description" validate:"omitempty,max=255"`
 }
 
-func (e CreateExampleRequest) ToDomain() exampleDomain.Example {
+func (e ExampleCreateRequest) ToDomain() exampleDomain.Example {
 	return exampleDomain.Example{
 		Name:        e.Name,
 		Description: e.Description,
 	}
 }
 
-type CreateMultipleExampleRequest struct {
-	Examples []CreateExampleRequest `json:"examples"`
+type ExampleCreateMultipleRequest struct {
+	Examples []ExampleCreateRequest `json:"examples" validate:"required,min=1,dive"`
 }
 
-func (r CreateMultipleExampleRequest) ToDomain() []exampleDomain.Example {
+func (r ExampleCreateMultipleRequest) ToDomain() []exampleDomain.Example {
 	examples := make([]exampleDomain.Example, len(r.Examples))
 	for i, e := range r.Examples {
 		examples[i] = e.ToDomain()
@@ -51,8 +55,8 @@ func (r CreateMultipleExampleRequest) ToDomain() []exampleDomain.Example {
 }
 
 type UpdateExampleRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description" validate:"omitempty,max=255"`
 }
 
 func (e *UpdateExampleRequest) ToDomain() exampleDomain.Example {

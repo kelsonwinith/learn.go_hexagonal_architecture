@@ -3,7 +3,7 @@ package fiber
 import (
 	errors "errors"
 
-	fiber "github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v3"
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
@@ -11,8 +11,8 @@ var InternalServerError = sharedDomain.New(sharedDomain.InternalServerError, "SY
 
 type Response struct {
 	Success bool        `json:"success"`
-	Data    interface{} `json:"data,omitempty"`
-	Error   interface{} `json:"error,omitempty"`
+	Data    interface{} `json:"data"`
+	Error   interface{} `json:"error"`
 }
 
 type ErrorBody struct {
@@ -21,11 +21,11 @@ type ErrorBody struct {
 	Message string                 `json:"message"`
 }
 
-func SuccessResponse(c *fiber.Ctx, status int, data interface{}) error {
+func SuccessResponse(c fiber.Ctx, status int, data interface{}) error {
 	return SuccessResponseWithMessage(c, status, data)
 }
 
-func SuccessResponseWithMessage(c *fiber.Ctx, status int, data interface{}) error {
+func SuccessResponseWithMessage(c fiber.Ctx, status int, data interface{}) error {
 	if status == fiber.StatusNoContent {
 		return c.SendStatus(status)
 	}
@@ -36,7 +36,7 @@ func SuccessResponseWithMessage(c *fiber.Ctx, status int, data interface{}) erro
 	})
 }
 
-func ErrorResponse(c *fiber.Ctx, err error) error {
+func ErrorResponse(c fiber.Ctx, err error) error {
 	var appErr *sharedDomain.Error
 	if !errors.As(err, &appErr) {
 		appErr = InternalServerError

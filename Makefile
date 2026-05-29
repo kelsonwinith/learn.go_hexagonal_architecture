@@ -8,7 +8,7 @@ compose-down:
 
 # Generate Swagger Docs
 swagger:
-	$$(go env GOPATH)/bin/swag init -g cmd/main.go --parseDependency --parseInternal
+	go run github.com/swaggo/swag/cmd/swag@v1.16.6 init -g cmd/main.go --parseDependency --parseInternal
 
 # Start Database only
 db-up:

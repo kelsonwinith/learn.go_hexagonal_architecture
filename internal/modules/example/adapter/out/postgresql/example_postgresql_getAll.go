@@ -4,6 +4,7 @@ import (
 	context "context"
 
 	postgresqlModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model"
+	exampleMapper "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/out/postgresql/mapper"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
@@ -23,5 +24,5 @@ func (e *ExamplePostgresqlGetAll) Execute(ctx context.Context) ([]*exampleDomain
 		return nil, err
 	}
 
-	return toExampleDomains(entities), nil
+	return exampleMapper.ToExampleDomains(entities), nil
 }

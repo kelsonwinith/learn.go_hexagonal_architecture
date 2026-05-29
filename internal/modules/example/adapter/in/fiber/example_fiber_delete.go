@@ -1,7 +1,8 @@
 package fiber
 
 import (
-	fiber "github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v3"
+	exampleDto "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/in/fiber/dto"
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
@@ -24,10 +25,13 @@ func NewExampleFiberDelete(useCase exampleDomain.ExampleUsecaseDelete) *ExampleF
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/example/{id} [delete]
-func (h *ExampleFiberDelete) Handle(c *fiber.Ctx) error {
-	id := c.Params("id")
+func (h *ExampleFiberDelete) Handle(c fiber.Ctx) error {
+	req, err := sharedFiber.Bind[exampleDto.ExampleRequestParams, sharedFiber.Empty, sharedFiber.Empty](c)
+	if err != nil {
+		return sharedFiber.ErrorResponse(c, err)
+	}
 
-	err := h.useCase.Execute(c.Context(), id)
+	err = h.useCase.Execute(c.Context(), req.URI.ID)
 	if err != nil {
 		return sharedFiber.ErrorResponse(c, err)
 	}

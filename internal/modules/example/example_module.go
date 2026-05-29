@@ -1,7 +1,7 @@
 package example
 
 import (
-	fiber "github.com/gofiber/fiber/v2"
+	fiber "github.com/gofiber/fiber/v3"
 	exampleFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/in/fiber"
 	examplePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/out/postgresql"
 	exampleUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
