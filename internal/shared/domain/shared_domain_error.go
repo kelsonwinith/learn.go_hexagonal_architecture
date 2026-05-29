@@ -13,15 +13,22 @@ const (
 	ErrorTypeInternalServer ErrorType = "INTERNAL_SERVER_ERROR"
 )
 
-type Status struct {
+type ErrorPrefix string
+
+const (
+	SystemErrorPrefixID  ErrorPrefix = "SYSM"
+	ExampleErrorPrefixID ErrorPrefix = "E"
+)
+
+type ErrorStatus struct {
 	HTTPCode int
 	Type     ErrorType
 }
 
 var (
-	BadRequest          = Status{HTTPCode: http.StatusBadRequest, Type: ErrorTypeBadRequest}
-	NotFound            = Status{HTTPCode: http.StatusNotFound, Type: ErrorTypeNotFound}
-	InternalServerError = Status{HTTPCode: http.StatusInternalServerError, Type: ErrorTypeInternalServer}
+	BadRequest          = ErrorStatus{HTTPCode: http.StatusBadRequest, Type: ErrorTypeBadRequest}
+	NotFound            = ErrorStatus{HTTPCode: http.StatusNotFound, Type: ErrorTypeNotFound}
+	InternalServerError = ErrorStatus{HTTPCode: http.StatusInternalServerError, Type: ErrorTypeInternalServer}
 )
 
 type Error struct {
@@ -31,7 +38,7 @@ type Error struct {
 	Message  string
 }
 
-func New(status Status, id, message string) *Error {
+func NewError(status ErrorStatus, id, message string) *Error {
 	return &Error{
 		HTTPCode: status.HTTPCode,
 		Type:     status.Type,
@@ -42,4 +49,8 @@ func New(status Status, id, message string) *Error {
 
 func (e *Error) Error() string {
 	return fmt.Sprintf("%s: %s", e.ID, e.Message)
+}
+
+func BuildErrorID(prefix ErrorPrefix, id string) string {
+	return string(prefix) + id
 }

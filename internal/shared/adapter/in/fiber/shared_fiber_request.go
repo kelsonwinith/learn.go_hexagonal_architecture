@@ -71,5 +71,5 @@ func isEmpty[T any]() bool {
 }
 
 func invalidRequest(source string, err error) error {
-	return sharedDomain.New(sharedDomain.BadRequest, "E005", fmt.Sprintf("invalid request %s: %s", source, err.Error()))
+	return sharedDomain.NewError(sharedDomain.BadRequest, "E005", fmt.Sprintf("invalid request %s: %s", source, err.Error()))
 }
