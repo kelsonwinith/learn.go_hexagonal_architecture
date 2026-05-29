@@ -8,15 +8,15 @@ import (
 	clause "gorm.io/gorm/clause"
 )
 
-func allSeed() []any {
-	return []any{
+func allSeeds() []func() any {
+	return []func() any{
 		postgresqlSeed.SeedExample,
 	}
 }
 
 func RunSeeders(db *gorm.DB) {
-	for _, seed := range allSeed() {
-		if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(seed).Error; err != nil {
+	for _, seed := range allSeeds() {
+		if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(seed()).Error; err != nil {
 			log.Fatalf("Seeders failed to run: %v", err)
 		}
 	}
