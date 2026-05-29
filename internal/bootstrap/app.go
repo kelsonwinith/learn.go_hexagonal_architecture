@@ -32,7 +32,7 @@ func Run() {
 	defer sqlDB.Close()
 
 	// PostgreSQL Migrations and Seeders
-	postgresql.RunAutoMigrations(db)
+	postgresql.RunMigrations(db)
 	postgresql.RunSeeders(db)
 
 	// Initialize Fiber App
