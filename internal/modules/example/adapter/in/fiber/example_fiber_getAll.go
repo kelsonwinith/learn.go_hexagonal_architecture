@@ -26,13 +26,13 @@ func NewExampleFiberGetAll(useCase exampleDomain.ExampleUsecaseGetAll) *ExampleF
 func (h *ExampleFiberGetAll) Handle(c fiber.Ctx) error {
 	_, err := sharedFiber.Bind[sharedFiber.Empty, sharedFiber.Empty, sharedFiber.Empty](c)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
 	res, err := h.useCase.Execute(c.Context())
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusOK, exampleDto.ToExampleResponses(res))
+	return sharedFiber.ResponseSuccess(c, exampleDto.ToExampleResponses(res))
 }

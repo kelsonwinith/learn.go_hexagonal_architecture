@@ -7,12 +7,11 @@ import (
 )
 
 type txKeyType struct{}
-
-var txKey = txKeyType{}
-
 type Postgresql struct {
 	DB *gorm.DB
 }
+
+var txKey = txKeyType{}
 
 func NewPostgresql(db *gorm.DB) *Postgresql {
 	return &Postgresql{

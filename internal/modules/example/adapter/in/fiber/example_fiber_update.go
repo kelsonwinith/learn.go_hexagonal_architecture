@@ -31,7 +31,7 @@ func NewExampleFiberUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *ExampleF
 func (h *ExampleFiberUpdate) Handle(c fiber.Ctx) error {
 	req, err := sharedFiber.Bind[exampleDto.ExampleRequestParams, sharedFiber.Empty, exampleDto.UpdateExampleRequest](c)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
 	domainReq := req.Body.ToDomain()
@@ -39,8 +39,8 @@ func (h *ExampleFiberUpdate) Handle(c fiber.Ctx) error {
 
 	res, err := h.useCase.Execute(c.Context(), domainReq)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusOK, exampleDto.ToExampleResponse(res))
+	return sharedFiber.ResponseSuccess(c, exampleDto.ToExampleResponse(res))
 }

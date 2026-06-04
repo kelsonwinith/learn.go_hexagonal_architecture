@@ -28,13 +28,13 @@ func NewExampleFiberGetByID(useCase exampleDomain.ExampleUsecaseGetByID) *Exampl
 func (h *ExampleFiberGetByID) Handle(c fiber.Ctx) error {
 	req, err := sharedFiber.Bind[exampleDto.ExampleRequestParams, sharedFiber.Empty, sharedFiber.Empty](c)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
 	res, err := h.useCase.Execute(c.Context(), req.URI.ID)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusOK, exampleDto.ToExampleResponse(res))
+	return sharedFiber.ResponseSuccess(c, exampleDto.ToExampleResponse(res))
 }

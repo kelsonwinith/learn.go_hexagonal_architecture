@@ -29,13 +29,13 @@ func NewExampleFiberCreateMultiple(useCase exampleDomain.ExampleUsecaseCreateMul
 func (h *ExampleFiberCreateMultiple) Handle(c fiber.Ctx) error {
 	req, err := sharedFiber.Bind[sharedFiber.Empty, sharedFiber.Empty, exampleDto.ExampleCreateMultipleRequest](c)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
 	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain())
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusCreated, exampleDto.ToExampleResponses(res))
+	return sharedFiber.ResponseCreated(c, exampleDto.ToExampleResponses(res))
 }

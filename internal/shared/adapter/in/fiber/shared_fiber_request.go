@@ -1,7 +1,7 @@
 package fiber
 
 import (
-	fmt "fmt"
+	"errors"
 	reflect "reflect"
 	strings "strings"
 
@@ -13,6 +13,12 @@ import (
 type Validator struct {
 	validate *validator.Validate
 }
+type Request[URI any, Query any, Body any] struct {
+	URI   URI
+	Query Query
+	Body  Body
+}
+type Empty struct{}
 
 func NewValidator() *Validator {
 	validate := validator.New()
@@ -30,16 +36,8 @@ func NewValidator() *Validator {
 	return &Validator{validate: validate}
 }
 
-func (v *Validator) Validate(out interface{}) error {
+func (v *Validator) Validate(out any) error {
 	return v.validate.Struct(out)
-}
-
-type Empty struct{}
-
-type Request[URI any, Query any, Body any] struct {
-	URI   URI
-	Query Query
-	Body  Body
 }
 
 func Bind[URI any, Query any, Body any](c fiber.Ctx) (*Request[URI, Query, Body], error) {
@@ -71,5 +69,44 @@ func isEmpty[T any]() bool {
 }
 
 func invalidRequest(source string, err error) error {
-	return sharedDomain.NewError(sharedDomain.BadRequest, "E005", fmt.Sprintf("invalid request %s: %s", source, err.Error()))
+	detail := validationErrorDetail(err)
+	if len(detail) == 0 {
+		detail = []string{err.Error()}
+	}
+
+	appErr := invalidRequestError(source)
+	return &sharedDomain.Error{
+		HTTPCode: appErr.HTTPCode,
+		Type:     appErr.Type,
+		ID:       appErr.ID,
+		Message:  appErr.Message,
+		Detail:   detail,
+	}
+}
+
+func invalidRequestError(source string) *sharedDomain.Error {
+	switch source {
+	case "uri":
+		return sharedDomain.FiberErrInvalidURI
+	case "query":
+		return sharedDomain.FiberErrInvalidQuery
+	case "body":
+		return sharedDomain.FiberErrInvalidBody
+	default:
+		return sharedDomain.SystemErrInternal
+	}
+}
+
+func validationErrorDetail(err error) []string {
+	var validationErrors validator.ValidationErrors
+	if !errors.As(err, &validationErrors) {
+		return nil
+	}
+
+	detail := make([]string, len(validationErrors))
+	for i, fieldErr := range validationErrors {
+		detail[i] = fieldErr.Error()
+	}
+
+	return detail
 }

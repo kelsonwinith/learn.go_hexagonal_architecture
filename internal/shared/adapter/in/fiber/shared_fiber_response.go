@@ -1,49 +1,58 @@
 package fiber
 
 import (
-	errors "errors"
+	"errors"
 
 	fiber "github.com/gofiber/fiber/v3"
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
-var InternalServerError = sharedDomain.NewError(sharedDomain.InternalServerError, "SYS001", "internal server error")
-
-type ResponseBody struct {
-	Success bool        `json:"success"`
-	Data    interface{} `json:"data"`
-	Error   interface{} `json:"error"`
+type responseBase struct {
+	Success bool                   `json:"success"`
+	Data    any                    `json:"data"`
+	Error   *responseBaseErrorBody `json:"error"`
 }
 
-type ErrorBody struct {
+type responseBaseErrorBody struct {
 	Type    sharedDomain.ErrorType `json:"type"`
 	ID      string                 `json:"id"`
 	Message string                 `json:"message"`
+	Detail  any                    `json:"detail,omitempty"`
 }
 
-func SuccessResponse(c fiber.Ctx, status int, data interface{}) error {
-	if status == fiber.StatusNoContent {
-		return c.SendStatus(status)
-	}
-
-	return c.Status(status).JSON(ResponseBody{
+// 2XX
+func ResponseSuccess(c fiber.Ctx, data any) error {
+	return c.Status(fiber.StatusOK).JSON(responseBase{
 		Success: true,
 		Data:    data,
 	})
 }
 
-func ErrorResponse(c fiber.Ctx, err error) error {
+func ResponseCreated(c fiber.Ctx, data any) error {
+	return c.Status(fiber.StatusCreated).JSON(responseBase{
+		Success: true,
+		Data:    data,
+	})
+}
+
+func ResponseNoContent(c fiber.Ctx) error {
+	return c.SendStatus(fiber.StatusNoContent)
+}
+
+// 4XX-5XX
+func ResponseError(c fiber.Ctx, err error) error {
 	var appErr *sharedDomain.Error
 	if !errors.As(err, &appErr) {
-		appErr = InternalServerError
+		appErr = sharedDomain.SystemErrInternal
 	}
 
-	return c.Status(appErr.HTTPCode).JSON(ResponseBody{
+	return c.Status(appErr.HTTPCode).JSON(responseBase{
 		Success: false,
-		Error: ErrorBody{
+		Error: &responseBaseErrorBody{
 			Type:    appErr.Type,
 			ID:      appErr.ID,
 			Message: appErr.Message,
+			Detail:  appErr.Detail,
 		},
 	})
 }

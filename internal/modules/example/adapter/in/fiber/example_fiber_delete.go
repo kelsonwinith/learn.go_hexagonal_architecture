@@ -28,13 +28,13 @@ func NewExampleFiberDelete(useCase exampleDomain.ExampleUsecaseDelete) *ExampleF
 func (h *ExampleFiberDelete) Handle(c fiber.Ctx) error {
 	req, err := sharedFiber.Bind[exampleDto.ExampleRequestParams, sharedFiber.Empty, sharedFiber.Empty](c)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
 	err = h.useCase.Execute(c.Context(), req.URI.ID)
 	if err != nil {
-		return sharedFiber.ErrorResponse(c, err)
+		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.SuccessResponse(c, fiber.StatusNoContent, nil)
+	return sharedFiber.ResponseNoContent(c)
 }
