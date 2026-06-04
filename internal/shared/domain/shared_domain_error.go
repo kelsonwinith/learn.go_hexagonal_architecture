@@ -5,20 +5,6 @@ import (
 	http "net/http"
 )
 
-type ErrorType string
-type ErrorPrefix string
-type ErrorStatus struct {
-	HTTPCode int
-	Type     ErrorType
-}
-type Error struct {
-	HTTPCode int
-	Type     ErrorType
-	ID       string
-	Message  string
-	Detail   any
-}
-
 const (
 	ErrorTypeBadRequest     ErrorType = "BAD_REQUEST"
 	ErrorTypeNotFound       ErrorType = "NOT_FOUND"
@@ -30,6 +16,23 @@ const (
 	FiberErrPrefixID   ErrorPrefix = "FIB"
 	ExampleErrPrefixID ErrorPrefix = "E"
 )
+
+type ErrorType string
+
+type ErrorPrefix string
+
+type ErrorStatus struct {
+	HTTPCode int
+	Type     ErrorType
+}
+
+type Error struct {
+	HTTPCode int
+	Type     ErrorType
+	ID       string
+	Message  string
+	Detail   any
+}
 
 var (
 	BadRequest    = ErrorStatus{HTTPCode: http.StatusBadRequest, Type: ErrorTypeBadRequest}

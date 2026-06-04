@@ -13,11 +13,13 @@ import (
 type Validator struct {
 	validate *validator.Validate
 }
+
 type Request[URI any, Query any, Body any] struct {
 	URI   URI
 	Query Query
 	Body  Body
 }
+
 type Empty struct{}
 
 func NewValidator() *Validator {

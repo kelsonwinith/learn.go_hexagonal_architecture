@@ -7,6 +7,7 @@ import (
 )
 
 type txKeyType struct{}
+
 type Postgresql struct {
 	DB *gorm.DB
 }
