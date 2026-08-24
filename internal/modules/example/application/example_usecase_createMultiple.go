@@ -28,7 +28,7 @@ func (uc *ExampleUsecaseCreateMultiple) Execute(ctx context.Context, examples []
 	err := uc.postgresqlTransaction.WithinTransaction(ctx, func(ctx context.Context) error {
 		createdExamples = make([]*exampleDomain.Example, len(examples))
 		for i := range examples {
-			example, err := exampleDomain.NewExample(examples[i].Name, examples[i].Description)
+			example, err := exampleDomain.NewExample(examples[i].Name, examples[i].Description, examples[i].CreatedBy)
 			if err != nil {
 				return err
 			}

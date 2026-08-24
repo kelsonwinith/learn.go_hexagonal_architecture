@@ -23,6 +23,7 @@ func (e *ExamplePostgresqlUpdate) Execute(ctx context.Context, example *exampleD
 		Updates(map[string]interface{}{
 			"name":        example.Name,
 			"description": example.Description,
+			"updated_by":  example.UpdatedBy,
 			"updated_at":  example.UpdatedAt,
 		})
 	if result.Error != nil {

@@ -21,7 +21,7 @@ type ExampleUsecaseUpdate interface {
 	Execute(ctx context.Context, input Example) (*Example, error)
 }
 type ExampleUsecaseDelete interface {
-	Execute(ctx context.Context, id string) error
+	Execute(ctx context.Context, id string, userID int64) error
 }
 
 // PostgreSQL Ports

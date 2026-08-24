@@ -21,9 +21,12 @@ func NewExampleFiberCreateMultiple(useCase exampleDomain.ExampleUsecaseCreateMul
 // @Tags example
 // @Accept json
 // @Produce json
+// @Security UserIdAuth
+// @Param example-user-id header int true "Authenticated User ID"
 // @Param examples body exampleDto.ExampleCreateMultipleRequest true "Create Multiple Examples"
 // @Success 201 {object} []exampleDto.ExampleResponse
 // @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/example/batch [post]
 func (h *ExampleFiberCreateMultiple) Handle(c fiber.Ctx) error {
@@ -32,7 +35,8 @@ func (h *ExampleFiberCreateMultiple) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain())
+	userID := sharedFiber.GetAuthUserID(c)
+	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(userID))
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

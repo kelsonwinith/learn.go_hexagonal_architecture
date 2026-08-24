@@ -18,6 +18,11 @@ import (
 
 // @host localhost:8080
 // @BasePath /
+
+// @securityDefinitions.apikey UserIdAuth
+// @in header
+// @name example-user-id
+// @description Pass the user ID as integer (e.g. 1).
 func main() {
 	bootstrap.Run()
 }

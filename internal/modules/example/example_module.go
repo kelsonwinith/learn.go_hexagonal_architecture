@@ -5,6 +5,7 @@ import (
 	exampleFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/in/fiber"
 	examplePostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/adapter/out/postgresql"
 	exampleUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/application"
+	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 	gorm "gorm.io/gorm"
 )
@@ -26,10 +27,12 @@ func Init(app *fiber.App, db *gorm.DB) {
 	exampleUsecaseGetAll := exampleUseCase.NewExampleUsecaseGetAll(examplePostgresqlGetAll)
 	exampleUsecaseGetByID := exampleUseCase.NewExampleUsecaseGetByID(examplePostgresqlGetByID)
 	exampleUsecaseUpdate := exampleUseCase.NewExampleUsecaseUpdate(examplePostgresqlUpdate, examplePostgresqlGetByID)
-	exampleUsecaseDelete := exampleUseCase.NewExampleUsecaseDelete(examplePostgresqlDelete)
+	exampleUsecaseDelete := exampleUseCase.NewExampleUsecaseDelete(examplePostgresqlDelete, examplePostgresqlGetByID)
 	exampleUsecaseCreateMultiple := exampleUseCase.NewExampleUsecaseCreateMultiple(postgresqlTransaction, examplePostgresqlCreateMultiple)
 
 	// Adapters In - Fiber
+	authMiddleware := sharedFiber.NewAuth()
+
 	exampleFiberCreate := exampleFiber.NewExampleFiberCreate(exampleUsecaseCreate)
 	exampleFiberGetAll := exampleFiber.NewExampleFiberGetAll(exampleUsecaseGetAll)
 	exampleFiberGetByID := exampleFiber.NewExampleFiberGetByID(exampleUsecaseGetByID)
@@ -38,10 +41,10 @@ func Init(app *fiber.App, db *gorm.DB) {
 	exampleFiberCreateMultiple := exampleFiber.NewExampleFiberCreateMultiple(exampleUsecaseCreateMultiple)
 
 	routes := app.Group("/api/v1/example")
-	routes.Post("/", exampleFiberCreate.Handle)
-	routes.Post("/batch", exampleFiberCreateMultiple.Handle)
+	routes.Post("/", authMiddleware, exampleFiberCreate.Handle)
+	routes.Post("/batch", authMiddleware, exampleFiberCreateMultiple.Handle)
 	routes.Get("/", exampleFiberGetAll.Handle)
 	routes.Get("/:id", exampleFiberGetByID.Handle)
-	routes.Put("/:id", exampleFiberUpdate.Handle)
-	routes.Delete("/:id", exampleFiberDelete.Handle)
+	routes.Put("/:id", authMiddleware, exampleFiberUpdate.Handle)
+	routes.Delete("/:id", authMiddleware, exampleFiberDelete.Handle)
 }

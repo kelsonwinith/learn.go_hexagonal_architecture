@@ -12,11 +12,13 @@ type Example struct {
 	ID          string
 	Name        string
 	Description string
+	CreatedBy   int64
+	UpdatedBy   int64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
 
-func NewExample(name, description string) (*Example, error) {
+func NewExample(name, description string, createdBy int64) (*Example, error) {
 	name, description, err := validateExample(name, description)
 	if err != nil {
 		return nil, err
@@ -27,12 +29,14 @@ func NewExample(name, description string) (*Example, error) {
 	return &Example{
 		Name:        name,
 		Description: description,
+		CreatedBy:   createdBy,
+		UpdatedBy:   createdBy,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}, nil
 }
 
-func (e *Example) UpdateExample(name, description string) error {
+func (e *Example) UpdateExample(name, description string, updatedBy int64) error {
 	name, description, err := validateExample(name, description)
 	if err != nil {
 		return err
@@ -40,6 +44,7 @@ func (e *Example) UpdateExample(name, description string) error {
 
 	e.Name = name
 	e.Description = description
+	e.UpdatedBy = updatedBy
 	e.UpdatedAt = time.Now().UTC()
 
 	return nil

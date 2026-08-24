@@ -24,7 +24,11 @@ func (uc *ExampleUsecaseUpdate) Execute(ctx context.Context, input exampleDomain
 		return nil, err
 	}
 
-	if err := existing.UpdateExample(input.Name, input.Description); err != nil {
+	if existing.CreatedBy != input.UpdatedBy {
+		return nil, exampleDomain.ExampleErrForbidden
+	}
+
+	if err := existing.UpdateExample(input.Name, input.Description, input.UpdatedBy); err != nil {
 		return nil, err
 	}
 

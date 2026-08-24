@@ -12,6 +12,8 @@ func ToExampleModel(example *exampleDomain.Example) *postgresqlModel.ExampleMode
 			ID:        example.ID,
 			CreatedAt: example.CreatedAt,
 			UpdatedAt: example.UpdatedAt,
+			CreatedBy: example.CreatedBy,
+			UpdatedBy: example.UpdatedBy,
 		},
 		Name:        example.Name,
 		Description: example.Description,
@@ -32,6 +34,8 @@ func ToExampleDomain(entity *postgresqlModel.ExampleModel) *exampleDomain.Exampl
 		ID:          entity.ID,
 		Name:        entity.Name,
 		Description: entity.Description,
+		CreatedBy:   entity.CreatedBy,
+		UpdatedBy:   entity.UpdatedBy,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
 	}
