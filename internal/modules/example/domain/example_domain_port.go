@@ -25,6 +25,9 @@ type ExampleUsecaseDelete interface {
 }
 
 // PostgreSQL Ports
+type ExamplePostgresqlTransaction interface {
+	WithinTransaction(ctx context.Context, fn func(ctx context.Context) error) error
+}
 type ExamplePostgresqlCreate interface {
 	Execute(ctx context.Context, example *Example) error
 }
@@ -37,7 +40,7 @@ type ExamplePostgresqlUpdate interface {
 	Execute(ctx context.Context, example *Example) error
 }
 type ExamplePostgresqlDelete interface {
-	Execute(ctx context.Context, id string) error
+	Execute(ctx context.Context, id string, deletedBy int64) error
 }
 type ExamplePostgresqlGetByID interface {
 	Execute(ctx context.Context, id string) (*Example, error)

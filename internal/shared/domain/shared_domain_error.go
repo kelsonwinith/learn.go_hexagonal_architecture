@@ -33,7 +33,7 @@ const (
 const (
 	SystemErrPrefixID  ErrorPrefix = "SYS"
 	FiberErrPrefixID   ErrorPrefix = "FIB"
-	ExampleErrPrefixID ErrorPrefix = "ERR"
+	ExampleErrPrefixID ErrorPrefix = "EX"
 )
 
 var (

@@ -16,8 +16,11 @@ func NewExamplePostgresqlDelete(p *sharedPostgresql.Postgresql) *ExamplePostgres
 	return &ExamplePostgresqlDelete{Postgresql: p}
 }
 
-func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string) error {
-	result := e.GetExecutor(ctx).Where("id = ?", id).Delete(&postgresqlModel.ExampleModel{})
+func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string, deletedBy int64) error {
+	result := e.GetExecutor(ctx).
+		Model(&postgresqlModel.ExampleModel{}).
+		Where("id = ?", id).
+		Update("deleted_by", deletedBy)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -26,5 +29,5 @@ func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string) error 
 		return exampleDomain.ExampleErrNotFound
 	}
 
-	return nil
+	return e.GetExecutor(ctx).Where("id = ?", id).Delete(&postgresqlModel.ExampleModel{}).Error
 }

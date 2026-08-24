@@ -54,39 +54,27 @@ func ToExampleResponses(examples []*exampleDomain.Example) []ExampleResponse {
 	return res
 }
 
-func (e ExampleCreateRequest) ToDomain(createdBy ...int64) exampleDomain.Example {
-	var uid int64
-	if len(createdBy) > 0 {
-		uid = createdBy[0]
-	}
+func (e ExampleCreateRequest) ToDomain(createdBy int64) exampleDomain.Example {
 	return exampleDomain.Example{
 		Name:        e.Name,
 		Description: e.Description,
-		CreatedBy:   uid,
-		UpdatedBy:   uid,
+		CreatedBy:   createdBy,
+		UpdatedBy:   createdBy,
 	}
 }
 
-func (r ExampleCreateMultipleRequest) ToDomain(createdBy ...int64) []exampleDomain.Example {
-	var uid int64
-	if len(createdBy) > 0 {
-		uid = createdBy[0]
-	}
+func (r ExampleCreateMultipleRequest) ToDomain(createdBy int64) []exampleDomain.Example {
 	examples := make([]exampleDomain.Example, len(r.Examples))
 	for i, e := range r.Examples {
-		examples[i] = e.ToDomain(uid)
+		examples[i] = e.ToDomain(createdBy)
 	}
 	return examples
 }
 
-func (e *UpdateExampleRequest) ToDomain(updatedBy ...int64) exampleDomain.Example {
-	var uid int64
-	if len(updatedBy) > 0 {
-		uid = updatedBy[0]
-	}
+func (e UpdateExampleRequest) ToDomain(updatedBy int64) exampleDomain.Example {
 	return exampleDomain.Example{
 		Name:        e.Name,
 		Description: e.Description,
-		UpdatedBy:   uid,
+		UpdatedBy:   updatedBy,
 	}
 }

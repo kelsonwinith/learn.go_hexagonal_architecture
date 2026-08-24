@@ -48,7 +48,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 
 - Use `sharedDomain.Error` for application-level errors.
 - Errors consist of an `HTTPCode`, a `Type` (e.g., `BAD_REQUEST`, `NOT_FOUND`), a unique `ID` (e.g., `E001`), and a `Message`.
-- Use prefix-based IDs defined in `internal/shared/domain/shared_domain_error.go` (e.g., `SYSM` for system, `FIB` for fiber, `E` for example module).
+- Use prefix-based IDs defined in `internal/shared/domain/shared_domain_error.go` (e.g., `SYS` for system, `FIB` for fiber, `EX` for example module).
 - Prefer defining reusable errors in the domain layer of the relevant module.
 
 ## PostgreSQL and GORM

@@ -4,16 +4,15 @@ import (
 	context "context"
 
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
-	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
 type ExampleUsecaseCreateMultiple struct {
-	postgresqlTransaction  *sharedPostgresql.PostgresqlTransaction
+	postgresqlTransaction  exampleDomain.ExamplePostgresqlTransaction
 	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple
 }
 
 func NewExampleUsecaseCreateMultiple(
-	postgresqlTransaction *sharedPostgresql.PostgresqlTransaction,
+	postgresqlTransaction exampleDomain.ExamplePostgresqlTransaction,
 	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple,
 ) exampleDomain.ExampleUsecaseCreateMultiple {
 	return &ExampleUsecaseCreateMultiple{

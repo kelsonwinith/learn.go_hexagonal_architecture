@@ -31,5 +31,5 @@ func (uc *ExampleUsecaseDelete) Execute(ctx context.Context, id string, userID i
 		return exampleDomain.ExampleErrForbidden
 	}
 
-	return uc.exampleDeletePostgres.Execute(ctx, id)
+	return uc.exampleDeletePostgres.Execute(ctx, id, userID)
 }
