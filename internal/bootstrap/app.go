@@ -1,7 +1,13 @@
 package bootstrap
 
 import (
+	"errors"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
@@ -52,9 +58,23 @@ func Run() {
 	// Initialize Modules
 	example.Init(app, db)
 
-	// Start Server
-	log.Printf("Server listening on port %s", config.App.Port)
-	if err := app.Listen(":" + config.App.Port); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+	// Start Server with Graceful Shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		log.Printf("Server listening on port %s", config.App.Port)
+		if err := app.Listen(":" + config.App.Port); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+
+	<-quit
+	log.Println("Shutting down server gracefully...")
+
+	if err := app.ShutdownWithTimeout(10 * time.Second); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
 	}
+
+	log.Println("Server exited cleanly")
 }

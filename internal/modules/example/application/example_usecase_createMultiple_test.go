@@ -33,7 +33,7 @@ func (f *fakePostgresCreateMultiple) Execute(ctx context.Context, examples []*ex
 	return nil
 }
 
-func TestExampleUsecaseCreateMultiple_Execute(t *testing.T) {
+func TestExampleUsecaseCreateMultipleExecute(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success creating multiple examples", func(t *testing.T) {

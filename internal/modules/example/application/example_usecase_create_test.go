@@ -20,7 +20,7 @@ func (f *fakePostgresCreate) Execute(ctx context.Context, example *exampleDomain
 	return nil
 }
 
-func TestExampleUsecaseCreate_Execute(t *testing.T) {
+func TestExampleUsecaseCreateExecute(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success", func(t *testing.T) {

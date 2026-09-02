@@ -29,7 +29,7 @@ func (f *fakePostgresUpdate) Execute(ctx context.Context, example *exampleDomain
 	return f.err
 }
 
-func TestExampleUsecaseUpdate_Execute(t *testing.T) {
+func TestExampleUsecaseUpdateExecute(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success when updated by creator", func(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
-func TestExampleUsecaseGetByID_Execute(t *testing.T) {
+func TestExampleUsecaseGetByIDExecute(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success", func(t *testing.T) {

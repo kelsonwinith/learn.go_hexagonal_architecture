@@ -20,7 +20,7 @@ func (f *fakePostgresGetAll) Execute(ctx context.Context) ([]*exampleDomain.Exam
 	return f.results, nil
 }
 
-func TestExampleUsecaseGetAll_Execute(t *testing.T) {
+func TestExampleUsecaseGetAllExecute(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success with items", func(t *testing.T) {

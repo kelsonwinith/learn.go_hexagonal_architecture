@@ -20,7 +20,7 @@ func (f *fakePostgresDelete) Execute(ctx context.Context, id string, deletedBy i
 	return f.err
 }
 
-func TestExampleUsecaseDelete_Execute(t *testing.T) {
+func TestExampleUsecaseDeleteExecute(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success when deleted by creator", func(t *testing.T) {

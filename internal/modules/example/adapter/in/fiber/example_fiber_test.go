@@ -115,7 +115,7 @@ func setupTestApp() *fiber.App {
 	return app
 }
 
-func TestExampleRoutes_AuthProtection(t *testing.T) {
+func TestExampleRoutesAuthProtection(t *testing.T) {
 	app := setupTestApp()
 
 	tests := []struct {
@@ -267,7 +267,7 @@ func TestExampleRoutes_AuthProtection(t *testing.T) {
 	}
 }
 
-func TestExampleCreate_UserIDRecorded(t *testing.T) {
+func TestExampleCreateUserIDRecorded(t *testing.T) {
 	app := setupTestApp()
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/example", bytes.NewReader([]byte(`{"name":"Jane Doe"}`)))
