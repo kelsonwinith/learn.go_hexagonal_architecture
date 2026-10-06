@@ -6,15 +6,36 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 
 ## Project Structure
 
-- `bin/`: compiled application binaries.
-- `cmd/main.go`: application entry point.
-- `internal/bootstrap`: application startup, infrastructure setup (Config, DB), middleware, and module initialization.
-- `internal/modules/example/domain`: domain model, domain errors, and input/output port interfaces.
-- `internal/modules/example/application`: use case implementations. Use cases should depend on domain interfaces, not concrete adapters.
-- `internal/modules/example/adapter/in/fiber`: HTTP handlers and request/response DTOs for Fiber.
-- `internal/modules/example/adapter/out/postgresql`: PostgreSQL adapter implementations using GORM and domain/model mappers.
-- `internal/infrastructure`: config loading, database connection setup, migrations, seed data, and persistence models.
-- `internal/shared`: reusable domain errors, shared adapter helpers (Fiber, PostgreSQL).
+```text
+.
+├── bin/                                  # compiled application binaries
+├── cmd/
+│   └── main.go                           # application entry point
+├── docs/                                 # generated Swagger docs
+└── internal/
+    ├── bootstrap/                        # startup, infra setup (Config, DB), middleware, module init
+    │   └── app.go
+    ├── infrastructure/                   # config loading, DB connection, migrations, seed, persistence models
+    │   ├── config/
+    │   └── postgresql/
+    ├── modules/
+    │   └── example/
+    │       ├── domain/                   # business model, domain errors, input/output ports
+    │       ├── application/              # use cases; depend on domain ports, not concrete adapters
+    │       ├── adapter/
+    │       │   ├── in/
+    │       │   │   └── fiber/            # HTTP handlers and request/response DTOs
+    │       │   └── out/
+    │       │       └── postgresql/       # GORM adapters and domain/model mappers
+    │       └── example_module.go         # wires the module's dependencies
+    └── shared/                           # reusable domain errors and shared adapter helpers
+        ├── domain/
+        └── adapter/
+            ├── in/
+            │   └── fiber/
+            └── out/
+                └── postgresql/
+```
 
 ## Architecture Rules
 
@@ -134,6 +155,12 @@ func helper() string {
 - Convert between domain objects and GORM models in `adapter/out/postgresql/mapper`.
 - For multi-step writes that must be atomic, follow the existing transaction pattern used by `ExampleUsecaseCreateMultiple`.
 
+## Configuration
+
+- Environment variables are defined in `internal/infrastructure/config/config_schema.go` via struct tags (`envconfig`, `default`, `required`).
+- Whenever you add, rename, or remove a config field in `config_schema.go`, update `.env.example` in the same change so it lists the matching variable name.
+- `.env.example` declares variable names only (empty values), never real values. `.env` is local and git-ignored; never commit credentials.
+
 ## Commands
 
 - Only run commands through `make` targets defined in `Makefile`. Do not run raw `go`, `docker-compose`, Swagger, or other project commands directly unless the user explicitly asks for one.
@@ -185,4 +212,4 @@ func helper() string {
 - Keep changed Go files formatted. If formatting requires a command, use a `Makefile` target for it; otherwise report that formatting could not be run under the command rule.
 - Keep changes scoped to the relevant module/layer.
 - Do not introduce new frameworks or infrastructure abstractions unless the existing structure cannot support the requested behavior.
-- When adding environment-driven config, update `internal/infrastructure/config` and any required local setup documentation together.
+- When adding environment-driven config, update `config_schema.go` and `.env.example` together (see Configuration).

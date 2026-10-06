@@ -3,3 +3,6 @@ bin
 
 # Swagger
 docs
+
+# Environment
+.env
