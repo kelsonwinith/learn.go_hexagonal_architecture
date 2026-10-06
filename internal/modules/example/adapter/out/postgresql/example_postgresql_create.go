@@ -8,13 +8,25 @@ import (
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExamplePostgresqlCreate struct {
 	*sharedPostgresql.Postgresql
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExamplePostgresqlCreate(p *sharedPostgresql.Postgresql) *ExamplePostgresqlCreate {
 	return &ExamplePostgresqlCreate{Postgresql: p}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (e *ExamplePostgresqlCreate) Execute(ctx context.Context, example *exampleDomain.Example) error {
 	entity := exampleMapper.ToExampleModel(example)

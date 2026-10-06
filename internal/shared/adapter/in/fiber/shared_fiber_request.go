@@ -10,6 +10,10 @@ import (
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type Validator struct {
 	validate *validator.Validate
 }
@@ -21,6 +25,10 @@ type Request[URI any, Query any, Body any] struct {
 }
 
 type Empty struct{}
+
+// ============================================================================
+// Constructors
+// ============================================================================
 
 func NewValidator() *Validator {
 	validate := validator.New()
@@ -38,9 +46,17 @@ func NewValidator() *Validator {
 	return &Validator{validate: validate}
 }
 
+// ============================================================================
+// Methods
+// ============================================================================
+
 func (v *Validator) Validate(out any) error {
 	return v.validate.Struct(out)
 }
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 func Bind[URI any, Query any, Body any](c fiber.Ctx) (*Request[URI, Query, Body], error) {
 	var req Request[URI, Query, Body]

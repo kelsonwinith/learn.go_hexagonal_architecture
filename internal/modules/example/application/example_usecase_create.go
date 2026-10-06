@@ -6,13 +6,25 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleUsecaseCreate struct {
 	exampleCreatePostgres exampleDomain.ExamplePostgresqlCreate
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExampleUsecaseCreate(exampleCreatePostgres exampleDomain.ExamplePostgresqlCreate) exampleDomain.ExampleUsecaseCreate {
 	return &ExampleUsecaseCreate{exampleCreatePostgres: exampleCreatePostgres}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (uc *ExampleUsecaseCreate) Execute(ctx context.Context, input exampleDomain.Example) (*exampleDomain.Example, error) {
 

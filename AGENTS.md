@@ -35,6 +35,81 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 - Use `Execute` for use case and output adapter methods, as defined by the domain port interfaces.
 - Keep import aliases consistent with the project style, such as `exampleDomain`, `sharedFiber`, and `examplePostgresql`.
 
+## File Sectioning
+
+Every Go file is divided into labeled banner sections so declarations are easy to locate. Each banner uses this exact three-line format, where both rule lines are the fixed string `// ============================================================================` and the title is replaced with the section name:
+
+```go
+// ============================================================================
+// <Title>
+// ============================================================================
+```
+
+Place sections in the order below, omitting any section that would be empty:
+
+1. `Constants` - `const` blocks.
+2. `Variables` - package-level `var` blocks.
+3. `Types` - structs, interfaces, type aliases, and enums.
+4. `Constructors` - `New<Type>` functions.
+5. `Methods` - functions with a receiver.
+6. `Functions` - package-level helpers.
+
+Rules:
+
+- Separate a banner from the declarations that follow it with one blank line, and precede it with one blank line when it is not the first item after the imports.
+- A file that contains only one category still gets that category's banner (a port-only file starts with a `Types` banner).
+- When a category has meaningful subgroups, give each subgroup its own named banner in the same format, such as `Usecase Ports` and `PostgreSQL Ports` in `example_domain_port.go`.
+- Keep the Swagger doc comment directly above its handler: place the `Methods` banner, then a blank line, then the `// Handle ...` annotation block, so the annotations stay attached to `func`.
+- Do not section declarations inside a function body. Existing inline step comments (for example `// Adapters Out - PostgreSQL` in `example_module.go`) stay as they are.
+
+Example:
+
+```go
+package domain
+
+import (
+	context "context"
+)
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const ExampleMaxLength = 255
+
+// ============================================================================
+// Types
+// ============================================================================
+
+type Example struct {
+	ID string
+}
+
+// ============================================================================
+// Constructors
+// ============================================================================
+
+func NewExample(id string) *Example {
+	return &Example{ID: id}
+}
+
+// ============================================================================
+// Methods
+// ============================================================================
+
+func (e *Example) Validate() error {
+	return nil
+}
+
+// ============================================================================
+// Functions
+// ============================================================================
+
+func helper() string {
+	return ""
+}
+```
+
 ## HTTP and Validation
 
 - Fiber handlers should:
@@ -101,7 +176,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 ## Testing Guidance
 
 - Add focused tests near the package being changed.
-- For HTTP binding/response behavior, follow the style in `internal/shared/adapter/in/fiber/*_test.go` with `httptest` and `app.Test`.
+- For HTTP binding/response behavior, use `httptest` with `app.Test`.
 - Prefer testing use cases with small fake port implementations instead of a real database unless persistence behavior is the subject of the test.
 - Run `make test` before handing off code changes.
 

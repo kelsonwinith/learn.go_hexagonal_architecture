@@ -10,6 +10,10 @@ import (
 	gorm "gorm.io/gorm"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func Init(app *fiber.App, db *gorm.DB) {
 	// Adapters Out - PostgreSQL
 	postgresql := sharedPostgresql.NewPostgresql(db)

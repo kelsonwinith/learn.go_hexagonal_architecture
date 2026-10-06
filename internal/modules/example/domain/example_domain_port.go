@@ -4,7 +4,10 @@ import (
 	context "context"
 )
 
+// ============================================================================
 // Usecase Ports
+// ============================================================================
+
 type ExampleUsecaseCreate interface {
 	Execute(ctx context.Context, input Example) (*Example, error)
 }
@@ -24,7 +27,10 @@ type ExampleUsecaseDelete interface {
 	Execute(ctx context.Context, id string, userID int64) error
 }
 
+// ============================================================================
 // PostgreSQL Ports
+// ============================================================================
+
 type ExamplePostgresqlTransaction interface {
 	WithinTransaction(ctx context.Context, fn func(ctx context.Context) error) error
 }

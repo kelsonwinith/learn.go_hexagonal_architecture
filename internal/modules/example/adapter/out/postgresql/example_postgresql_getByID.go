@@ -11,13 +11,25 @@ import (
 	gorm "gorm.io/gorm"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExamplePostgresqlGetByID struct {
 	*sharedPostgresql.Postgresql
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExamplePostgresqlGetByID(p *sharedPostgresql.Postgresql) *ExamplePostgresqlGetByID {
 	return &ExamplePostgresqlGetByID{Postgresql: p}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (e *ExamplePostgresqlGetByID) Execute(ctx context.Context, id string) (*exampleDomain.Example, error) {
 	var entity postgresqlModel.ExampleModel

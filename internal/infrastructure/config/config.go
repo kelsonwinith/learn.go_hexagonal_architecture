@@ -7,6 +7,10 @@ import (
 	envconfig "github.com/kelseyhightower/envconfig"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func LoadConfig() (*Config, error) {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")

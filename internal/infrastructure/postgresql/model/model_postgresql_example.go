@@ -4,7 +4,15 @@ import (
 	defaultModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model/default"
 )
 
+// ============================================================================
+// Constants
+// ============================================================================
+
 const exampleTableName = "example"
+
+// ============================================================================
+// Types
+// ============================================================================
 
 type ExampleModel struct {
 	defaultModel.BaseModel
@@ -14,9 +22,17 @@ type ExampleModel struct {
 	Description string `gorm:"column:description;type:text"`
 }
 
+// ============================================================================
+// Methods
+// ============================================================================
+
 func (ExampleModel) TableName() string {
 	return exampleTableName
 }
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 func ExampleTable() string {
 	return exampleTableName

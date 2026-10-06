@@ -6,10 +6,18 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleUsecaseUpdate struct {
 	exampleUpdatePostgres  exampleDomain.ExamplePostgresqlUpdate
 	exampleGetByIDPostgres exampleDomain.ExamplePostgresqlGetByID
 }
+
+// ============================================================================
+// Constructors
+// ============================================================================
 
 func NewExampleUsecaseUpdate(update exampleDomain.ExamplePostgresqlUpdate, getByID exampleDomain.ExamplePostgresqlGetByID) exampleDomain.ExampleUsecaseUpdate {
 	return &ExampleUsecaseUpdate{
@@ -17,6 +25,10 @@ func NewExampleUsecaseUpdate(update exampleDomain.ExamplePostgresqlUpdate, getBy
 		exampleGetByIDPostgres: getByID,
 	}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (uc *ExampleUsecaseUpdate) Execute(ctx context.Context, input exampleDomain.Example) (*exampleDomain.Example, error) {
 	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, input.ID)

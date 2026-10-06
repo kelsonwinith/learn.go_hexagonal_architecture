@@ -6,6 +6,10 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleResponse struct {
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`
@@ -34,25 +38,9 @@ type UpdateExampleRequest struct {
 	Description string `json:"description" validate:"omitempty,max=255"`
 }
 
-func ToExampleResponse(e *exampleDomain.Example) ExampleResponse {
-	return ExampleResponse{
-		ID:          e.ID,
-		Name:        e.Name,
-		Description: e.Description,
-		CreatedBy:   e.CreatedBy,
-		UpdatedBy:   e.UpdatedBy,
-		CreatedAt:   e.CreatedAt,
-		UpdatedAt:   e.UpdatedAt,
-	}
-}
-
-func ToExampleResponses(examples []*exampleDomain.Example) []ExampleResponse {
-	res := make([]ExampleResponse, len(examples))
-	for i, e := range examples {
-		res[i] = ToExampleResponse(e)
-	}
-	return res
-}
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (e ExampleCreateRequest) ToDomain(createdBy int64) exampleDomain.Example {
 	return exampleDomain.Example{
@@ -77,4 +65,28 @@ func (e UpdateExampleRequest) ToDomain(updatedBy int64) exampleDomain.Example {
 		Description: e.Description,
 		UpdatedBy:   updatedBy,
 	}
+}
+
+// ============================================================================
+// Functions
+// ============================================================================
+
+func ToExampleResponse(e *exampleDomain.Example) ExampleResponse {
+	return ExampleResponse{
+		ID:          e.ID,
+		Name:        e.Name,
+		Description: e.Description,
+		CreatedBy:   e.CreatedBy,
+		UpdatedBy:   e.UpdatedBy,
+		CreatedAt:   e.CreatedAt,
+		UpdatedAt:   e.UpdatedAt,
+	}
+}
+
+func ToExampleResponses(examples []*exampleDomain.Example) []ExampleResponse {
+	res := make([]ExampleResponse, len(examples))
+	for i, e := range examples {
+		res[i] = ToExampleResponse(e)
+	}
+	return res
 }

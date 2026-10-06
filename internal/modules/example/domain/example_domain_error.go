@@ -4,6 +4,10 @@ import (
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
+// ============================================================================
+// Variables
+// ============================================================================
+
 var (
 	ExampleErrNotFound           = sharedDomain.NewError(sharedDomain.NotFound, sharedDomain.BuildErrorID(sharedDomain.ExampleErrPrefixID, "001"), "example not found", nil)
 	ExampleErrInvalidName        = sharedDomain.NewError(sharedDomain.BadRequest, sharedDomain.BuildErrorID(sharedDomain.ExampleErrPrefixID, "002"), "example name must be in format: [First name] [Last name]", nil)

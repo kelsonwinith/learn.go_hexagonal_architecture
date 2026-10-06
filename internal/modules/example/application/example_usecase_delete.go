@@ -6,10 +6,18 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleUsecaseDelete struct {
 	exampleDeletePostgres  exampleDomain.ExamplePostgresqlDelete
 	exampleGetByIDPostgres exampleDomain.ExamplePostgresqlGetByID
 }
+
+// ============================================================================
+// Constructors
+// ============================================================================
 
 func NewExampleUsecaseDelete(
 	exampleDeletePostgres exampleDomain.ExamplePostgresqlDelete,
@@ -20,6 +28,10 @@ func NewExampleUsecaseDelete(
 		exampleGetByIDPostgres: exampleGetByIDPostgres,
 	}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (uc *ExampleUsecaseDelete) Execute(ctx context.Context, id string, userID int64) error {
 	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, id)

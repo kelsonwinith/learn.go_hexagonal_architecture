@@ -6,6 +6,10 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func ToExampleModel(example *exampleDomain.Example) *postgresqlModel.ExampleModel {
 	return &postgresqlModel.ExampleModel{
 		BaseModel: defaultModel.BaseModel{

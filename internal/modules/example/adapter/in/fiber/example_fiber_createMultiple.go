@@ -7,13 +7,25 @@ import (
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleFiberCreateMultiple struct {
 	useCase exampleDomain.ExampleUsecaseCreateMultiple
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExampleFiberCreateMultiple(useCase exampleDomain.ExampleUsecaseCreateMultiple) *ExampleFiberCreateMultiple {
 	return &ExampleFiberCreateMultiple{useCase: useCase}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 // Handle CreateMultipleExamples
 // @Summary Create multiple examples in a transaction

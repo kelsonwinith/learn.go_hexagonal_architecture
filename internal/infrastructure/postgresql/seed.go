@@ -8,6 +8,10 @@ import (
 	clause "gorm.io/gorm/clause"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func allSeeds() []func() any {
 	return []func() any{
 		postgresqlSeed.SeedExample,

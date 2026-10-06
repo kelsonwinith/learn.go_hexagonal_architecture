@@ -11,6 +11,10 @@ import (
 	schema "gorm.io/gorm/schema"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func NewDBConnection(cfg *config.Config) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg.PostgreSQL.DBHost, cfg.PostgreSQL.DBPort, cfg.PostgreSQL.DBUser, cfg.PostgreSQL.DBPassword, cfg.PostgreSQL.DBName, cfg.PostgreSQL.DBSSLMode)

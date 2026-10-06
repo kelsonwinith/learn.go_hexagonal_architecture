@@ -6,10 +6,18 @@ import (
 	exampleDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleUsecaseCreateMultiple struct {
 	postgresqlTransaction  exampleDomain.ExamplePostgresqlTransaction
 	createMultiplePostgres exampleDomain.ExamplePostgresqlCreateMultiple
 }
+
+// ============================================================================
+// Constructors
+// ============================================================================
 
 func NewExampleUsecaseCreateMultiple(
 	postgresqlTransaction exampleDomain.ExamplePostgresqlTransaction,
@@ -20,6 +28,10 @@ func NewExampleUsecaseCreateMultiple(
 		createMultiplePostgres: createMultiplePostgres,
 	}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (uc *ExampleUsecaseCreateMultiple) Execute(ctx context.Context, examples []exampleDomain.Example) ([]*exampleDomain.Example, error) {
 	var createdExamples []*exampleDomain.Example

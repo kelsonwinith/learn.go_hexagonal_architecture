@@ -6,7 +6,15 @@ import (
 	utf8 "unicode/utf8"
 )
 
+// ============================================================================
+// Constants
+// ============================================================================
+
 const ExampleDescriptionMaxLength = 255
+
+// ============================================================================
+// Types
+// ============================================================================
 
 type Example struct {
 	ID          string
@@ -17,6 +25,10 @@ type Example struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
+
+// ============================================================================
+// Constructors
+// ============================================================================
 
 func NewExample(name, description string, createdBy int64) (*Example, error) {
 	name, description, err := validateExample(name, description)
@@ -36,6 +48,10 @@ func NewExample(name, description string, createdBy int64) (*Example, error) {
 	}, nil
 }
 
+// ============================================================================
+// Methods
+// ============================================================================
+
 func (e *Example) UpdateExample(name, description string, updatedBy int64) error {
 	name, description, err := validateExample(name, description)
 	if err != nil {
@@ -49,6 +65,10 @@ func (e *Example) UpdateExample(name, description string, updatedBy int64) error
 
 	return nil
 }
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 func validateExample(name, description string) (string, string, error) {
 	name, err := validateName(name)

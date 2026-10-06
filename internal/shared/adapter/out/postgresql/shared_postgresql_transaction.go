@@ -7,13 +7,25 @@ import (
 	gorm "gorm.io/gorm"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type PostgresqlTransaction struct {
 	postgresql *Postgresql
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewPostgresqlTransaction(postgresql *Postgresql) *PostgresqlTransaction {
 	return &PostgresqlTransaction{postgresql: postgresql}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (pt *PostgresqlTransaction) WithinTransaction(ctx context.Context, fn func(ctx context.Context) error) error {
 	if _, ok := ctx.Value(txKey).(*gorm.DB); ok {

@@ -9,13 +9,25 @@ import (
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExamplePostgresqlGetAll struct {
 	*sharedPostgresql.Postgresql
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExamplePostgresqlGetAll(p *sharedPostgresql.Postgresql) *ExamplePostgresqlGetAll {
 	return &ExamplePostgresqlGetAll{Postgresql: p}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (e *ExamplePostgresqlGetAll) Execute(ctx context.Context) ([]*exampleDomain.Example, error) {
 	var entities []*postgresqlModel.ExampleModel

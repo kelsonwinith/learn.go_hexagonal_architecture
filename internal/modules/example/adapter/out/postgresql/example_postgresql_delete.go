@@ -8,13 +8,25 @@ import (
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExamplePostgresqlDelete struct {
 	*sharedPostgresql.Postgresql
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExamplePostgresqlDelete(p *sharedPostgresql.Postgresql) *ExamplePostgresqlDelete {
 	return &ExamplePostgresqlDelete{Postgresql: p}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 func (e *ExamplePostgresqlDelete) Execute(ctx context.Context, id string, deletedBy int64) error {
 	result := e.GetExecutor(ctx).

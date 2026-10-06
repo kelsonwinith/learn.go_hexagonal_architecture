@@ -7,13 +7,25 @@ import (
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleFiberDelete struct {
 	useCase exampleDomain.ExampleUsecaseDelete
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExampleFiberDelete(useCase exampleDomain.ExampleUsecaseDelete) *ExampleFiberDelete {
 	return &ExampleFiberDelete{useCase: useCase}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 // Handle DeleteExample
 // @Summary Delete an example

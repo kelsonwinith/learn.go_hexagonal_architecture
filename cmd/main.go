@@ -5,6 +5,10 @@ import (
 	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/bootstrap"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 // @title Hexagonal Architecture Go API
 // @version 1.0
 // @description This is a sample server following Hexagonal Architecture.

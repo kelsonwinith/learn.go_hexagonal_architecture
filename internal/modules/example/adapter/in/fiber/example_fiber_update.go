@@ -7,13 +7,25 @@ import (
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleFiberUpdate struct {
 	useCase exampleDomain.ExampleUsecaseUpdate
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExampleFiberUpdate(useCase exampleDomain.ExampleUsecaseUpdate) *ExampleFiberUpdate {
 	return &ExampleFiberUpdate{useCase: useCase}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 // Handle UpdateExample
 // @Summary Update an example

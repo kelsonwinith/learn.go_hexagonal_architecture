@@ -8,12 +8,29 @@ import (
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
+// ============================================================================
+// Constants
+// ============================================================================
+
 const (
 	DefaultAuthHeader     = "example-user-id"
 	DefaultAuthContextKey = "auth_user_id"
 	DefaultAuthScheme     = ""
 )
 
+// ============================================================================
+// Variables
+// ============================================================================
+// DefaultAuthConfig is the default configuration for Auth middleware.
+var DefaultAuthConfig = AuthConfig{
+	Header:     DefaultAuthHeader,
+	Scheme:     DefaultAuthScheme,
+	ContextKey: DefaultAuthContextKey,
+}
+
+// ============================================================================
+// Types
+// ============================================================================
 // AuthConfig defines configuration options for the Auth middleware.
 type AuthConfig struct {
 	// Next defines a function to skip this middleware when returning true.
@@ -44,13 +61,9 @@ type AuthConfig struct {
 	ErrorHandler func(c fiber.Ctx, err error) error
 }
 
-// DefaultAuthConfig is the default configuration for Auth middleware.
-var DefaultAuthConfig = AuthConfig{
-	Header:     DefaultAuthHeader,
-	Scheme:     DefaultAuthScheme,
-	ContextKey: DefaultAuthContextKey,
-}
-
+// ============================================================================
+// Constructors
+// ============================================================================
 // NewAuth creates a Fiber middleware handler that performs authentication checks.
 func NewAuth(config ...AuthConfig) fiber.Handler {
 	cfg := DefaultAuthConfig
@@ -126,6 +139,9 @@ func NewAuth(config ...AuthConfig) fiber.Handler {
 	}
 }
 
+// ============================================================================
+// Functions
+// ============================================================================
 // GetAuthUserID retrieves the authenticated user's integer ID from Fiber context locals.
 func GetAuthUserID(c fiber.Ctx, contextKey ...string) int64 {
 	key := DefaultAuthContextKey

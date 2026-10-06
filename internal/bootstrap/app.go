@@ -19,6 +19,10 @@ import (
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func Run() {
 	// Config
 	config, err := config.LoadConfig()

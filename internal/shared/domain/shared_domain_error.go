@@ -5,22 +5,9 @@ import (
 	http "net/http"
 )
 
-type ErrorType string
-
-type ErrorPrefix string
-
-type ErrorStatus struct {
-	HTTPCode int
-	Type     ErrorType
-}
-
-type Error struct {
-	HTTPCode int
-	Type     ErrorType
-	ID       string
-	Message  string
-	Detail   any
-}
+// ============================================================================
+// Constants
+// ============================================================================
 
 const (
 	ErrorTypeBadRequest     ErrorType = "BAD_REQUEST"
@@ -35,6 +22,10 @@ const (
 	FiberErrPrefixID   ErrorPrefix = "FIB"
 	ExampleErrPrefixID ErrorPrefix = "EX"
 )
+
+// ============================================================================
+// Variables
+// ============================================================================
 
 var (
 	BadRequest    = ErrorStatus{HTTPCode: http.StatusBadRequest, Type: ErrorTypeBadRequest}
@@ -57,9 +48,38 @@ var (
 	FiberErrInvalidAuthHeader = NewError(Unauthorized, BuildErrorID(FiberErrPrefixID, "006"), "invalid authorization header", nil)
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
+type ErrorType string
+
+type ErrorPrefix string
+
+type ErrorStatus struct {
+	HTTPCode int
+	Type     ErrorType
+}
+
+type Error struct {
+	HTTPCode int
+	Type     ErrorType
+	ID       string
+	Message  string
+	Detail   any
+}
+
+// ============================================================================
+// Methods
+// ============================================================================
+
 func (e *Error) Error() string {
 	return fmt.Sprintf("%s: %s", e.ID, e.Message)
 }
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 func NewError(status ErrorStatus, id, message string, detail any) *Error {
 	return &Error{

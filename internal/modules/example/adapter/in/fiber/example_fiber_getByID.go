@@ -7,13 +7,25 @@ import (
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type ExampleFiberGetByID struct {
 	useCase exampleDomain.ExampleUsecaseGetByID
 }
 
+// ============================================================================
+// Constructors
+// ============================================================================
+
 func NewExampleFiberGetByID(useCase exampleDomain.ExampleUsecaseGetByID) *ExampleFiberGetByID {
 	return &ExampleFiberGetByID{useCase: useCase}
 }
+
+// ============================================================================
+// Methods
+// ============================================================================
 
 // Handle GetExampleByID
 // @Summary Get an example by ID

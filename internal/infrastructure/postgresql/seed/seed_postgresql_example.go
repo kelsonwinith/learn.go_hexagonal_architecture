@@ -7,6 +7,10 @@ import (
 	baseModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model/default"
 )
 
+// ============================================================================
+// Functions
+// ============================================================================
+
 func SeedExample() any {
 	now := time.Now().UTC()
 

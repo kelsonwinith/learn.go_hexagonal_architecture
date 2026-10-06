@@ -7,6 +7,10 @@ import (
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
+// ============================================================================
+// Types
+// ============================================================================
+
 type responseBase struct {
 	Success bool                   `json:"success"`
 	Data    any                    `json:"data"`
@@ -19,6 +23,10 @@ type responseBaseErrorBody struct {
 	Message string                 `json:"message"`
 	Detail  any                    `json:"detail,omitempty"`
 }
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 // 2XX
 func ResponseSuccess(c fiber.Ctx, data any) error {
