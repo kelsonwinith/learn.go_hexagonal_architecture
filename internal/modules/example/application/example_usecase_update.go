@@ -36,7 +36,7 @@ func (uc *ExampleUsecaseUpdate) Execute(ctx context.Context, input exampleDomain
 		return nil, err
 	}
 
-	if existing.CreatedBy != input.UpdatedBy {
+	if !existing.IsOwnedBy(input.UpdatedBy) {
 		return nil, exampleDomain.ExampleErrForbidden
 	}
 

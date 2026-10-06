@@ -66,6 +66,10 @@ func (e *Example) UpdateExample(name, description string, updatedBy int64) error
 	return nil
 }
 
+func (e *Example) IsOwnedBy(userID int64) bool {
+	return e.CreatedBy == userID
+}
+
 // ============================================================================
 // Functions
 // ============================================================================

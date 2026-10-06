@@ -39,7 +39,7 @@ func (uc *ExampleUsecaseDelete) Execute(ctx context.Context, id string, userID i
 		return err
 	}
 
-	if existing.CreatedBy != userID {
+	if !existing.IsOwnedBy(userID) {
 		return exampleDomain.ExampleErrForbidden
 	}
 
