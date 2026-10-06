@@ -1,7 +1,7 @@
 package fiber
 
 import (
-	"errors"
+	errors "errors"
 	reflect "reflect"
 	strings "strings"
 

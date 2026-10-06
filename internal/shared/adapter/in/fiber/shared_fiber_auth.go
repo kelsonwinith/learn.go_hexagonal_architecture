@@ -1,8 +1,8 @@
 package fiber
 
 import (
-	"strconv"
-	"strings"
+	strconv "strconv"
+	strings "strings"
 
 	fiber "github.com/gofiber/fiber/v3"
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"

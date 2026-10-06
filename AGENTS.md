@@ -49,12 +49,46 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 - Register new dependencies explicitly in the module initializer, following `internal/modules/example/example_module.go`.
 - Use `context.Context` through use case and adapter methods, matching the existing `Execute(ctx, ...)` pattern.
 
+## Example Module Showcase
+
+`internal/modules/example` is the reference implementation. Use the matching use case as a template when adding a new operation:
+
+| Use case (`application/`) | Endpoint | Showcases |
+| --- | --- | --- |
+| `ExampleUsecaseCreate` | `POST /api/v1/example` | Simple write: validation through the `NewExample` domain constructor, then a single insert |
+| `ExampleUsecaseCreateMultiple` | `POST /api/v1/example/batch` | Atomic batch insert wrapped in `ExamplePostgresqlTransaction.WithinTransaction` |
+| `ExampleUsecaseGetAll` | `GET /api/v1/example` | Simple read delegated straight to the output port |
+| `ExampleUsecaseGetByID` | `GET /api/v1/example/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleErrNotFound` in the adapter |
+| `ExampleUsecaseUpdate` | `PUT /api/v1/example/:id` | Ownership rule (`ExampleErrForbidden`) plus domain mutation via `UpdateExample` |
+| `ExampleUsecaseDelete` | `DELETE /api/v1/example/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
+
 ## Naming Conventions
 
 - Follow the existing file naming style: `<module>_<layer>_<operation>.go`, for example `example_usecase_create.go` and `example_postgresql_getByID.go`.
 - Constructors should be named `New<Type>` and return the interface when exposing a port implementation from the application layer.
 - Use `Execute` for use case and output adapter methods, as defined by the domain port interfaces.
 - Keep import aliases consistent with the project style, such as `exampleDomain`, `sharedFiber`, and `examplePostgresql`.
+
+## Imports
+
+- Always alias every import with an explicit name, even when it matches the package name, so each reference is unambiguous:
+
+  ```go
+  import (
+  	errors "errors"
+  	reflect "reflect"
+  	strings "strings"
+
+  	validator "github.com/go-playground/validator/v10"
+  	fiber "github.com/gofiber/fiber/v3"
+  	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
+  )
+  ```
+
+- Group imports into three blocks separated by blank lines, in this order: standard library, third-party, then internal (`github.com/kelsonwinith/...`) packages.
+- Use lowercase aliases for standard library and third-party packages (`fiber`, `gorm`, `validator`).
+- Use camelCase aliases for internal packages, prefixed with the module or layer name (`exampleDomain`, `sharedFiber`, `examplePostgresql`); a bare package name such as `config` is fine when unambiguous.
+- Never rely on the implicit package name; write the alias on every import.
 
 ## File Sectioning
 

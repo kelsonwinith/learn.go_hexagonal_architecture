@@ -1,21 +1,22 @@
 package bootstrap
 
 import (
-	"errors"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	errors "errors"
+	log "log"
+	http "net/http"
+	os "os"
+	signal "os/signal"
+	syscall "syscall"
+	time "time"
 
-	"github.com/gofiber/contrib/v3/swaggo"
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/cors"
-	"github.com/gofiber/fiber/v3/middleware/logger"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example"
+	swaggo "github.com/gofiber/contrib/v3/swaggo"
+	fiber "github.com/gofiber/fiber/v3"
+	cors "github.com/gofiber/fiber/v3/middleware/cors"
+	logger "github.com/gofiber/fiber/v3/middleware/logger"
+
+	config "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
+	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
+	example "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 

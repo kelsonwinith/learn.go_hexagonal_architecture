@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "github.com/kelsonwinith/learn.go-hexagonal-architecture/docs"
-	"github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/bootstrap"
+	bootstrap "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/bootstrap"
 )
 
 // ============================================================================
