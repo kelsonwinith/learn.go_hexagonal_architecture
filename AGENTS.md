@@ -58,7 +58,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 | `ExampleUsecaseCreate` | `POST /api/v1/example` | Simple write: validation through the `NewExample` domain constructor, then a single insert |
 | `ExampleUsecaseCreateMultiple` | `POST /api/v1/example/batch` | Atomic batch insert wrapped in `ExamplePostgresqlTransaction.WithinTransaction` |
 | `ExampleUsecaseGetAll` | `GET /api/v1/example` | Simple read delegated straight to the output port |
-| `ExampleUsecaseGetPaginated` | `GET /api/v1/example/paginated` | Pagination: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
+| `ExampleUsecaseGetPaginated` | `GET /api/v1/example/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
 | `ExampleUsecaseGetByID` | `GET /api/v1/example/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleErrNotFound` in the adapter |
 | `ExampleUsecaseUpdate` | `PUT /api/v1/example/:id` | Ownership rule (`ExampleErrForbidden`) plus domain mutation via `UpdateExample` |
 | `ExampleUsecaseDelete` | `DELETE /api/v1/example/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |

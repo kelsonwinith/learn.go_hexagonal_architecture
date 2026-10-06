@@ -34,7 +34,8 @@ func NewExampleFiberGetPaginated(useCase exampleDomain.ExampleUsecaseGetPaginate
 // @Produce json
 // @Param page query int false "Page number (default 1)"
 // @Param page_size query int false "Items per page (default 10, max 100)"
-// @Success 200 {object} sharedFiber.responsePaginated[exampleDto.ExampleResponse]
+// @Param search query string false "Search by name or description"
+// @Success 200 {object} sharedFiber.responsePaginatedData[exampleDto.ExampleResponse]
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/example/paginated [get]
@@ -44,7 +45,7 @@ func (h *ExampleFiberGetPaginated) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.Query.Page, req.Query.PageSize)
+	res, err := h.useCase.Execute(c.Context(), req.Query.Page, req.Query.PageSize, req.Query.Search)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

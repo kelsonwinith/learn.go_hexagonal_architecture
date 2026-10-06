@@ -25,8 +25,9 @@ type ExampleRequestParams struct {
 }
 
 type ExampleGetPaginatedQuery struct {
-	Page     int `query:"page" validate:"omitempty,min=1"`
-	PageSize int `query:"page_size" validate:"omitempty,min=1"`
+	Page     int    `query:"page" validate:"omitempty,min=1"`
+	PageSize int    `query:"page_size" validate:"omitempty,min=1"`
+	Search   string `query:"search" validate:"omitempty,max=255"`
 }
 
 type ExampleCreateRequest struct {
