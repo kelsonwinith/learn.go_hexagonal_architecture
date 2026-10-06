@@ -21,6 +21,7 @@ func Init(app *fiber.App, db *gorm.DB) {
 
 	examplePostgresqlCreate := examplePostgresql.NewExamplePostgresqlCreate(postgresql)
 	examplePostgresqlGetAll := examplePostgresql.NewExamplePostgresqlGetAll(postgresql)
+	examplePostgresqlGetPaginated := examplePostgresql.NewExamplePostgresqlGetPaginated(postgresql)
 	examplePostgresqlGetByID := examplePostgresql.NewExamplePostgresqlGetByID(postgresql)
 	examplePostgresqlUpdate := examplePostgresql.NewExamplePostgresqlUpdate(postgresql)
 	examplePostgresqlDelete := examplePostgresql.NewExamplePostgresqlDelete(postgresql)
@@ -29,6 +30,7 @@ func Init(app *fiber.App, db *gorm.DB) {
 	// Use Cases
 	exampleUsecaseCreate := exampleUseCase.NewExampleUsecaseCreate(examplePostgresqlCreate)
 	exampleUsecaseGetAll := exampleUseCase.NewExampleUsecaseGetAll(examplePostgresqlGetAll)
+	exampleUsecaseGetPaginated := exampleUseCase.NewExampleUsecaseGetPaginated(examplePostgresqlGetPaginated)
 	exampleUsecaseGetByID := exampleUseCase.NewExampleUsecaseGetByID(examplePostgresqlGetByID)
 	exampleUsecaseUpdate := exampleUseCase.NewExampleUsecaseUpdate(examplePostgresqlUpdate, examplePostgresqlGetByID)
 	exampleUsecaseDelete := exampleUseCase.NewExampleUsecaseDelete(examplePostgresqlDelete, examplePostgresqlGetByID)
@@ -39,6 +41,7 @@ func Init(app *fiber.App, db *gorm.DB) {
 
 	exampleFiberCreate := exampleFiber.NewExampleFiberCreate(exampleUsecaseCreate)
 	exampleFiberGetAll := exampleFiber.NewExampleFiberGetAll(exampleUsecaseGetAll)
+	exampleFiberGetPaginated := exampleFiber.NewExampleFiberGetPaginated(exampleUsecaseGetPaginated)
 	exampleFiberGetByID := exampleFiber.NewExampleFiberGetByID(exampleUsecaseGetByID)
 	exampleFiberUpdate := exampleFiber.NewExampleFiberUpdate(exampleUsecaseUpdate)
 	exampleFiberDelete := exampleFiber.NewExampleFiberDelete(exampleUsecaseDelete)
@@ -48,6 +51,7 @@ func Init(app *fiber.App, db *gorm.DB) {
 	routes.Post("/", authMiddleware, exampleFiberCreate.Handle)
 	routes.Post("/batch", authMiddleware, exampleFiberCreateMultiple.Handle)
 	routes.Get("/", exampleFiberGetAll.Handle)
+	routes.Get("/paginated", exampleFiberGetPaginated.Handle)
 	routes.Get("/:id", exampleFiberGetByID.Handle)
 	routes.Put("/:id", authMiddleware, exampleFiberUpdate.Handle)
 	routes.Delete("/:id", authMiddleware, exampleFiberDelete.Handle)

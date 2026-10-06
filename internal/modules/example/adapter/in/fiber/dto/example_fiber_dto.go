@@ -24,6 +24,11 @@ type ExampleRequestParams struct {
 	ID string `uri:"id" validate:"required,uuid4"`
 }
 
+type ExampleGetPaginatedQuery struct {
+	Page     int `query:"page" validate:"omitempty,min=1"`
+	PageSize int `query:"page_size" validate:"omitempty,min=1"`
+}
+
 type ExampleCreateRequest struct {
 	Name        string `json:"name" validate:"required"`
 	Description string `json:"description" validate:"omitempty,max=255"`

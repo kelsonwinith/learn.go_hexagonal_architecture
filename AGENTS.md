@@ -58,6 +58,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 | `ExampleUsecaseCreate` | `POST /api/v1/example` | Simple write: validation through the `NewExample` domain constructor, then a single insert |
 | `ExampleUsecaseCreateMultiple` | `POST /api/v1/example/batch` | Atomic batch insert wrapped in `ExamplePostgresqlTransaction.WithinTransaction` |
 | `ExampleUsecaseGetAll` | `GET /api/v1/example` | Simple read delegated straight to the output port |
+| `ExampleUsecaseGetPaginated` | `GET /api/v1/example/paginated` | Pagination: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
 | `ExampleUsecaseGetByID` | `GET /api/v1/example/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleErrNotFound` in the adapter |
 | `ExampleUsecaseUpdate` | `PUT /api/v1/example/:id` | Ownership rule (`ExampleErrForbidden`) plus domain mutation via `UpdateExample` |
 | `ExampleUsecaseDelete` | `DELETE /api/v1/example/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
@@ -172,6 +173,8 @@ func helper() string {
   - Convert DTOs to domain models before calling use cases.
   - Return responses with `sharedFiber.ResponseSuccess`, `ResponseCreated`, `ResponseNoContent`, or `ResponseError`.
 - Add validation tags to request DTOs where needed. The shared validator is configured in `internal/bootstrap/app.go` and supports `json`, `query`, `params`, and `uri` tags.
+- Reusable response envelopes (for example pagination via `sharedFiber.ResponsePaginated`) belong in `internal/shared/adapter/in/fiber`, not in a module DTO package. Map the domain page items to response DTOs first, then pass them with the `sharedDomain.Pagination` and total.
+- Use `sharedDomain.NewPagination` for page/page-size defaulting and max clamping instead of reimplementing it in each use case. Pass `sharedDomain.PaginationLimits` to override the shared defaults; omit it to fall back to `DefaultPageSize`/`MaxPageSize`.
 - Keep Swagger comments on handlers up to date when adding or changing endpoints.
 
 ## Error Handling

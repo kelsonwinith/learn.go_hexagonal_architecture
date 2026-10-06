@@ -2,6 +2,8 @@ package domain
 
 import (
 	context "context"
+
+	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 // ============================================================================
@@ -19,6 +21,9 @@ type ExampleUsecaseGetByID interface {
 }
 type ExampleUsecaseGetAll interface {
 	Execute(ctx context.Context) ([]*Example, error)
+}
+type ExampleUsecaseGetPaginated interface {
+	Execute(ctx context.Context, page, pageSize int) (*sharedDomain.Page[*Example], error)
 }
 type ExampleUsecaseUpdate interface {
 	Execute(ctx context.Context, input Example) (*Example, error)
@@ -53,4 +58,7 @@ type ExamplePostgresqlGetByID interface {
 }
 type ExamplePostgresqlGetAll interface {
 	Execute(ctx context.Context) ([]*Example, error)
+}
+type ExamplePostgresqlGetPaginated interface {
+	Execute(ctx context.Context, limit, offset int) ([]*Example, int64, error)
 }
