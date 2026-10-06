@@ -24,7 +24,7 @@ type responseBaseErrorBody struct {
 	Detail  any                    `json:"detail,omitempty"`
 }
 
-type responsePaginatedData[T any] struct {
+type ResponsePaginatedData[T any] struct {
 	Items    []T   `json:"items"`
 	Page     int   `json:"page"`
 	PageSize int   `json:"page_size"`
@@ -46,7 +46,7 @@ func ResponseSuccess(c fiber.Ctx, data any) error {
 func ResponsePaginated[T any](c fiber.Ctx, items []T, pagination sharedDomain.Pagination, total int64) error {
 	return c.Status(fiber.StatusOK).JSON(responseBase{
 		Success: true,
-		Data: responsePaginatedData[T]{
+		Data: ResponsePaginatedData[T]{
 			Items:    items,
 			Page:     pagination.Page,
 			PageSize: pagination.PageSize,

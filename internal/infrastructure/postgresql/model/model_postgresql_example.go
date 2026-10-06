@@ -19,7 +19,7 @@ type ExampleModel struct {
 	defaultModel.DeleteModel
 
 	Name        string `gorm:"column:name;type:varchar(255);not null"`
-	Description string `gorm:"column:description;type:text"`
+	Description string `gorm:"column:description;type:varchar(255)"`
 }
 
 // ============================================================================

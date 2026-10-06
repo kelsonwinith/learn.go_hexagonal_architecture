@@ -27,7 +27,6 @@ func NewExampleUsecaseCreate(exampleCreatePostgres exampleDomain.ExamplePostgres
 // ============================================================================
 
 func (uc *ExampleUsecaseCreate) Execute(ctx context.Context, input exampleDomain.Example) (*exampleDomain.Example, error) {
-
 	example, err := exampleDomain.NewExample(input.Name, input.Description, input.CreatedBy)
 	if err != nil {
 		return nil, err
