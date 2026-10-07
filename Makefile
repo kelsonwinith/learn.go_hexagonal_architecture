@@ -18,6 +18,10 @@ db-up:
 test:
 	go test -v ./...
 
+# Format Go Code
+fmt:
+	go fmt ./...
+
 # Build Application
 build:
 	go build -o bin/app cmd/main.go

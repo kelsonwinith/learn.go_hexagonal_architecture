@@ -16,7 +16,8 @@ import (
 
 	config "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
-	example "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/example"
+	exampleAdvanced "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleAdvanced"
+	exampleBasic "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleBasic"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
@@ -61,7 +62,8 @@ func Run() {
 	app.Get("/swagger/*", swaggo.HandlerDefault)
 
 	// Initialize Modules
-	example.Init(app, db)
+	exampleBasic.Init(app, db)
+	exampleAdvanced.Init(app, db)
 
 	// Start Server with Graceful Shutdown
 	quit := make(chan os.Signal, 1)

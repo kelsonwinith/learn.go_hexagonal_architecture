@@ -18,9 +18,10 @@ const (
 )
 
 const (
-	SystemErrPrefixID  ErrorPrefix = "SYS"
-	FiberErrPrefixID   ErrorPrefix = "FIB"
-	ExampleErrPrefixID ErrorPrefix = "EX"
+	SystemErrPrefixID          ErrorPrefix = "SYS"
+	FiberErrPrefixID           ErrorPrefix = "FIB"
+	ExampleBasicErrPrefixID    ErrorPrefix = "EXB"
+	ExampleAdvancedErrPrefixID ErrorPrefix = "EXA"
 )
 
 // ============================================================================

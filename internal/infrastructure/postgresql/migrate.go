@@ -14,6 +14,8 @@ import (
 func allModels() []any {
 	return []any{
 		&postgresqlModel.ExampleModel{},
+		&postgresqlModel.ExampleAdvancedParentModel{},
+		&postgresqlModel.ExampleAdvancedChildModel{},
 	}
 }
 
