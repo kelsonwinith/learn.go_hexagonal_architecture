@@ -13,7 +13,7 @@ import (
 
 func allModels() []any {
 	return []any{
-		&postgresqlModel.ExampleModel{},
+		&postgresqlModel.ExampleBasicModel{},
 		&postgresqlModel.ExampleAdvancedParentModel{},
 		&postgresqlModel.ExampleAdvancedChildModel{},
 	}

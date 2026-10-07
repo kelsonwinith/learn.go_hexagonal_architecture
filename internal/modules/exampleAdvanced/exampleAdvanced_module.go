@@ -20,24 +20,24 @@ func Init(app *fiber.App, db *gorm.DB) {
 	postgresql := sharedPostgresql.NewPostgresql(db)
 	postgresqlTransaction := sharedPostgresql.NewPostgresqlTransaction(postgresql)
 
-	createPostgres := exampleAdvancedPostgresql.NewExampleAdvancedPostgresqlCreate(postgresql)
-	createChildrenPostgres := exampleAdvancedPostgresql.NewExampleAdvancedChildPostgresqlCreateMultiple(postgresql)
-	getByIDPostgres := exampleAdvancedPostgresql.NewExampleAdvancedPostgresqlGetByID(postgresql)
+	exampleAdvancedCreatePostgres := exampleAdvancedPostgresql.NewExampleAdvancedPostgresqlCreate(postgresql)
+	exampleAdvancedCreateChildrenPostgres := exampleAdvancedPostgresql.NewExampleAdvancedChildPostgresqlCreateMultiple(postgresql)
+	exampleAdvancedGetByIDPostgres := exampleAdvancedPostgresql.NewExampleAdvancedPostgresqlGetByID(postgresql)
 
 	// Adapters Out - Event Log
-	eventPublisher := exampleAdvancedEventLog.NewExampleAdvancedEventLogPublisher()
+	exampleAdvancedEventPublisher := exampleAdvancedEventLog.NewExampleAdvancedEventLogPublisher()
 
 	// Use Cases
-	advancedUsecaseCreate := exampleAdvancedUseCase.NewExampleAdvancedUsecaseCreate(postgresqlTransaction, createPostgres, createChildrenPostgres, eventPublisher)
-	advancedUsecaseGetByID := exampleAdvancedUseCase.NewExampleAdvancedUsecaseGetByID(getByIDPostgres)
+	exampleAdvancedUsecaseCreate := exampleAdvancedUseCase.NewExampleAdvancedUsecaseCreate(postgresqlTransaction, exampleAdvancedCreatePostgres, exampleAdvancedCreateChildrenPostgres, exampleAdvancedEventPublisher)
+	exampleAdvancedUsecaseGetByID := exampleAdvancedUseCase.NewExampleAdvancedUsecaseGetByID(exampleAdvancedGetByIDPostgres)
 
 	// Adapters In - Fiber
 	authMiddleware := sharedFiber.NewAuth()
 
-	advancedFiberCreate := exampleAdvancedFiber.NewExampleAdvancedFiberCreate(advancedUsecaseCreate)
-	advancedFiberGetByID := exampleAdvancedFiber.NewExampleAdvancedFiberGetByID(advancedUsecaseGetByID)
+	exampleAdvancedFiberCreate := exampleAdvancedFiber.NewExampleAdvancedFiberCreate(exampleAdvancedUsecaseCreate)
+	exampleAdvancedFiberGetByID := exampleAdvancedFiber.NewExampleAdvancedFiberGetByID(exampleAdvancedUsecaseGetByID)
 
-	routes := app.Group("/api/v1/exampleadvanced")
-	routes.Post("/", authMiddleware, advancedFiberCreate.Handle)
-	routes.Get("/:id", advancedFiberGetByID.Handle)
+	exampleAdvancedRoutes := app.Group("/api/v1/exampleadvanced")
+	exampleAdvancedRoutes.Post("/", authMiddleware, exampleAdvancedFiberCreate.Handle)
+	exampleAdvancedRoutes.Get("/:id", authMiddleware, exampleAdvancedFiberGetByID.Handle)
 }

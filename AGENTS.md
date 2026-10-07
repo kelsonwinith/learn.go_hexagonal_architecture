@@ -69,13 +69,13 @@ Flat, single-table CRUD with one output port. This is the baseline scaffold to c
 
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
-| `ExampleUsecaseCreate` | `POST /api/v1/examplebasic` | Simple write: validation through the `NewExample` domain constructor, then a single insert |
-| `ExampleUsecaseCreateMultiple` | `POST /api/v1/examplebasic/batch` | Atomic batch insert wrapped in `ExamplePostgresqlTransaction.WithinTransaction` |
-| `ExampleUsecaseGetAll` | `GET /api/v1/examplebasic` | Simple read delegated straight to the output port |
-| `ExampleUsecaseGetPaginated` | `GET /api/v1/examplebasic/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
-| `ExampleUsecaseGetByID` | `GET /api/v1/examplebasic/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleErrNotFound` in the adapter |
-| `ExampleUsecaseUpdate` | `PUT /api/v1/examplebasic/:id` | Ownership rule (`ExampleErrForbidden`) plus domain mutation via `UpdateExample` |
-| `ExampleUsecaseDelete` | `DELETE /api/v1/examplebasic/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
+| `ExampleBasicUsecaseCreate` | `POST /api/v1/examplebasic` | Simple write: validation through the `NewExampleBasic` domain constructor, then a single insert |
+| `ExampleBasicUsecaseCreateMultiple` | `POST /api/v1/examplebasic/batch` | Atomic batch insert wrapped in `ExampleBasicPostgresqlTransaction.WithinTransaction` |
+| `ExampleBasicUsecaseGetAll` | `GET /api/v1/examplebasic` | Simple read delegated straight to the output port |
+| `ExampleBasicUsecaseGetPaginated` | `GET /api/v1/examplebasic/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
+| `ExampleBasicUsecaseGetByID` | `GET /api/v1/examplebasic/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleBasicErrNotFound` in the adapter |
+| `ExampleBasicUsecaseUpdate` | `PUT /api/v1/examplebasic/:id` | Ownership rule (`ExampleBasicErrForbidden`) plus domain mutation via `UpdateExampleBasic` |
+| `ExampleBasicUsecaseDelete` | `DELETE /api/v1/examplebasic/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
 
 ### Example Advanced (`internal/modules/exampleAdvanced`)
 
@@ -93,6 +93,7 @@ Aggregate relations and more than one output port. Copy from here when a feature
 - Constructors should be named `New<Type>` and return the interface when exposing a port implementation from the application layer.
 - Use `Execute` for use case and output adapter methods, as defined by the domain port interfaces.
 - Keep import aliases consistent with the project style, such as `exampleBasicDomain`, `exampleAdvancedPostgresql`, and `sharedFiber`.
+- Prefix every identifier and variable declared inside a module with the module name: exported names use PascalCase (`ExampleBasicUsecaseCreate`, `ExampleAdvancedPostgresqlCreate`) and unexported or local names use camelCase (`exampleBasicPostgresqlCreate`, `exampleAdvancedCreatePostgres`). Shared packages are the exception and use the `shared` prefix instead, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
 
 ## Imports
 
@@ -155,13 +156,13 @@ import (
 // Constants
 // ============================================================================
 
-const ExampleMaxLength = 255
+const ExampleBasicMaxLength = 255
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type Example struct {
+type ExampleBasic struct {
 	ID string
 }
 
@@ -169,15 +170,15 @@ type Example struct {
 // Constructors
 // ============================================================================
 
-func NewExample(id string) *Example {
-	return &Example{ID: id}
+func NewExampleBasic(id string) *ExampleBasic {
+	return &ExampleBasic{ID: id}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (e *Example) Validate() error {
+func (e *ExampleBasic) Validate() error {
 	return nil
 }
 
@@ -215,7 +216,7 @@ func helper() string {
 - Use `GetExecutor(ctx)` so transactional contexts continue to work.
 - Convert between domain objects and GORM models in `adapter/out/postgresql/mapper`.
 - Keep persistence models to one file per database table (e.g. `model_postgresql_exampleAdvancedParent.go` and `model_postgresql_exampleAdvancedChild.go`).
-- For multi-step writes that must be atomic, follow the existing transaction pattern used by `ExampleUsecaseCreateMultiple` (single table) or `ExampleAdvancedUsecaseCreate` (parent + children across multiple output ports).
+- For multi-step writes that must be atomic, follow the existing transaction pattern used by `ExampleBasicUsecaseCreateMultiple` (single table) or `ExampleAdvancedUsecaseCreate` (parent + children across multiple output ports).
 
 ## Configuration
 
