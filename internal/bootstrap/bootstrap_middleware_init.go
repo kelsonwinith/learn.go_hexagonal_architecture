@@ -18,5 +18,11 @@ func InitMiddleware(app *fiber.App) {
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 	}))
-	app.Get("/swagger/*", swaggo.HandlerDefault)
+
+	// API documentation: Swagger UI, tags and operations collapsed by default
+	swaggerConfig := swaggo.ConfigDefault
+	swaggerConfig.DocExpansion = "none"
+	swaggerConfig.DeepLinking = false
+	swaggerConfig.PersistAuthorization = true
+	app.Get("/swagger/*", swaggo.New(swaggerConfig))
 }
