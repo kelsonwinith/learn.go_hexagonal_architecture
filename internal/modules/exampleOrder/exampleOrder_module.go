@@ -15,7 +15,7 @@ import (
 // Functions
 // ============================================================================
 
-func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrderUserReader, productReader exampleOrderDomain.ExampleOrderProductReader, authMiddleware fiber.Handler) {
+func Init(app *fiber.App, db *gorm.DB, exampleUserModuleGetByID exampleOrderDomain.ExampleUserModuleGetByID, exampleProductModuleGetByID exampleOrderDomain.ExampleProductModuleGetByID, authMiddleware fiber.Handler) {
 	// Adapters Out - PostgreSQL
 	postgresql := sharedPostgresql.NewPostgresql(db)
 	postgresqlTransaction := sharedPostgresql.NewPostgresqlTransaction(postgresql)
@@ -29,7 +29,7 @@ func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrde
 	exampleOrderEventPublisher := exampleOrderEventLog.NewExampleOrderEventLogPublisher()
 
 	// Use Cases
-	exampleOrderUsecaseCreate := exampleOrderUseCase.NewExampleOrderUsecaseCreate(userReader, productReader, postgresqlTransaction, exampleOrderCreatePostgres, exampleOrderCreateProductsPostgres, exampleOrderEventPublisher)
+	exampleOrderUsecaseCreate := exampleOrderUseCase.NewExampleOrderUsecaseCreate(exampleUserModuleGetByID, exampleProductModuleGetByID, postgresqlTransaction, exampleOrderCreatePostgres, exampleOrderCreateProductsPostgres, exampleOrderEventPublisher)
 	exampleOrderUsecaseGetByID := exampleOrderUseCase.NewExampleOrderUsecaseGetByID(exampleOrderGetByIDPostgres)
 	exampleOrderUsecaseGetPaginated := exampleOrderUseCase.NewExampleOrderUsecaseGetPaginated(exampleOrderGetPaginatedPostgres)
 

@@ -11,7 +11,7 @@ import (
 // Types
 // ============================================================================
 
-type ExampleOrderUserReader struct {
+type ExampleUserModuleGetByID struct {
 	userGetByID exampleUserDomain.ExampleUserUsecaseGetByID
 }
 
@@ -19,15 +19,15 @@ type ExampleOrderUserReader struct {
 // Constructors
 // ============================================================================
 
-func NewExampleOrderUserReader(userGetByID exampleUserDomain.ExampleUserUsecaseGetByID) *ExampleOrderUserReader {
-	return &ExampleOrderUserReader{userGetByID: userGetByID}
+func NewExampleUserModuleGetByID(userGetByID exampleUserDomain.ExampleUserUsecaseGetByID) *ExampleUserModuleGetByID {
+	return &ExampleUserModuleGetByID{userGetByID: userGetByID}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (r *ExampleOrderUserReader) Execute(ctx context.Context, id string) (exampleOrderDomain.ExampleOrderUser, error) {
+func (r *ExampleUserModuleGetByID) Execute(ctx context.Context, id string) (exampleOrderDomain.ExampleOrderUser, error) {
 	user, err := r.userGetByID.Execute(ctx, id)
 	if err != nil {
 		return exampleOrderDomain.ExampleOrderUser{}, err

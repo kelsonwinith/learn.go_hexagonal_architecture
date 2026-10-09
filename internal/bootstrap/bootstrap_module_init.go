@@ -22,8 +22,8 @@ func InitModules(app *fiber.App, db *gorm.DB, tokenService sharedDomain.TokenSer
 	exampleProductService := exampleProduct.Init(app, db, authMiddleware)
 
 	// Cross-module adapters: exampleOrder consumes the exampleUser and exampleProduct services
-	exampleOrderUserReader := exampleOrderExampleUser.NewExampleOrderUserReader(exampleUserService)
-	exampleOrderProductReader := exampleOrderExampleProduct.NewExampleOrderProductReader(exampleProductService)
+	exampleUserModuleGetByID := exampleOrderExampleUser.NewExampleUserModuleGetByID(exampleUserService)
+	exampleProductModuleGetByID := exampleOrderExampleProduct.NewExampleProductModuleGetByID(exampleProductService)
 
-	exampleOrder.Init(app, db, exampleOrderUserReader, exampleOrderProductReader, authMiddleware)
+	exampleOrder.Init(app, db, exampleUserModuleGetByID, exampleProductModuleGetByID, authMiddleware)
 }

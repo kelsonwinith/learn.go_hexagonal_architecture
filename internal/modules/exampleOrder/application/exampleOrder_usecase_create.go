@@ -11,8 +11,8 @@ import (
 // ============================================================================
 
 type ExampleOrderUsecaseCreate struct {
-	exampleOrderUserReader             exampleOrderDomain.ExampleOrderUserReader
-	exampleOrderProductReader          exampleOrderDomain.ExampleOrderProductReader
+	exampleUserModuleGetByID           exampleOrderDomain.ExampleUserModuleGetByID
+	exampleProductModuleGetByID        exampleOrderDomain.ExampleProductModuleGetByID
 	exampleOrderPostgresqlTransaction  exampleOrderDomain.ExampleOrderPostgresqlTransaction
 	exampleOrderCreatePostgres         exampleOrderDomain.ExampleOrderPostgresqlCreate
 	exampleOrderCreateProductsPostgres exampleOrderDomain.ExampleOrderProductPostgresqlCreateMultiple
@@ -24,16 +24,16 @@ type ExampleOrderUsecaseCreate struct {
 // ============================================================================
 
 func NewExampleOrderUsecaseCreate(
-	exampleOrderUserReader exampleOrderDomain.ExampleOrderUserReader,
-	exampleOrderProductReader exampleOrderDomain.ExampleOrderProductReader,
+	exampleUserModuleGetByID exampleOrderDomain.ExampleUserModuleGetByID,
+	exampleProductModuleGetByID exampleOrderDomain.ExampleProductModuleGetByID,
 	exampleOrderPostgresqlTransaction exampleOrderDomain.ExampleOrderPostgresqlTransaction,
 	exampleOrderCreatePostgres exampleOrderDomain.ExampleOrderPostgresqlCreate,
 	exampleOrderCreateProductsPostgres exampleOrderDomain.ExampleOrderProductPostgresqlCreateMultiple,
 	exampleOrderEventPublisher exampleOrderDomain.ExampleOrderEventPublisher,
 ) exampleOrderDomain.ExampleOrderUsecaseCreate {
 	return &ExampleOrderUsecaseCreate{
-		exampleOrderUserReader:             exampleOrderUserReader,
-		exampleOrderProductReader:          exampleOrderProductReader,
+		exampleUserModuleGetByID:           exampleUserModuleGetByID,
+		exampleProductModuleGetByID:        exampleProductModuleGetByID,
 		exampleOrderPostgresqlTransaction:  exampleOrderPostgresqlTransaction,
 		exampleOrderCreatePostgres:         exampleOrderCreatePostgres,
 		exampleOrderCreateProductsPostgres: exampleOrderCreateProductsPostgres,
@@ -47,13 +47,13 @@ func NewExampleOrderUsecaseCreate(
 
 func (uc *ExampleOrderUsecaseCreate) Execute(ctx context.Context, exampleOrderInput exampleOrderDomain.ExampleOrder) (*exampleOrderDomain.ExampleOrder, error) {
 	// Cross-module: ensure the referenced user exists.
-	if _, err := uc.exampleOrderUserReader.Execute(ctx, exampleOrderInput.UserID); err != nil {
+	if _, err := uc.exampleUserModuleGetByID.Execute(ctx, exampleOrderInput.UserID); err != nil {
 		return nil, err
 	}
 
 	// Cross-module: resolve each referenced product and use its name.
 	for _, exampleOrderProduct := range exampleOrderInput.Products {
-		exampleOrderProductInfo, err := uc.exampleOrderProductReader.Execute(ctx, exampleOrderProduct.ProductID)
+		exampleOrderProductInfo, err := uc.exampleProductModuleGetByID.Execute(ctx, exampleOrderProduct.ProductID)
 		if err != nil {
 			return nil, err
 		}

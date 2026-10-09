@@ -74,6 +74,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 - Keep DTOs and persistence models out of the domain layer. Convert at adapter boundaries with DTO `ToDomain` helpers or mapper functions.
 - Register new dependencies explicitly in the module initializer, following `internal/modules/exampleProduct/exampleProduct_module.go` (baseline) or `internal/modules/exampleOrder/exampleOrder_module.go` (multiple output ports and cross-module services).
 - Cross-module calls go through a port defined in the consumer's `domain`; the provider exposes its use case and a small `adapter/out/<provider>` in the consumer maps the result. Wire them in `bootstrap`, e.g. `exampleOrder` consuming the `exampleUser` and `exampleProduct` services.
+- Name cross-module ports and their adapters `<Provider>Module<Operation>` so the name states the provider operation being called, for example `ExampleUserModuleGetByID` and `ExampleProductModuleGetByID` (this provider-prefixed form is the exception to the module-prefix rule).
 - Use `context.Context` through use case and adapter methods, matching the existing `Execute(ctx, ...)` pattern.
 
 ## Example Module Showcase
@@ -108,7 +109,7 @@ Aggregate relations, a transaction, more than one output port, and cross-module 
 
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
-| `ExampleOrderUsecaseCreate` | `POST /api/v1/exampleorder` | Order + products created atomically inside `WithinTransaction`; the referenced user and products are resolved through the `ExampleOrderUserReader` and `ExampleOrderProductReader` ports (cross-module), then a domain event is published through the `eventlog` output port |
+| `ExampleOrderUsecaseCreate` | `POST /api/v1/exampleorder` | Order + products created atomically inside `WithinTransaction`; the referenced user and products are resolved through the `ExampleUserModuleGetByID` and `ExampleProductModuleGetByID` ports (cross-module), then a domain event is published through the `eventlog` output port |
 | `ExampleOrderUsecaseGetByID` | `GET /api/v1/exampleorder/:id` | Loading an aggregate with products via GORM `Preload`, with not-found mapped to `ExampleOrderErrNotFound` |
 | `ExampleOrderUsecaseGetPaginated` | `GET /api/v1/exampleorder/paginated` | Paginated aggregate listing: shared `sharedDomain.NewPagination` + `sharedFiber.ResponsePaginated` |
 
@@ -123,8 +124,8 @@ Aggregate relations, a transaction, more than one output port, and cross-module 
 
 ### Variable Naming
 
-- Prefix every struct field, constructor parameter, and local variable with the module token: `exampleProductCreatePostgres`, `exampleOrderUserReader`.
-- Name injected collaborators as `<module><Operation><Adapter>`: `exampleProductCreatePostgres`, `exampleOrderEventPublisher`, `exampleUserPasswordHasher`, `exampleOrderUserReader`.
+- Prefix every struct field, constructor parameter, and local variable with the module token: `exampleProductCreatePostgres`, `exampleUserModuleGetByID`.
+- Name injected collaborators as `<module><Operation><Adapter>`: `exampleProductCreatePostgres`, `exampleOrderEventPublisher`, `exampleUserPasswordHasher`, `exampleUserModuleGetByID`.
 - Name domain values `<module>` (singular), `<module>s` (slice), or `<module><Sub>` (sub-entity): `exampleOrder`, `exampleOrders`, `exampleOrderProduct`, `exampleProductInput`.
 - Keep Go idioms and primitive/audit parameters unprefixed: `ctx`, `err`, `ok`, `i`, `id`, `email`, `password`, `createdBy`, `updatedBy`, `page`, `pageSize`, `search`, `total`, `pagination`.
 - Keep receivers short (`uc`, `h`, `e`, `p`, `r`); name DTO method receivers `request`.

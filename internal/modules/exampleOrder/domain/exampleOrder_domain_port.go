@@ -69,10 +69,10 @@ type ExampleOrderProductInfo struct {
 	Price int64
 }
 
-type ExampleOrderUserReader interface {
+type ExampleUserModuleGetByID interface {
 	Execute(ctx context.Context, id string) (ExampleOrderUser, error)
 }
 
-type ExampleOrderProductReader interface {
+type ExampleProductModuleGetByID interface {
 	Execute(ctx context.Context, id string) (ExampleOrderProductInfo, error)
 }

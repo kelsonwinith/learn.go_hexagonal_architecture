@@ -11,7 +11,7 @@ import (
 // Types
 // ============================================================================
 
-type ExampleOrderProductReader struct {
+type ExampleProductModuleGetByID struct {
 	productGetByID exampleProductDomain.ExampleProductUsecaseGetByID
 }
 
@@ -19,15 +19,15 @@ type ExampleOrderProductReader struct {
 // Constructors
 // ============================================================================
 
-func NewExampleOrderProductReader(productGetByID exampleProductDomain.ExampleProductUsecaseGetByID) *ExampleOrderProductReader {
-	return &ExampleOrderProductReader{productGetByID: productGetByID}
+func NewExampleProductModuleGetByID(productGetByID exampleProductDomain.ExampleProductUsecaseGetByID) *ExampleProductModuleGetByID {
+	return &ExampleProductModuleGetByID{productGetByID: productGetByID}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (r *ExampleOrderProductReader) Execute(ctx context.Context, id string) (exampleOrderDomain.ExampleOrderProductInfo, error) {
+func (r *ExampleProductModuleGetByID) Execute(ctx context.Context, id string) (exampleOrderDomain.ExampleOrderProductInfo, error) {
 	product, err := r.productGetByID.Execute(ctx, id)
 	if err != nil {
 		return exampleOrderDomain.ExampleOrderProductInfo{}, err
