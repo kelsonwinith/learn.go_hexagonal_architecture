@@ -51,8 +51,8 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │       │   └── out/
     │       │       ├── postgresql/
     │       │       ├── eventlog/         # second output adapter, not a database
-    │       │       ├── exampleuser/      # cross-module adapter consuming the exampleUser service
-    │       │       └── exampleproduct/   # cross-module adapter consuming the exampleProduct service
+    │       │       ├── exampleUser/      # cross-module adapter consuming the exampleUser service
+    │       │       └── exampleProduct/   # cross-module adapter consuming the exampleProduct service
     │       └── exampleOrder_module.go
     └── shared/                           # reusable domain errors and shared adapter helpers
         ├── domain/

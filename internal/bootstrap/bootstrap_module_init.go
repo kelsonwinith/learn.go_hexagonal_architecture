@@ -5,8 +5,8 @@ import (
 	gorm "gorm.io/gorm"
 
 	exampleOrder "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder"
-	exampleOrderExampleProduct "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleproduct"
-	exampleOrderExampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleuser"
+	exampleOrderExampleProduct "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleProduct"
+	exampleOrderExampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleUser"
 	exampleProduct "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct"
 	exampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser"
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
