@@ -51,7 +51,7 @@ type ExampleOrderPostgresqlGetPaginated interface {
 // ============================================================================
 
 type ExampleOrderEventPublisher interface {
-	Execute(ctx context.Context, event Event) error
+	Execute(ctx context.Context, exampleOrderEvent ExampleOrderEvent) error
 }
 
 // ============================================================================

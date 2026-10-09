@@ -119,11 +119,3 @@ func NewExampleOrderProduct(productID, name string, quantity int, createdBy stri
 		UpdatedAt: now,
 	}, nil
 }
-
-// ============================================================================
-// Methods
-// ============================================================================
-
-func (o *ExampleOrder) IsOwnedBy(userID string) bool {
-	return o.CreatedBy == userID
-}

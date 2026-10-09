@@ -14,7 +14,7 @@ const EventTypeOrderCreated = "ORDER_CREATED"
 // Types
 // ============================================================================
 
-type Event struct {
+type ExampleOrderEvent struct {
 	Type       string
 	OrderID    string
 	OccurredAt time.Time
@@ -24,8 +24,8 @@ type Event struct {
 // Constructors
 // ============================================================================
 
-func NewEvent(eventType, orderID string) Event {
-	return Event{
+func NewExampleOrderEvent(eventType, orderID string) ExampleOrderEvent {
+	return ExampleOrderEvent{
 		Type:       eventType,
 		OrderID:    orderID,
 		OccurredAt: time.Now().UTC(),

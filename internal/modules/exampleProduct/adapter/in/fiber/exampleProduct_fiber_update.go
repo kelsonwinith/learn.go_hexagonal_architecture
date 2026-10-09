@@ -35,7 +35,7 @@ func NewExampleProductFiberUpdate(useCase exampleProductDomain.ExampleProductUse
 // @Produce json
 // @Security BearerAuth
 // @Param id path string true "Example ID"
-// @Param example body exampleProductDto.UpdateExampleProductRequest true "Update Example"
+// @Param example body exampleProductDto.ExampleProductUpdateRequest true "Update Example"
 // @Success 200 {object} exampleProductDto.ExampleProductResponse
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
@@ -44,7 +44,7 @@ func NewExampleProductFiberUpdate(useCase exampleProductDomain.ExampleProductUse
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/exampleproduct/{id} [put]
 func (h *ExampleProductFiberUpdate) Handle(c fiber.Ctx) error {
-	req, err := sharedFiber.Bind[exampleProductDto.ExampleProductRequestParams, sharedFiber.Empty, exampleProductDto.UpdateExampleProductRequest](c)
+	req, err := sharedFiber.Bind[exampleProductDto.ExampleProductRequestParams, sharedFiber.Empty, exampleProductDto.ExampleProductUpdateRequest](c)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

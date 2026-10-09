@@ -37,7 +37,7 @@ type ExampleProductCreateRequest struct {
 	Price       int64  `json:"price" validate:"gte=0"`
 }
 
-type UpdateExampleProductRequest struct {
+type ExampleProductUpdateRequest struct {
 	Name        string `json:"name" validate:"required"`
 	Description string `json:"description" validate:"omitempty,max=255"`
 	Price       int64  `json:"price" validate:"gte=0"`
@@ -57,7 +57,7 @@ func (request ExampleProductCreateRequest) ToDomain(createdBy string) examplePro
 	}
 }
 
-func (request UpdateExampleProductRequest) ToDomain(updatedBy string) exampleProductDomain.ExampleProduct {
+func (request ExampleProductUpdateRequest) ToDomain(updatedBy string) exampleProductDomain.ExampleProduct {
 	return exampleProductDomain.ExampleProduct{
 		Name:        request.Name,
 		Description: request.Description,

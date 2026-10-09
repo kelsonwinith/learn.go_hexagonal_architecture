@@ -80,7 +80,7 @@ func (uc *ExampleOrderUsecaseCreate) Execute(ctx context.Context, exampleOrderIn
 		return nil, err
 	}
 
-	exampleOrderEvent := exampleOrderDomain.NewEvent(exampleOrderDomain.EventTypeOrderCreated, exampleOrder.ID)
+	exampleOrderEvent := exampleOrderDomain.NewExampleOrderEvent(exampleOrderDomain.EventTypeOrderCreated, exampleOrder.ID)
 	if err := uc.exampleOrderEventPublisher.Execute(ctx, exampleOrderEvent); err != nil {
 		return nil, err
 	}

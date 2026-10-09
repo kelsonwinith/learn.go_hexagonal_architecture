@@ -55,29 +55,21 @@ func NewExampleUser(name, email, password string, createdBy string) (*ExampleUse
 }
 
 // ============================================================================
-// Methods
-// ============================================================================
-
-func (u *ExampleUser) IsOwnedBy(userID string) bool {
-	return u.CreatedBy == userID
-}
-
-// ============================================================================
 // Functions
 // ============================================================================
 
 func validateExampleUser(name, email, password string) (string, string, string, error) {
-	name, err := validateName(name)
+	name, err := validateExampleUserName(name)
 	if err != nil {
 		return "", "", "", err
 	}
 
-	email, err = validateEmail(email)
+	email, err = validateExampleUserEmail(email)
 	if err != nil {
 		return "", "", "", err
 	}
 
-	password, err = validatePassword(password)
+	password, err = validateExampleUserPassword(password)
 	if err != nil {
 		return "", "", "", err
 	}
@@ -85,7 +77,7 @@ func validateExampleUser(name, email, password string) (string, string, string, 
 	return name, email, password, nil
 }
 
-func validateName(name string) (string, error) {
+func validateExampleUserName(name string) (string, error) {
 	name = strings.TrimSpace(name)
 
 	if name == "" || utf8.RuneCountInString(name) > ExampleUserNameMaxLength {
@@ -95,7 +87,7 @@ func validateName(name string) (string, error) {
 	return name, nil
 }
 
-func validateEmail(email string) (string, error) {
+func validateExampleUserEmail(email string) (string, error) {
 	email = strings.ToLower(strings.TrimSpace(email))
 
 	if email == "" || utf8.RuneCountInString(email) > ExampleUserEmailMaxLength || !strings.Contains(email, "@") {
@@ -105,7 +97,7 @@ func validateEmail(email string) (string, error) {
 	return email, nil
 }
 
-func validatePassword(password string) (string, error) {
+func validateExampleUserPassword(password string) (string, error) {
 	if utf8.RuneCountInString(password) < ExampleUserPasswordMinLength {
 		return "", ExampleUserErrInvalidPassword
 	}

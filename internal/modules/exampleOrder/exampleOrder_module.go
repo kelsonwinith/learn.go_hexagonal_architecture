@@ -25,7 +25,7 @@ func Init(app *fiber.App, db *gorm.DB, exampleUserModuleGetByID exampleOrderDoma
 	exampleOrderGetByIDPostgres := exampleOrderPostgresql.NewExampleOrderPostgresqlGetByID(postgresql)
 	exampleOrderGetPaginatedPostgres := exampleOrderPostgresql.NewExampleOrderPostgresqlGetPaginated(postgresql)
 
-	// Adapters Out - Event Log
+	// Adapters Out - ExampleOrderEvent Log
 	exampleOrderEventPublisher := exampleOrderEventLog.NewExampleOrderEventLogPublisher()
 
 	// Use Cases

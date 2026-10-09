@@ -82,17 +82,17 @@ func (e *ExampleProduct) IsOwnedBy(userID string) bool {
 // ============================================================================
 
 func validateExampleProduct(name, description string, price int64) (string, string, int64, error) {
-	name, err := validateName(name)
+	name, err := validateExampleProductName(name)
 	if err != nil {
 		return "", "", 0, err
 	}
 
-	description, err = validateDescription(description)
+	description, err = validateExampleProductDescription(description)
 	if err != nil {
 		return "", "", 0, err
 	}
 
-	price, err = validatePrice(price)
+	price, err = validateExampleProductPrice(price)
 	if err != nil {
 		return "", "", 0, err
 	}
@@ -100,7 +100,7 @@ func validateExampleProduct(name, description string, price int64) (string, stri
 	return name, description, price, nil
 }
 
-func validateName(name string) (string, error) {
+func validateExampleProductName(name string) (string, error) {
 	name = strings.TrimSpace(name)
 
 	if name == "" || utf8.RuneCountInString(name) > ExampleProductNameMaxLength {
@@ -110,7 +110,7 @@ func validateName(name string) (string, error) {
 	return name, nil
 }
 
-func validateDescription(description string) (string, error) {
+func validateExampleProductDescription(description string) (string, error) {
 	description = strings.TrimSpace(description)
 	if utf8.RuneCountInString(description) > ExampleProductDescriptionMaxLength {
 		return "", ExampleProductErrDescriptionTooLong
@@ -119,7 +119,7 @@ func validateDescription(description string) (string, error) {
 	return description, nil
 }
 
-func validatePrice(price int64) (int64, error) {
+func validateExampleProductPrice(price int64) (int64, error) {
 	if price < ExampleProductMinPrice {
 		return 0, ExampleProductErrInvalidPrice
 	}
