@@ -14,8 +14,9 @@ import (
 
 func allSeeds() []func() any {
 	return []func() any{
-		postgresqlSeed.SeedExampleBasic,
-		postgresqlSeed.SeedExampleAdvanced,
+		postgresqlSeed.SeedExampleUser,
+		postgresqlSeed.SeedExampleProduct,
+		postgresqlSeed.SeedExampleOrder,
 	}
 }
 

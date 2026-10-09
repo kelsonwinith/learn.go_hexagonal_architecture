@@ -16,8 +16,11 @@ import (
 
 	config "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/config"
 	postgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql"
-	exampleAdvanced "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleAdvanced"
-	exampleBasic "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleBasic"
+	exampleOrder "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder"
+	exampleOrderExampleProduct "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleproduct"
+	exampleOrderExampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleuser"
+	exampleProduct "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct"
+	exampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser"
 	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 )
 
@@ -62,8 +65,14 @@ func Run() {
 	app.Get("/swagger/*", swaggo.HandlerDefault)
 
 	// Initialize Modules
-	exampleBasic.Init(app, db)
-	exampleAdvanced.Init(app, db)
+	exampleUserService := exampleUser.Init(app, db)
+	exampleProductService := exampleProduct.Init(app, db)
+
+	// Cross-module adapters: exampleOrder consumes exampleUser and exampleProduct services
+	exampleOrderUserReader := exampleOrderExampleUser.NewExampleOrderUserReader(exampleUserService)
+	exampleOrderProductReader := exampleOrderExampleProduct.NewExampleOrderProductReader(exampleProductService)
+
+	exampleOrder.Init(app, db, exampleOrderUserReader, exampleOrderProductReader)
 
 	// Start Server with Graceful Shutdown
 	quit := make(chan os.Signal, 1)

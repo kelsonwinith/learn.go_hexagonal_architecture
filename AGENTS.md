@@ -19,7 +19,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │   ├── config/
     │   └── postgresql/
     ├── modules/
-    │   ├── exampleBasic/                 # baseline scaffold: flat CRUD with one output port
+    │   ├── exampleUser/                  # baseline scaffold: single-entity CRUD, auth and ownership rules
     │   │   ├── domain/                   # business model, domain errors, input/output ports
     │   │   ├── application/              # use cases; depend on domain ports, not concrete adapters
     │   │   ├── adapter/
@@ -27,8 +27,17 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │   │   │   │   └── fiber/            # HTTP handlers and request/response DTOs
     │   │   │   └── out/
     │   │   │       └── postgresql/       # GORM adapters and domain/model mappers
-    │   │   └── exampleBasic_module.go    # wires the module's dependencies
-    │   └── exampleAdvanced/              # advanced reference: relations, transaction, multiple output ports
+    │   │   └── exampleUser_module.go     # wires the module's dependencies
+    │   ├── exampleProduct/               # single-entity CRUD with a numeric (price) field
+    │   │   ├── domain/
+    │   │   ├── application/
+    │   │   ├── adapter/
+    │   │   │   ├── in/
+    │   │   │   │   └── fiber/
+    │   │   │   └── out/
+    │   │   │       └── postgresql/
+    │   │   └── exampleProduct_module.go
+    │   └── exampleOrder/                 # aggregate, transaction, multiple output ports, cross-module services
     │       ├── domain/
     │       ├── application/
     │       ├── adapter/
@@ -36,8 +45,10 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │       │   │   └── fiber/
     │       │   └── out/
     │       │       ├── postgresql/
-    │       │       └── eventlog/         # second output adapter, not a database
-    │       └── exampleAdvanced_module.go
+    │       │       ├── eventlog/         # second output adapter, not a database
+    │       │       ├── exampleuser/      # cross-module adapter consuming the exampleUser service
+    │       │       └── exampleproduct/   # cross-module adapter consuming the exampleProduct service
+    │       └── exampleOrder_module.go
     └── shared/                           # reusable domain errors and shared adapter helpers
         ├── domain/
         └── adapter/
@@ -56,44 +67,49 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
   - Domain code must not import Fiber, GORM, PostgreSQL, config, or infrastructure packages.
 - Put new business rules in domain constructors/methods or application use cases, not HTTP handlers or database adapters.
 - Keep DTOs and persistence models out of the domain layer. Convert at adapter boundaries with DTO `ToDomain` helpers or mapper functions.
-- Register new dependencies explicitly in the module initializer, following `internal/modules/exampleBasic/exampleBasic_module.go` (baseline) or `internal/modules/exampleAdvanced/exampleAdvanced_module.go` (multiple output ports).
+- Register new dependencies explicitly in the module initializer, following `internal/modules/exampleUser/exampleUser_module.go` (baseline) or `internal/modules/exampleOrder/exampleOrder_module.go` (multiple output ports and cross-module services).
+- Cross-module calls go through a port defined in the consumer's `domain`; the provider exposes its use case and a small `adapter/out/<provider>` in the consumer maps the result. Wire them in `bootstrap`, e.g. `exampleOrder` consuming the `exampleUser` and `exampleProduct` services.
 - Use `context.Context` through use case and adapter methods, matching the existing `Execute(ctx, ...)` pattern.
 
 ## Example Module Showcase
 
 The `example*` modules are the reference implementations. Pick the one whose shape matches the feature you are adding, then use its matching use case as a template.
 
-### Example Basic (`internal/modules/exampleBasic`)
+### Example User (`internal/modules/exampleUser`)
 
 Flat, single-table CRUD with one output port. This is the baseline scaffold to copy when starting a new module.
 
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
-| `ExampleBasicUsecaseCreate` | `POST /api/v1/examplebasic` | Simple write: validation through the `NewExampleBasic` domain constructor, then a single insert |
-| `ExampleBasicUsecaseCreateMultiple` | `POST /api/v1/examplebasic/batch` | Atomic batch insert wrapped in `ExampleBasicPostgresqlTransaction.WithinTransaction` |
-| `ExampleBasicUsecaseGetAll` | `GET /api/v1/examplebasic` | Simple read delegated straight to the output port |
-| `ExampleBasicUsecaseGetPaginated` | `GET /api/v1/examplebasic/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
-| `ExampleBasicUsecaseGetByID` | `GET /api/v1/examplebasic/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleBasicErrNotFound` in the adapter |
-| `ExampleBasicUsecaseUpdate` | `PUT /api/v1/examplebasic/:id` | Ownership rule (`ExampleBasicErrForbidden`) plus domain mutation via `UpdateExampleBasic` |
-| `ExampleBasicUsecaseDelete` | `DELETE /api/v1/examplebasic/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
+| `ExampleUserUsecaseCreate` | `POST /api/v1/exampleuser` | Simple write: validation through the `NewExampleUser` domain constructor, then a single insert |
+| `ExampleUserUsecaseCreateMultiple` | `POST /api/v1/exampleuser/batch` | Atomic batch insert wrapped in `ExampleUserPostgresqlTransaction.WithinTransaction` |
+| `ExampleUserUsecaseGetAll` | `GET /api/v1/exampleuser` | Simple read delegated straight to the output port |
+| `ExampleUserUsecaseGetPaginated` | `GET /api/v1/exampleuser/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
+| `ExampleUserUsecaseGetByID` | `GET /api/v1/exampleuser/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleUserErrNotFound` in the adapter |
+| `ExampleUserUsecaseUpdate` | `PUT /api/v1/exampleuser/:id` | Ownership rule (`ExampleUserErrForbidden`) plus domain mutation via `UpdateExampleUser` |
+| `ExampleUserUsecaseDelete` | `DELETE /api/v1/exampleuser/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
 
-### Example Advanced (`internal/modules/exampleAdvanced`)
+### Example Product (`internal/modules/exampleProduct`)
 
-Aggregate relations and more than one output port. Copy from here when a feature spans multiple tables or must talk to a non-database dependency.
+Same single-entity CRUD shape as `exampleUser`, adding a numeric `Price` field with its own domain validation. Copy from here when an entity has numeric or money-like attributes.
+
+### Example Order (`internal/modules/exampleOrder`)
+
+Aggregate relations, a transaction, more than one output port, and cross-module services. Copy from here when a feature spans multiple tables, talks to a non-database dependency, or consumes another module.
 
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
-| `ExampleAdvancedUsecaseCreate` | `POST /api/v1/exampleadvanced` | Parent + children created atomically inside `WithinTransaction`, then a domain event published through a second output port (`eventlog`) |
-| `ExampleAdvancedUsecaseGetByID` | `GET /api/v1/exampleadvanced/:id` | Loading an aggregate with children via GORM `Preload`, with not-found mapped to `ExampleAdvancedErrNotFound` |
+| `ExampleOrderUsecaseCreate` | `POST /api/v1/exampleorder` | Order + products created atomically inside `WithinTransaction`; the referenced user and products are resolved through the `ExampleOrderUserReader` and `ExampleOrderProductReader` ports (cross-module), then a domain event is published through the `eventlog` output port |
+| `ExampleOrderUsecaseGetByID` | `GET /api/v1/exampleorder/:id` | Loading an aggregate with products via GORM `Preload`, with not-found mapped to `ExampleOrderErrNotFound` |
 
 ## Naming Conventions
 
-- Follow the existing file naming style: `<module>_<layer>_<name>.go`. The name is exactly three underscore-separated segments, and each segment may use camelCase, for example `exampleBasic_usecase_create.go`, `exampleAdvanced_postgresql_getByID.go`, `model_postgresql_exampleAdvancedParent.go`, and `exampleAdvanced_domain_model.go`.
-- Apply the same `<module>_<layer>_<name>` convention to folders, which may also use camelCase, for example `internal/modules/exampleAdvanced/adapter/in/fiber/exampleAdvanced_fiber_getByID.go`.
+- Follow the existing file naming style: `<module>_<layer>_<name>.go`. The name is exactly three underscore-separated segments, and each segment may use camelCase, for example `exampleUser_usecase_create.go`, `exampleOrder_postgresql_getByID.go`, `model_postgresql_exampleOrder.go`, and `exampleOrder_domain_model.go`.
+- Apply the same `<module>_<layer>_<name>` convention to folders, which may also use camelCase, for example `internal/modules/exampleOrder/adapter/in/fiber/exampleOrder_fiber_getByID.go`.
 - Constructors should be named `New<Type>` and return the interface when exposing a port implementation from the application layer.
 - Use `Execute` for use case and output adapter methods, as defined by the domain port interfaces.
-- Keep import aliases consistent with the project style, such as `exampleBasicDomain`, `exampleAdvancedPostgresql`, and `sharedFiber`.
-- Prefix every identifier and variable declared inside a module with the module name: exported names use PascalCase (`ExampleBasicUsecaseCreate`, `ExampleAdvancedPostgresqlCreate`) and unexported or local names use camelCase (`exampleBasicPostgresqlCreate`, `exampleAdvancedCreatePostgres`). Shared packages are the exception and use the `shared` prefix instead, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
+- Keep import aliases consistent with the project style, such as `exampleUserDomain`, `exampleOrderPostgresql`, and `sharedFiber`.
+- Prefix every identifier and variable declared inside a module with the module name: exported names use PascalCase (`ExampleUserUsecaseCreate`, `ExampleOrderPostgresqlCreate`) and unexported or local names use camelCase (`exampleUserPostgresqlCreate`, `exampleOrderCreatePostgres`). Shared packages are the exception and use the `shared` prefix instead, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
 
 ## Imports
 
@@ -113,7 +129,7 @@ Aggregate relations and more than one output port. Copy from here when a feature
 
 - Group imports into three blocks separated by blank lines, in this order: standard library, third-party, then internal (`github.com/kelsonwinith/...`) packages.
 - Use lowercase aliases for standard library and third-party packages (`fiber`, `gorm`, `validator`).
-- Use camelCase aliases for internal packages, prefixed with the module or layer name (`exampleBasicDomain`, `sharedFiber`, `exampleAdvancedPostgresql`); a bare package name such as `config` is fine when unambiguous.
+- Use camelCase aliases for internal packages, prefixed with the module or layer name (`exampleUserDomain`, `sharedFiber`, `exampleOrderPostgresql`); a bare package name such as `config` is fine when unambiguous.
 - Never rely on the implicit package name; write the alias on every import.
 
 ## File Sectioning
@@ -139,9 +155,9 @@ Rules:
 
 - Separate a banner from the declarations that follow it with one blank line, and precede it with one blank line when it is not the first item after the imports.
 - A file that contains only one category still gets that category's banner (a port-only file starts with a `Types` banner).
-- When a category has meaningful subgroups, give each subgroup its own named banner in the same format, such as `Usecase Ports` and `PostgreSQL Ports` in `exampleBasic_domain_port.go`.
+- When a category has meaningful subgroups, give each subgroup its own named banner in the same format, such as `Usecase Ports` and `PostgreSQL Ports` in `exampleUser_domain_port.go`.
 - Keep the Swagger doc comment directly above its handler: place the `Methods` banner, then a blank line, then the `// Handle ...` annotation block, so the annotations stay attached to `func`.
-- Do not section declarations inside a function body. Existing inline step comments (for example `// Adapters Out - PostgreSQL` in `exampleBasic_module.go`) stay as they are.
+- Do not section declarations inside a function body. Existing inline step comments (for example `// Adapters Out - PostgreSQL` in `exampleUser_module.go`) stay as they are.
 
 Example:
 
@@ -156,13 +172,13 @@ import (
 // Constants
 // ============================================================================
 
-const ExampleBasicMaxLength = 255
+const ExampleUserMaxLength = 255
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type ExampleBasic struct {
+type ExampleUser struct {
 	ID string
 }
 
@@ -170,15 +186,15 @@ type ExampleBasic struct {
 // Constructors
 // ============================================================================
 
-func NewExampleBasic(id string) *ExampleBasic {
-	return &ExampleBasic{ID: id}
+func NewExampleUser(id string) *ExampleUser {
+	return &ExampleUser{ID: id}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (e *ExampleBasic) Validate() error {
+func (e *ExampleUser) Validate() error {
 	return nil
 }
 
@@ -206,7 +222,7 @@ func helper() string {
 
 - Use `sharedDomain.Error` for application-level errors.
 - Errors consist of an `HTTPCode`, a `Type` (e.g., `BAD_REQUEST`, `NOT_FOUND`), a unique `ID` (e.g., `E001`), and a `Message`.
-- Use prefix-based IDs defined in `internal/shared/domain/shared_domain_error.go` (e.g., `SYS` for system, `FIB` for fiber, `EXB` for the exampleBasic module, `EXA` for the exampleAdvanced module).
+- Use prefix-based IDs defined in `internal/shared/domain/shared_domain_error.go` (e.g., `SYS` for system, `FIB` for fiber, `EXU` for the exampleUser module, `EXP` for the exampleProduct module, `EXO` for the exampleOrder module).
 - Prefer defining reusable errors in the domain layer of the relevant module.
 
 ## PostgreSQL and GORM
@@ -215,8 +231,8 @@ func helper() string {
 - Use the shared PostgreSQL wrapper from `internal/shared/adapter/out/postgresql`.
 - Use `GetExecutor(ctx)` so transactional contexts continue to work.
 - Convert between domain objects and GORM models in `adapter/out/postgresql/mapper`.
-- Keep persistence models to one file per database table (e.g. `model_postgresql_exampleAdvancedParent.go` and `model_postgresql_exampleAdvancedChild.go`).
-- For multi-step writes that must be atomic, follow the existing transaction pattern used by `ExampleBasicUsecaseCreateMultiple` (single table) or `ExampleAdvancedUsecaseCreate` (parent + children across multiple output ports).
+- Keep persistence models to one file per database table (e.g. `model_postgresql_exampleOrder.go` and `model_postgresql_exampleOrderProduct.go`).
+- For multi-step writes that must be atomic, follow the existing transaction pattern used by `ExampleUserUsecaseCreateMultiple` (single table) or `ExampleOrderUsecaseCreate` (order + products across multiple output ports).
 
 ## Configuration
 
