@@ -3,7 +3,7 @@ package exampleOrder
 import (
 	fiber "github.com/gofiber/fiber/v3"
 	exampleOrderFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/in/fiber"
-	exampleOrderEventLog "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/eventlog"
+	exampleOrderEventLog "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/eventLog"
 	exampleOrderPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/postgresql"
 	exampleOrderUsecase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/application"
 	exampleOrderDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/domain"

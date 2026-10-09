@@ -50,7 +50,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │       │   │   └── fiber/
     │       │   └── out/
     │       │       ├── postgresql/
-    │       │       ├── eventlog/         # second output adapter, not a database
+    │       │       ├── eventLog/         # second output adapter, not a database
     │       │       ├── exampleUser/      # cross-module adapter consuming the exampleUser service
     │       │       └── exampleProduct/   # cross-module adapter consuming the exampleProduct service
     │       └── exampleOrder_module.go
@@ -109,7 +109,7 @@ Aggregate relations, a transaction, more than one output port, and cross-module 
 
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
-| `ExampleOrderUsecaseCreate` | `POST /api/v1/exampleorder` | Order + products created atomically inside `WithinTransaction`; the referenced user and products are resolved through the `ExampleUserModuleGetByID` and `ExampleProductModuleGetByID` ports (cross-module), then a domain event is published through the `eventlog` output port |
+| `ExampleOrderUsecaseCreate` | `POST /api/v1/exampleorder` | Order + products created atomically inside `WithinTransaction`; the referenced user and products are resolved through the `ExampleUserModuleGetByID` and `ExampleProductModuleGetByID` ports (cross-module), then a domain event is published through the `eventLog` output port |
 | `ExampleOrderUsecaseGetByID` | `GET /api/v1/exampleorder/:id` | Loading an aggregate with products via GORM `Preload`, with not-found mapped to `ExampleOrderErrNotFound` |
 | `ExampleOrderUsecaseGetPaginated` | `GET /api/v1/exampleorder/paginated` | Paginated aggregate listing: shared `sharedDomain.NewPagination` + `sharedFiber.ResponsePaginated` |
 
