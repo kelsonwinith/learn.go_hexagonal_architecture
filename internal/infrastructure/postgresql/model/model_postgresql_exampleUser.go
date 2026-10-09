@@ -18,8 +18,9 @@ type ExampleUserModel struct {
 	defaultModel.BaseModel
 	defaultModel.DeleteModel
 
-	Name        string `gorm:"column:name;type:varchar(255);not null"`
-	Description string `gorm:"column:description;type:varchar(255)"`
+	Name     string `gorm:"column:name;type:varchar(255);not null"`
+	Email    string `gorm:"column:email;type:varchar(255);not null;uniqueIndex"`
+	Password string `gorm:"column:password;type:varchar(255);not null"`
 }
 
 // ============================================================================

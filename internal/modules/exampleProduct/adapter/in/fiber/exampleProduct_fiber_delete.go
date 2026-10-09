@@ -30,7 +30,7 @@ func NewExampleProductFiberDelete(useCase exampleProductDomain.ExampleProductUse
 // Handle DeleteExampleProduct
 // @Summary Delete an example
 // @Description Delete an example by ID
-// @Tags exampleproduct
+// @Tags Example Product
 // @Produce json
 // @Security UserIdAuth
 // @Param example-user-id header int true "Authenticated User ID"

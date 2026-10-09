@@ -11,53 +11,44 @@ import (
 // Types
 // ============================================================================
 
-type ExampleUserFiberUpdate struct {
-	useCase exampleUserDomain.ExampleUserUsecaseUpdate
+type ExampleUserFiberLogin struct {
+	useCase exampleUserDomain.ExampleUserUsecaseLogin
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUserFiberUpdate(useCase exampleUserDomain.ExampleUserUsecaseUpdate) *ExampleUserFiberUpdate {
-	return &ExampleUserFiberUpdate{useCase: useCase}
+func NewExampleUserFiberLogin(useCase exampleUserDomain.ExampleUserUsecaseLogin) *ExampleUserFiberLogin {
+	return &ExampleUserFiberLogin{useCase: useCase}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-// Handle UpdateExampleUser
-// @Summary Update an example
-// @Description Update an example by ID
-// @Tags exampleuser
+// Handle LoginExampleUser
+// @Summary Login an example user
+// @Description Mock login: verifies email and password and returns a mock token
+// @Tags Example User
 // @Accept json
 // @Produce json
-// @Security UserIdAuth
-// @Param example-user-id header int true "Authenticated User ID"
-// @Param id path string true "Example ID"
-// @Param example body exampleUserDto.UpdateExampleUserRequest true "Update Example"
-// @Success 200 {object} exampleUserDto.ExampleUserResponse
+// @Param example body exampleUserDto.ExampleUserLoginRequest true "Login ExampleUser"
+// @Success 200 {object} exampleUserDto.ExampleUserLoginResponse
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
-// @Failure 403 {object} map[string]string
-// @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/v1/exampleuser/{id} [put]
-func (h *ExampleUserFiberUpdate) Handle(c fiber.Ctx) error {
-	req, err := sharedFiber.Bind[exampleUserDto.ExampleUserRequestParams, sharedFiber.Empty, exampleUserDto.UpdateExampleUserRequest](c)
+// @Router /api/v1/exampleuser/login [post]
+func (h *ExampleUserFiberLogin) Handle(c fiber.Ctx) error {
+	req, err := sharedFiber.Bind[sharedFiber.Empty, sharedFiber.Empty, exampleUserDto.ExampleUserLoginRequest](c)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	userID := sharedFiber.GetAuthUserID(c)
-	domainReq := req.Body.ToDomain(userID)
-	domainReq.ID = req.URI.ID
-
-	res, err := h.useCase.Execute(c.Context(), domainReq)
+	res, err := h.useCase.Execute(c.Context(), req.Body.Email, req.Body.Password)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.ResponseSuccess(c, exampleUserDto.ToExampleUserResponse(res))
+	return sharedFiber.ResponseSuccess(c, exampleUserDto.ToExampleUserLoginResponse(res))
 }

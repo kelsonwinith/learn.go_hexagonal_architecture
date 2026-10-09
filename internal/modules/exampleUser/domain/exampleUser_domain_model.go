@@ -10,28 +10,33 @@ import (
 // Constants
 // ============================================================================
 
-const ExampleUserDescriptionMaxLength = 255
+const (
+	ExampleUserNameMaxLength     = 255
+	ExampleUserEmailMaxLength    = 255
+	ExampleUserPasswordMinLength = 8
+)
 
 // ============================================================================
 // Types
 // ============================================================================
 
 type ExampleUser struct {
-	ID          string
-	Name        string
-	Description string
-	CreatedBy   int64
-	UpdatedBy   int64
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID        string
+	Name      string
+	Email     string
+	Password  string
+	CreatedBy int64
+	UpdatedBy int64
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUser(name, description string, createdBy int64) (*ExampleUser, error) {
-	name, description, err := validateExampleUser(name, description)
+func NewExampleUser(name, email, password string, createdBy int64) (*ExampleUser, error) {
+	name, email, password, err := validateExampleUser(name, email, password)
 	if err != nil {
 		return nil, err
 	}
@@ -39,12 +44,13 @@ func NewExampleUser(name, description string, createdBy int64) (*ExampleUser, er
 	now := time.Now().UTC()
 
 	return &ExampleUser{
-		Name:        name,
-		Description: description,
-		CreatedBy:   createdBy,
-		UpdatedBy:   createdBy,
-		CreatedAt:   now,
-		UpdatedAt:   now,
+		Name:      name,
+		Email:     email,
+		Password:  password,
+		CreatedBy: createdBy,
+		UpdatedBy: createdBy,
+		CreatedAt: now,
+		UpdatedAt: now,
 	}, nil
 }
 
@@ -52,57 +58,57 @@ func NewExampleUser(name, description string, createdBy int64) (*ExampleUser, er
 // Methods
 // ============================================================================
 
-func (e *ExampleUser) UpdateExampleUser(name, description string, updatedBy int64) error {
-	name, description, err := validateExampleUser(name, description)
-	if err != nil {
-		return err
-	}
-
-	e.Name = name
-	e.Description = description
-	e.UpdatedBy = updatedBy
-	e.UpdatedAt = time.Now().UTC()
-
-	return nil
-}
-
-func (e *ExampleUser) IsOwnedBy(userID int64) bool {
-	return e.CreatedBy == userID
+func (u *ExampleUser) IsOwnedBy(userID int64) bool {
+	return u.CreatedBy == userID
 }
 
 // ============================================================================
 // Functions
 // ============================================================================
 
-func validateExampleUser(name, description string) (string, string, error) {
+func validateExampleUser(name, email, password string) (string, string, string, error) {
 	name, err := validateName(name)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 
-	description, err = validateDescription(description)
+	email, err = validateEmail(email)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 
-	return name, description, nil
+	password, err = validatePassword(password)
+	if err != nil {
+		return "", "", "", err
+	}
+
+	return name, email, password, nil
 }
 
 func validateName(name string) (string, error) {
-	fields := strings.Fields(name)
+	name = strings.TrimSpace(name)
 
-	if len(fields) != 2 {
+	if name == "" || utf8.RuneCountInString(name) > ExampleUserNameMaxLength {
 		return "", ExampleUserErrInvalidName
 	}
 
-	return strings.Join(fields, " "), nil
+	return name, nil
 }
 
-func validateDescription(description string) (string, error) {
-	description = strings.TrimSpace(description)
-	if utf8.RuneCountInString(description) > ExampleUserDescriptionMaxLength {
-		return "", ExampleUserErrDescriptionTooLong
+func validateEmail(email string) (string, error) {
+	email = strings.ToLower(strings.TrimSpace(email))
+
+	if email == "" || utf8.RuneCountInString(email) > ExampleUserEmailMaxLength || !strings.Contains(email, "@") {
+		return "", ExampleUserErrInvalidEmail
 	}
 
-	return description, nil
+	return email, nil
+}
+
+func validatePassword(password string) (string, error) {
+	if utf8.RuneCountInString(password) < ExampleUserPasswordMinLength {
+		return "", ExampleUserErrInvalidPassword
+	}
+
+	return password, nil
 }

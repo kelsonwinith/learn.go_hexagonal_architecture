@@ -28,13 +28,13 @@ func NewExampleUserPostgresqlCreate(p *sharedPostgresql.Postgresql) *ExampleUser
 // Methods
 // ============================================================================
 
-func (e *ExampleUserPostgresqlCreate) Execute(ctx context.Context, example *exampleUserDomain.ExampleUser) error {
-	entity := exampleUserMapper.ToExampleUserModel(example)
+func (e *ExampleUserPostgresqlCreate) Execute(ctx context.Context, exampleUser *exampleUserDomain.ExampleUser) error {
+	entity := exampleUserMapper.ToExampleUserModel(exampleUser)
 	if err := e.GetExecutor(ctx).Create(entity).Error; err != nil {
 		return err
 	}
 
-	*example = *exampleUserMapper.ToExampleUserDomain(entity)
+	*exampleUser = *exampleUserMapper.ToExampleUserDomain(entity)
 
 	return nil
 }

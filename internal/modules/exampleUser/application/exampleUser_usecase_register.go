@@ -10,31 +10,31 @@ import (
 // Types
 // ============================================================================
 
-type ExampleUserUsecaseCreate struct {
-	exampleCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate
+type ExampleUserUsecaseRegister struct {
+	exampleUserCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUserUsecaseCreate(exampleCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate) exampleUserDomain.ExampleUserUsecaseCreate {
-	return &ExampleUserUsecaseCreate{exampleCreatePostgres: exampleCreatePostgres}
+func NewExampleUserUsecaseRegister(exampleUserCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate) exampleUserDomain.ExampleUserUsecaseRegister {
+	return &ExampleUserUsecaseRegister{exampleUserCreatePostgres: exampleUserCreatePostgres}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (uc *ExampleUserUsecaseCreate) Execute(ctx context.Context, input exampleUserDomain.ExampleUser) (*exampleUserDomain.ExampleUser, error) {
-	example, err := exampleUserDomain.NewExampleUser(input.Name, input.Description, input.CreatedBy)
+func (uc *ExampleUserUsecaseRegister) Execute(ctx context.Context, input exampleUserDomain.ExampleUser) (*exampleUserDomain.ExampleUser, error) {
+	exampleUser, err := exampleUserDomain.NewExampleUser(input.Name, input.Email, input.Password, input.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := uc.exampleCreatePostgres.Execute(ctx, example); err != nil {
+	if err := uc.exampleUserCreatePostgres.Execute(ctx, exampleUser); err != nil {
 		return nil, err
 	}
 
-	return example, nil
+	return exampleUser, nil
 }

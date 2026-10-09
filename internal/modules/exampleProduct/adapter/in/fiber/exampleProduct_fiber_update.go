@@ -30,7 +30,7 @@ func NewExampleProductFiberUpdate(useCase exampleProductDomain.ExampleProductUse
 // Handle UpdateExampleProduct
 // @Summary Update an example
 // @Description Update an example by ID
-// @Tags exampleproduct
+// @Tags Example Product
 // @Accept json
 // @Produce json
 // @Security UserIdAuth

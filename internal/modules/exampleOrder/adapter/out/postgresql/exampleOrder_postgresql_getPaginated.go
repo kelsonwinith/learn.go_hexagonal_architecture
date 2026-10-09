@@ -6,8 +6,8 @@ import (
 	gorm "gorm.io/gorm"
 
 	postgresqlModel "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/infrastructure/postgresql/model"
-	exampleUserMapper "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/adapter/out/postgresql/mapper"
-	exampleUserDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/domain"
+	exampleOrderMapper "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/postgresql/mapper"
+	exampleOrderDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 )
 
@@ -15,7 +15,7 @@ import (
 // Types
 // ============================================================================
 
-type ExampleUserPostgresqlGetPaginated struct {
+type ExampleOrderPostgresqlGetPaginated struct {
 	*sharedPostgresql.Postgresql
 }
 
@@ -23,33 +23,38 @@ type ExampleUserPostgresqlGetPaginated struct {
 // Constructors
 // ============================================================================
 
-func NewExampleUserPostgresqlGetPaginated(p *sharedPostgresql.Postgresql) *ExampleUserPostgresqlGetPaginated {
-	return &ExampleUserPostgresqlGetPaginated{Postgresql: p}
+func NewExampleOrderPostgresqlGetPaginated(p *sharedPostgresql.Postgresql) *ExampleOrderPostgresqlGetPaginated {
+	return &ExampleOrderPostgresqlGetPaginated{Postgresql: p}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (e *ExampleUserPostgresqlGetPaginated) Execute(ctx context.Context, limit, offset int, search string) ([]*exampleUserDomain.ExampleUser, int64, error) {
+func (e *ExampleOrderPostgresqlGetPaginated) Execute(ctx context.Context, limit, offset int, search string) ([]*exampleOrderDomain.ExampleOrder, int64, error) {
 	var total int64
-	if err := exampleSearchScope(e.GetExecutor(ctx).Model(&postgresqlModel.ExampleUserModel{}), search).Count(&total).Error; err != nil {
+	if err := exampleOrderSearchScope(e.GetExecutor(ctx).Model(&postgresqlModel.ExampleOrderModel{}), search).Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	var entities []*postgresqlModel.ExampleUserModel
-	if err := exampleSearchScope(e.GetExecutor(ctx), search).Order("created_at DESC").Limit(limit).Offset(offset).Find(&entities).Error; err != nil {
+	var entities []*postgresqlModel.ExampleOrderModel
+	if err := exampleOrderSearchScope(e.GetExecutor(ctx), search).
+		Preload("Products").
+		Order("created_at DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&entities).Error; err != nil {
 		return nil, 0, err
 	}
 
-	return exampleUserMapper.ToExampleUserDomains(entities), total, nil
+	return exampleOrderMapper.ToExampleOrderDomains(entities), total, nil
 }
 
 // ============================================================================
 // Functions
 // ============================================================================
 
-func exampleSearchScope(db *gorm.DB, search string) *gorm.DB {
+func exampleOrderSearchScope(db *gorm.DB, search string) *gorm.DB {
 	if search == "" {
 		return db
 	}

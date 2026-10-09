@@ -30,7 +30,7 @@ func NewExampleProductFiberCreate(useCase exampleProductDomain.ExampleProductUse
 // Handle CreateExampleProduct
 // @Summary Create a new example
 // @Description Create a new example with the input payload
-// @Tags exampleproduct
+// @Tags Example Product
 // @Accept json
 // @Produce json
 // @Security UserIdAuth

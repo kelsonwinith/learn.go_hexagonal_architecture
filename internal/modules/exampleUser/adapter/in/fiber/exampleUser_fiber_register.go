@@ -11,44 +11,40 @@ import (
 // Types
 // ============================================================================
 
-type ExampleUserFiberCreate struct {
-	useCase exampleUserDomain.ExampleUserUsecaseCreate
+type ExampleUserFiberRegister struct {
+	useCase exampleUserDomain.ExampleUserUsecaseRegister
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUserFiberCreate(useCase exampleUserDomain.ExampleUserUsecaseCreate) *ExampleUserFiberCreate {
-	return &ExampleUserFiberCreate{useCase: useCase}
+func NewExampleUserFiberRegister(useCase exampleUserDomain.ExampleUserUsecaseRegister) *ExampleUserFiberRegister {
+	return &ExampleUserFiberRegister{useCase: useCase}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-// Handle CreateExampleUser
-// @Summary Create a new example
-// @Description Create a new example with the input payload
-// @Tags exampleuser
+// Handle RegisterExampleUser
+// @Summary Register a new example user
+// @Description Register a new example user from name, email and password
+// @Tags Example User
 // @Accept json
 // @Produce json
-// @Security UserIdAuth
-// @Param example-user-id header int true "Authenticated User ID"
-// @Param example body exampleUserDto.ExampleUserCreateRequest true "Create Example"
+// @Param example body exampleUserDto.ExampleUserRegisterRequest true "Register ExampleUser"
 // @Success 201 {object} exampleUserDto.ExampleUserResponse
 // @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/v1/exampleuser [post]
-func (h *ExampleUserFiberCreate) Handle(c fiber.Ctx) error {
-	req, err := sharedFiber.Bind[sharedFiber.Empty, sharedFiber.Empty, exampleUserDto.ExampleUserCreateRequest](c)
+// @Router /api/v1/exampleuser/register [post]
+func (h *ExampleUserFiberRegister) Handle(c fiber.Ctx) error {
+	req, err := sharedFiber.Bind[sharedFiber.Empty, sharedFiber.Empty, exampleUserDto.ExampleUserRegisterRequest](c)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	userID := sharedFiber.GetAuthUserID(c)
-	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(userID))
+	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(0))
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

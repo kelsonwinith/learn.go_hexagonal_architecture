@@ -72,6 +72,15 @@ func ToExampleOrderDomain(entity *postgresqlModel.ExampleOrderModel) *exampleOrd
 	return order
 }
 
+func ToExampleOrderDomains(entities []*postgresqlModel.ExampleOrderModel) []*exampleOrderDomain.ExampleOrder {
+	orders := make([]*exampleOrderDomain.ExampleOrder, len(entities))
+	for i, entity := range entities {
+		orders[i] = ToExampleOrderDomain(entity)
+	}
+
+	return orders
+}
+
 func ToExampleOrderProductDomain(entity *postgresqlModel.ExampleOrderProductModel) *exampleOrderDomain.ExampleOrderProduct {
 	return &exampleOrderDomain.ExampleOrderProduct{
 		ID:        entity.ID,

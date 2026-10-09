@@ -19,7 +19,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │   ├── config/
     │   └── postgresql/
     ├── modules/
-    │   ├── exampleUser/                  # baseline scaffold: single-entity CRUD, auth and ownership rules
+    │   ├── exampleUser/                  # identity module: register, login, profile
     │   │   ├── domain/                   # business model, domain errors, input/output ports
     │   │   ├── application/              # use cases; depend on domain ports, not concrete adapters
     │   │   ├── adapter/
@@ -28,7 +28,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
     │   │   │   └── out/
     │   │   │       └── postgresql/       # GORM adapters and domain/model mappers
     │   │   └── exampleUser_module.go     # wires the module's dependencies
-    │   ├── exampleProduct/               # single-entity CRUD with a numeric (price) field
+    │   ├── exampleProduct/               # baseline scaffold: single-entity CRUD with one output port
     │   │   ├── domain/
     │   │   ├── application/
     │   │   ├── adapter/
@@ -67,7 +67,7 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
   - Domain code must not import Fiber, GORM, PostgreSQL, config, or infrastructure packages.
 - Put new business rules in domain constructors/methods or application use cases, not HTTP handlers or database adapters.
 - Keep DTOs and persistence models out of the domain layer. Convert at adapter boundaries with DTO `ToDomain` helpers or mapper functions.
-- Register new dependencies explicitly in the module initializer, following `internal/modules/exampleUser/exampleUser_module.go` (baseline) or `internal/modules/exampleOrder/exampleOrder_module.go` (multiple output ports and cross-module services).
+- Register new dependencies explicitly in the module initializer, following `internal/modules/exampleProduct/exampleProduct_module.go` (baseline) or `internal/modules/exampleOrder/exampleOrder_module.go` (multiple output ports and cross-module services).
 - Cross-module calls go through a port defined in the consumer's `domain`; the provider exposes its use case and a small `adapter/out/<provider>` in the consumer maps the result. Wire them in `bootstrap`, e.g. `exampleOrder` consuming the `exampleUser` and `exampleProduct` services.
 - Use `context.Context` through use case and adapter methods, matching the existing `Execute(ctx, ...)` pattern.
 
@@ -77,21 +77,25 @@ The `example*` modules are the reference implementations. Pick the one whose sha
 
 ### Example User (`internal/modules/exampleUser`)
 
-Flat, single-table CRUD with one output port. This is the baseline scaffold to copy when starting a new module.
+Identity module (register, login, profile). Keep it small: it exists to show auth flow and to be consumed by other modules, not to show CRUD.
 
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
-| `ExampleUserUsecaseCreate` | `POST /api/v1/exampleuser` | Simple write: validation through the `NewExampleUser` domain constructor, then a single insert |
-| `ExampleUserUsecaseCreateMultiple` | `POST /api/v1/exampleuser/batch` | Atomic batch insert wrapped in `ExampleUserPostgresqlTransaction.WithinTransaction` |
-| `ExampleUserUsecaseGetAll` | `GET /api/v1/exampleuser` | Simple read delegated straight to the output port |
-| `ExampleUserUsecaseGetPaginated` | `GET /api/v1/exampleuser/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
-| `ExampleUserUsecaseGetByID` | `GET /api/v1/exampleuser/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleUserErrNotFound` in the adapter |
-| `ExampleUserUsecaseUpdate` | `PUT /api/v1/exampleuser/:id` | Ownership rule (`ExampleUserErrForbidden`) plus domain mutation via `UpdateExampleUser` |
-| `ExampleUserUsecaseDelete` | `DELETE /api/v1/exampleuser/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
+| `ExampleUserUsecaseRegister` | `POST /api/v1/exampleuser/register` | Validation through the `NewExampleUser` domain constructor (name, email, password), then a single insert |
+| `ExampleUserUsecaseLogin` | `POST /api/v1/exampleuser/login` | Mock login: lookup by email through `ExampleUserPostgresqlGetByEmail`, credential check, mock token returned by the handler |
+| `ExampleUserUsecaseGetByID` | `GET /api/v1/exampleuser/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleUserErrNotFound`; also the service `exampleOrder` consumes cross-module |
 
 ### Example Product (`internal/modules/exampleProduct`)
 
-Same single-entity CRUD shape as `exampleUser`, adding a numeric `Price` field with its own domain validation. Copy from here when an entity has numeric or money-like attributes.
+Single-entity CRUD with one output port. Copy from here when starting a new module with create, update, delete, get-by-ID and paginated read.
+
+| Use case (`application/`) | Endpoint | Showcases |
+| --- | --- | --- |
+| `ExampleProductUsecaseCreate` | `POST /api/v1/exampleproduct` | Simple write: validation (incl. numeric `Price`) through `NewExampleProduct`, then a single insert |
+| `ExampleProductUsecaseGetByID` | `GET /api/v1/exampleproduct/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleProductErrNotFound` |
+| `ExampleProductUsecaseGetPaginated` | `GET /api/v1/exampleproduct/paginated` | Pagination + search: query DTO validation, shared `sharedDomain.NewPagination` default/max rule, then `sharedFiber.ResponsePaginated` |
+| `ExampleProductUsecaseUpdate` | `PUT /api/v1/exampleproduct/:id` | Ownership rule (`ExampleProductErrForbidden`) plus domain mutation via `UpdateExampleProduct` |
+| `ExampleProductUsecaseDelete` | `DELETE /api/v1/exampleproduct/:id` | Ownership rule plus GORM soft delete (`deleted_by` then `Delete`) |
 
 ### Example Order (`internal/modules/exampleOrder`)
 
@@ -101,15 +105,16 @@ Aggregate relations, a transaction, more than one output port, and cross-module 
 | --- | --- | --- |
 | `ExampleOrderUsecaseCreate` | `POST /api/v1/exampleorder` | Order + products created atomically inside `WithinTransaction`; the referenced user and products are resolved through the `ExampleOrderUserReader` and `ExampleOrderProductReader` ports (cross-module), then a domain event is published through the `eventlog` output port |
 | `ExampleOrderUsecaseGetByID` | `GET /api/v1/exampleorder/:id` | Loading an aggregate with products via GORM `Preload`, with not-found mapped to `ExampleOrderErrNotFound` |
+| `ExampleOrderUsecaseGetPaginated` | `GET /api/v1/exampleorder/paginated` | Paginated aggregate listing: shared `sharedDomain.NewPagination` + `sharedFiber.ResponsePaginated` |
 
 ## Naming Conventions
 
-- Follow the existing file naming style: `<module>_<layer>_<name>.go`. The name is exactly three underscore-separated segments, and each segment may use camelCase, for example `exampleUser_usecase_create.go`, `exampleOrder_postgresql_getByID.go`, `model_postgresql_exampleOrder.go`, and `exampleOrder_domain_model.go`.
+- Follow the existing file naming style: `<module>_<layer>_<name>.go`. The name is exactly three underscore-separated segments, and each segment may use camelCase, for example `exampleUser_usecase_register.go`, `exampleOrder_postgresql_getByID.go`, `model_postgresql_exampleOrder.go`, and `exampleOrder_domain_model.go`.
 - Apply the same `<module>_<layer>_<name>` convention to folders, which may also use camelCase, for example `internal/modules/exampleOrder/adapter/in/fiber/exampleOrder_fiber_getByID.go`.
 - Constructors should be named `New<Type>` and return the interface when exposing a port implementation from the application layer.
 - Use `Execute` for use case and output adapter methods, as defined by the domain port interfaces.
 - Keep import aliases consistent with the project style, such as `exampleUserDomain`, `exampleOrderPostgresql`, and `sharedFiber`.
-- Prefix every identifier and variable declared inside a module with the module name: exported names use PascalCase (`ExampleUserUsecaseCreate`, `ExampleOrderPostgresqlCreate`) and unexported or local names use camelCase (`exampleUserPostgresqlCreate`, `exampleOrderCreatePostgres`). Shared packages are the exception and use the `shared` prefix instead, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
+- Prefix every identifier and variable declared inside a module with the module name: exported names use PascalCase (`ExampleUserUsecaseRegister`, `ExampleOrderPostgresqlCreate`) and unexported or local names use camelCase (`exampleUserPostgresqlCreate`, `exampleOrderCreatePostgres`). Shared packages are the exception and use the `shared` prefix instead, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
 
 ## Imports
 
@@ -218,6 +223,36 @@ func helper() string {
 - Use `sharedDomain.NewPagination` for page/page-size defaulting and max clamping instead of reimplementing it in each use case. Pass `sharedDomain.PaginationLimits` to override the shared defaults; omit it to fall back to `DefaultPageSize`/`MaxPageSize`.
 - Keep Swagger comments on handlers up to date when adding or changing endpoints.
 
+### Swagger Annotation Template
+
+Place this block directly above every `Handle` method: the `Methods` banner, a blank line, then the annotation comment so it stays attached to the function. Copy it and adjust names; keep the tag, DTO references, and router in the forms shown.
+
+```go
+// Handle CreateExampleProduct
+// @Summary Create an example product
+// @Description Create a new example product
+// @Tags Example Product
+// @Accept json
+// @Produce json
+// @Security UserIdAuth
+// @Param example-user-id header int true "Authenticated User ID"
+// @Param example body exampleProductDto.ExampleProductCreateRequest true "Create ExampleProduct"
+// @Success 201 {object} exampleProductDto.ExampleProductResponse
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/v1/exampleproduct [post]
+func (h *ExampleProductFiberCreate) Handle(c fiber.Ctx) error {
+```
+
+Rules:
+
+- `@Tags` is the only thing that controls the Swagger section header. Write it in Title Case with spaces (`Example User`, `Example Product`, `Example Order`), never the lowercase module name, and use the exact same value on every handler of a module. Swag splits tags on commas, not spaces, so a spaced name stays a single tag.
+- `@Router` keeps the lowercase module path (`/api/v1/exampleproduct`) even though the tag is `Example Product`.
+- Use the module DTO package alias for types: `exampleProductDto.ExampleProductResponse`.
+- For paginated reads use `@Success 200 {object} sharedFiber.ResponsePaginatedData[exampleProductDto.ExampleProductResponse]`.
+- Include `@Security UserIdAuth` and the `example-user-id` header param only on endpoints guarded by the auth middleware.
+
 ## Error Handling
 
 - Use `sharedDomain.Error` for application-level errors.
@@ -232,7 +267,7 @@ func helper() string {
 - Use `GetExecutor(ctx)` so transactional contexts continue to work.
 - Convert between domain objects and GORM models in `adapter/out/postgresql/mapper`.
 - Keep persistence models to one file per database table (e.g. `model_postgresql_exampleOrder.go` and `model_postgresql_exampleOrderProduct.go`).
-- For multi-step writes that must be atomic, follow the existing transaction pattern used by `ExampleUserUsecaseCreateMultiple` (single table) or `ExampleOrderUsecaseCreate` (order + products across multiple output ports).
+- For multi-step writes that must be atomic, follow the transaction pattern used by `ExampleOrderUsecaseCreate` (order + products across multiple output ports).
 
 ## Configuration
 

@@ -38,6 +38,12 @@ type ExampleOrderRequestParams struct {
 	ID string `uri:"id" validate:"required,uuid4"`
 }
 
+type ExampleOrderGetPaginatedQuery struct {
+	Page     int    `query:"page" validate:"omitempty,min=1"`
+	PageSize int    `query:"page_size" validate:"omitempty,min=1"`
+	Search   string `query:"search" validate:"omitempty,max=255"`
+}
+
 type ExampleOrderCreateRequest struct {
 	Name        string                             `json:"name" validate:"required,max=255"`
 	Description string                             `json:"description" validate:"omproductpty,max=255"`
@@ -91,6 +97,15 @@ func ToExampleOrderResponse(order *exampleOrderDomain.ExampleOrder) ExampleOrder
 		CreatedAt:   order.CreatedAt,
 		UpdatedAt:   order.UpdatedAt,
 	}
+}
+
+func ToExampleOrderResponses(orders []*exampleOrderDomain.ExampleOrder) []ExampleOrderResponse {
+	res := make([]ExampleOrderResponse, len(orders))
+	for i, order := range orders {
+		res[i] = ToExampleOrderResponse(order)
+	}
+
+	return res
 }
 
 func ToExampleOrderProductResponses(products []*exampleOrderDomain.ExampleOrderProduct) []ExampleOrderProductResponse {

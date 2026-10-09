@@ -28,11 +28,11 @@ func NewExampleUserFiberGetByID(useCase exampleUserDomain.ExampleUserUsecaseGetB
 // ============================================================================
 
 // Handle GetExampleUserByID
-// @Summary Get an example by ID
-// @Description Get an example by ID
-// @Tags exampleuser
+// @Summary Get an example user by ID
+// @Description Get an example user by ID
+// @Tags Example User
 // @Produce json
-// @Param id path string true "Example ID"
+// @Param id path string true "Example User ID"
 // @Success 200 {object} exampleUserDto.ExampleUserResponse
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string

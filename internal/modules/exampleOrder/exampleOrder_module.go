@@ -24,6 +24,7 @@ func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrde
 	exampleOrderCreatePostgres := exampleOrderPostgresql.NewExampleOrderPostgresqlCreate(postgresql)
 	exampleOrderCreateProductsPostgres := exampleOrderPostgresql.NewExampleOrderProductPostgresqlCreateMultiple(postgresql)
 	exampleOrderGetByIDPostgres := exampleOrderPostgresql.NewExampleOrderPostgresqlGetByID(postgresql)
+	exampleOrderGetPaginatedPostgres := exampleOrderPostgresql.NewExampleOrderPostgresqlGetPaginated(postgresql)
 
 	// Adapters Out - Event Log
 	exampleOrderEventPublisher := exampleOrderEventLog.NewExampleOrderEventLogPublisher()
@@ -31,14 +32,17 @@ func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrde
 	// Use Cases
 	exampleOrderUsecaseCreate := exampleOrderUseCase.NewExampleOrderUsecaseCreate(userReader, productReader, postgresqlTransaction, exampleOrderCreatePostgres, exampleOrderCreateProductsPostgres, exampleOrderEventPublisher)
 	exampleOrderUsecaseGetByID := exampleOrderUseCase.NewExampleOrderUsecaseGetByID(exampleOrderGetByIDPostgres)
+	exampleOrderUsecaseGetPaginated := exampleOrderUseCase.NewExampleOrderUsecaseGetPaginated(exampleOrderGetPaginatedPostgres)
 
 	// Adapters In - Fiber
 	authMiddleware := sharedFiber.NewAuth()
 
 	exampleOrderFiberCreate := exampleOrderFiber.NewExampleOrderFiberCreate(exampleOrderUsecaseCreate)
 	exampleOrderFiberGetByID := exampleOrderFiber.NewExampleOrderFiberGetByID(exampleOrderUsecaseGetByID)
+	exampleOrderFiberGetPaginated := exampleOrderFiber.NewExampleOrderFiberGetPaginated(exampleOrderUsecaseGetPaginated)
 
 	exampleOrderRoutes := app.Group("/api/v1/exampleorder")
 	exampleOrderRoutes.Post("/", authMiddleware, exampleOrderFiberCreate.Handle)
+	exampleOrderRoutes.Get("/paginated", exampleOrderFiberGetPaginated.Handle)
 	exampleOrderRoutes.Get("/:id", authMiddleware, exampleOrderFiberGetByID.Handle)
 }

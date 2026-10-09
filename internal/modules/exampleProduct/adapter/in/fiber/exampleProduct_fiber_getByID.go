@@ -30,7 +30,7 @@ func NewExampleProductFiberGetByID(useCase exampleProductDomain.ExampleProductUs
 // Handle GetExampleProductByID
 // @Summary Get an example by ID
 // @Description Get an example by ID
-// @Tags exampleproduct
+// @Tags Example Product
 // @Produce json
 // @Param id path string true "Example ID"
 // @Success 200 {object} exampleProductDto.ExampleProductResponse

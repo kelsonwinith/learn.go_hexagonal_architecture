@@ -30,7 +30,7 @@ func NewExampleOrderFiberCreate(useCase exampleOrderDomain.ExampleOrderUsecaseCr
 // Handle CreateExampleOrder
 // @Summary Create an example order with products
 // @Description Demonstrates nested aggregate creation, a transaction, and a second output port
-// @Tags exampleorder
+// @Tags Example Order
 // @Accept json
 // @Produce json
 // @Security UserIdAuth
