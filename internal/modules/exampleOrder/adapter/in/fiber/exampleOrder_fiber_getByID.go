@@ -12,15 +12,15 @@ import (
 // ============================================================================
 
 type ExampleOrderFiberGetByID struct {
-	useCase exampleOrderDomain.ExampleOrderUsecaseGetByID
+	usecase exampleOrderDomain.ExampleOrderUsecaseGetByID
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleOrderFiberGetByID(useCase exampleOrderDomain.ExampleOrderUsecaseGetByID) *ExampleOrderFiberGetByID {
-	return &ExampleOrderFiberGetByID{useCase: useCase}
+func NewExampleOrderFiberGetByID(usecase exampleOrderDomain.ExampleOrderUsecaseGetByID) *ExampleOrderFiberGetByID {
+	return &ExampleOrderFiberGetByID{usecase: usecase}
 }
 
 // ============================================================================
@@ -43,7 +43,7 @@ func (h *ExampleOrderFiberGetByID) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.URI.ID)
+	res, err := h.usecase.Execute(c.Context(), req.URI.ID)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

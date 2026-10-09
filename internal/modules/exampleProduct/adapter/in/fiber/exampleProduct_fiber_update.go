@@ -12,15 +12,15 @@ import (
 // ============================================================================
 
 type ExampleProductFiberUpdate struct {
-	useCase exampleProductDomain.ExampleProductUsecaseUpdate
+	usecase exampleProductDomain.ExampleProductUsecaseUpdate
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleProductFiberUpdate(useCase exampleProductDomain.ExampleProductUsecaseUpdate) *ExampleProductFiberUpdate {
-	return &ExampleProductFiberUpdate{useCase: useCase}
+func NewExampleProductFiberUpdate(usecase exampleProductDomain.ExampleProductUsecaseUpdate) *ExampleProductFiberUpdate {
+	return &ExampleProductFiberUpdate{usecase: usecase}
 }
 
 // ============================================================================
@@ -53,7 +53,7 @@ func (h *ExampleProductFiberUpdate) Handle(c fiber.Ctx) error {
 	domainReq := req.Body.ToDomain(userID)
 	domainReq.ID = req.URI.ID
 
-	res, err := h.useCase.Execute(c.Context(), domainReq)
+	res, err := h.usecase.Execute(c.Context(), domainReq)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

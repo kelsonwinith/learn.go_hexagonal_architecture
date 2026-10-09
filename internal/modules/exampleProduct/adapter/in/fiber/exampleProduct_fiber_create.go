@@ -12,15 +12,15 @@ import (
 // ============================================================================
 
 type ExampleProductFiberCreate struct {
-	useCase exampleProductDomain.ExampleProductUsecaseCreate
+	usecase exampleProductDomain.ExampleProductUsecaseCreate
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleProductFiberCreate(useCase exampleProductDomain.ExampleProductUsecaseCreate) *ExampleProductFiberCreate {
-	return &ExampleProductFiberCreate{useCase: useCase}
+func NewExampleProductFiberCreate(usecase exampleProductDomain.ExampleProductUsecaseCreate) *ExampleProductFiberCreate {
+	return &ExampleProductFiberCreate{usecase: usecase}
 }
 
 // ============================================================================
@@ -47,7 +47,7 @@ func (h *ExampleProductFiberCreate) Handle(c fiber.Ctx) error {
 	}
 
 	userID := sharedFiber.GetAuthUserID(c)
-	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(userID))
+	res, err := h.usecase.Execute(c.Context(), req.Body.ToDomain(userID))
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

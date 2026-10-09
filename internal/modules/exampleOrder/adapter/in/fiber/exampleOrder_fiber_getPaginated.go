@@ -12,15 +12,15 @@ import (
 // ============================================================================
 
 type ExampleOrderFiberGetPaginated struct {
-	useCase exampleOrderDomain.ExampleOrderUsecaseGetPaginated
+	usecase exampleOrderDomain.ExampleOrderUsecaseGetPaginated
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleOrderFiberGetPaginated(useCase exampleOrderDomain.ExampleOrderUsecaseGetPaginated) *ExampleOrderFiberGetPaginated {
-	return &ExampleOrderFiberGetPaginated{useCase: useCase}
+func NewExampleOrderFiberGetPaginated(usecase exampleOrderDomain.ExampleOrderUsecaseGetPaginated) *ExampleOrderFiberGetPaginated {
+	return &ExampleOrderFiberGetPaginated{usecase: usecase}
 }
 
 // ============================================================================
@@ -45,7 +45,7 @@ func (h *ExampleOrderFiberGetPaginated) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.Query.Page, req.Query.PageSize, req.Query.Search)
+	res, err := h.usecase.Execute(c.Context(), req.Query.Page, req.Query.PageSize, req.Query.Search)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

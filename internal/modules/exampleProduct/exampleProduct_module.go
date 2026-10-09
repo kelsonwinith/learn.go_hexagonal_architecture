@@ -4,7 +4,7 @@ import (
 	fiber "github.com/gofiber/fiber/v3"
 	exampleProductFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/adapter/in/fiber"
 	exampleProductPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/adapter/out/postgresql"
-	exampleProductUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/application"
+	exampleProductUsecase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/application"
 	exampleProductDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 	gorm "gorm.io/gorm"
@@ -25,11 +25,11 @@ func Init(app *fiber.App, db *gorm.DB, authMiddleware fiber.Handler) exampleProd
 	exampleProductPostgresqlDelete := exampleProductPostgresql.NewExampleProductPostgresqlDelete(postgresql)
 
 	// Use Cases
-	exampleProductUsecaseCreate := exampleProductUseCase.NewExampleProductUsecaseCreate(exampleProductPostgresqlCreate)
-	exampleProductUsecaseGetByID := exampleProductUseCase.NewExampleProductUsecaseGetByID(exampleProductPostgresqlGetByID)
-	exampleProductUsecaseGetPaginated := exampleProductUseCase.NewExampleProductUsecaseGetPaginated(exampleProductPostgresqlGetPaginated)
-	exampleProductUsecaseUpdate := exampleProductUseCase.NewExampleProductUsecaseUpdate(exampleProductPostgresqlUpdate, exampleProductPostgresqlGetByID)
-	exampleProductUsecaseDelete := exampleProductUseCase.NewExampleProductUsecaseDelete(exampleProductPostgresqlDelete, exampleProductPostgresqlGetByID)
+	exampleProductUsecaseCreate := exampleProductUsecase.NewExampleProductUsecaseCreate(exampleProductPostgresqlCreate)
+	exampleProductUsecaseGetByID := exampleProductUsecase.NewExampleProductUsecaseGetByID(exampleProductPostgresqlGetByID)
+	exampleProductUsecaseGetPaginated := exampleProductUsecase.NewExampleProductUsecaseGetPaginated(exampleProductPostgresqlGetPaginated)
+	exampleProductUsecaseUpdate := exampleProductUsecase.NewExampleProductUsecaseUpdate(exampleProductPostgresqlUpdate, exampleProductPostgresqlGetByID)
+	exampleProductUsecaseDelete := exampleProductUsecase.NewExampleProductUsecaseDelete(exampleProductPostgresqlDelete, exampleProductPostgresqlGetByID)
 
 	// Adapters In - Fiber
 	exampleProductFiberCreate := exampleProductFiber.NewExampleProductFiberCreate(exampleProductUsecaseCreate)

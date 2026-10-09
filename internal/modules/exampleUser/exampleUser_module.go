@@ -5,7 +5,7 @@ import (
 	exampleUserFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/adapter/in/fiber"
 	exampleUserPassword "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/adapter/out/password"
 	exampleUserPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/adapter/out/postgresql"
-	exampleUserUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/application"
+	exampleUserUsecase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/application"
 	exampleUserDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
@@ -29,9 +29,9 @@ func Init(app *fiber.App, db *gorm.DB, tokenService sharedDomain.TokenService) e
 	exampleUserPasswordComparer := exampleUserPassword.NewExampleUserPasswordComparer()
 
 	// Use Cases
-	exampleUserUsecaseRegister := exampleUserUseCase.NewExampleUserUsecaseRegister(exampleUserPasswordHasher, exampleUserPostgresqlCreate)
-	exampleUserUsecaseLogin := exampleUserUseCase.NewExampleUserUsecaseLogin(exampleUserPasswordComparer, exampleUserPostgresqlGetByEmail, tokenService)
-	exampleUserUsecaseGetByID := exampleUserUseCase.NewExampleUserUsecaseGetByID(exampleUserPostgresqlGetByID)
+	exampleUserUsecaseRegister := exampleUserUsecase.NewExampleUserUsecaseRegister(exampleUserPasswordHasher, exampleUserPostgresqlCreate)
+	exampleUserUsecaseLogin := exampleUserUsecase.NewExampleUserUsecaseLogin(exampleUserPasswordComparer, exampleUserPostgresqlGetByEmail, tokenService)
+	exampleUserUsecaseGetByID := exampleUserUsecase.NewExampleUserUsecaseGetByID(exampleUserPostgresqlGetByID)
 
 	// Adapters In - Fiber
 	exampleUserFiberRegister := exampleUserFiber.NewExampleUserFiberRegister(exampleUserUsecaseRegister)

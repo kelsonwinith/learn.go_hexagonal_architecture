@@ -12,15 +12,15 @@ import (
 // ============================================================================
 
 type ExampleUserFiberRegister struct {
-	useCase exampleUserDomain.ExampleUserUsecaseRegister
+	usecase exampleUserDomain.ExampleUserUsecaseRegister
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUserFiberRegister(useCase exampleUserDomain.ExampleUserUsecaseRegister) *ExampleUserFiberRegister {
-	return &ExampleUserFiberRegister{useCase: useCase}
+func NewExampleUserFiberRegister(usecase exampleUserDomain.ExampleUserUsecaseRegister) *ExampleUserFiberRegister {
+	return &ExampleUserFiberRegister{usecase: usecase}
 }
 
 // ============================================================================
@@ -44,7 +44,7 @@ func (h *ExampleUserFiberRegister) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(""))
+	res, err := h.usecase.Execute(c.Context(), req.Body.ToDomain(""))
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

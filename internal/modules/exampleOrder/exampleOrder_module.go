@@ -5,7 +5,7 @@ import (
 	exampleOrderFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/in/fiber"
 	exampleOrderEventLog "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/eventlog"
 	exampleOrderPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/postgresql"
-	exampleOrderUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/application"
+	exampleOrderUsecase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/application"
 	exampleOrderDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/domain"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 	gorm "gorm.io/gorm"
@@ -29,9 +29,9 @@ func Init(app *fiber.App, db *gorm.DB, exampleUserModuleGetByID exampleOrderDoma
 	exampleOrderEventPublisher := exampleOrderEventLog.NewExampleOrderEventLogPublisher()
 
 	// Use Cases
-	exampleOrderUsecaseCreate := exampleOrderUseCase.NewExampleOrderUsecaseCreate(exampleUserModuleGetByID, exampleProductModuleGetByID, postgresqlTransaction, exampleOrderCreatePostgres, exampleOrderCreateProductsPostgres, exampleOrderEventPublisher)
-	exampleOrderUsecaseGetByID := exampleOrderUseCase.NewExampleOrderUsecaseGetByID(exampleOrderGetByIDPostgres)
-	exampleOrderUsecaseGetPaginated := exampleOrderUseCase.NewExampleOrderUsecaseGetPaginated(exampleOrderGetPaginatedPostgres)
+	exampleOrderUsecaseCreate := exampleOrderUsecase.NewExampleOrderUsecaseCreate(exampleUserModuleGetByID, exampleProductModuleGetByID, postgresqlTransaction, exampleOrderCreatePostgres, exampleOrderCreateProductsPostgres, exampleOrderEventPublisher)
+	exampleOrderUsecaseGetByID := exampleOrderUsecase.NewExampleOrderUsecaseGetByID(exampleOrderGetByIDPostgres)
+	exampleOrderUsecaseGetPaginated := exampleOrderUsecase.NewExampleOrderUsecaseGetPaginated(exampleOrderGetPaginatedPostgres)
 
 	// Adapters In - Fiber
 	exampleOrderFiberCreate := exampleOrderFiber.NewExampleOrderFiberCreate(exampleOrderUsecaseCreate)
