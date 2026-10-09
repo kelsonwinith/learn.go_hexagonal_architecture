@@ -28,5 +28,22 @@ import (
 // @name example-user-id
 // @description Pass the user ID as integer (e.g. 1).
 func main() {
-	bootstrap.Run()
+	// Config
+	config := bootstrap.InitConfig()
+
+	// Database
+	db := bootstrap.InitDatabase(config)
+	defer bootstrap.CloseDatabase(db)
+
+	// HTTP App
+	app := bootstrap.InitApp()
+
+	// Middleware
+	bootstrap.InitMiddleware(app)
+
+	// Modules
+	bootstrap.InitModules(app, db)
+
+	// Server
+	bootstrap.RunServer(app, config)
 }

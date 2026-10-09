@@ -13,8 +13,13 @@ This project is a Go learning project for hexagonal architecture. Keep changes a
 │   └── main.go                           # application entry point
 ├── docs/                                 # generated Swagger docs
 └── internal/
-    ├── bootstrap/                        # startup, infra setup (Config, DB), middleware, module init
-    │   └── app.go
+    ├── bootstrap/                        # startup wiring, one file per topic
+    │   ├── bootstrap_config_init.go      # config loading
+    │   ├── bootstrap_database_init.go    # DB connection, migrations, seed, close
+    │   ├── bootstrap_app_init.go         # Fiber app + validator
+    │   ├── bootstrap_middleware_init.go  # logger, CORS, swagger
+    │   ├── bootstrap_module_init.go      # module wiring incl. cross-module adapters
+    │   └── bootstrap_server_run.go       # listen + graceful shutdown
     ├── infrastructure/                   # config loading, DB connection, migrations, seed, persistence models
     │   ├── config/
     │   └── postgresql/
@@ -218,7 +223,7 @@ func helper() string {
   - Bind input with `sharedFiber.Bind[URI, Query, Body](c)`. Use `sharedFiber.Empty` for parts not required.
   - Convert DTOs to domain models before calling use cases.
   - Return responses with `sharedFiber.ResponseSuccess`, `ResponseCreated`, `ResponseNoContent`, or `ResponseError`.
-- Add validation tags to request DTOs where needed. The shared validator is configured in `internal/bootstrap/app.go` and supports `json`, `query`, `params`, and `uri` tags.
+- Add validation tags to request DTOs where needed. The shared validator is configured in `internal/bootstrap/bootstrap_app_init.go` and supports `json`, `query`, `params`, and `uri` tags.
 - Reusable response envelopes (for example pagination via `sharedFiber.ResponsePaginated`) belong in `internal/shared/adapter/in/fiber`, not in a module DTO package. Map the domain page items to response DTOs first, then pass them with the `sharedDomain.Pagination` and total.
 - Use `sharedDomain.NewPagination` for page/page-size defaulting and max clamping instead of reimplementing it in each use case. Pass `sharedDomain.PaginationLimits` to override the shared defaults; omit it to fall back to `DefaultPageSize`/`MaxPageSize`.
 - Keep Swagger comments on handlers up to date when adding or changing endpoints.
