@@ -9,20 +9,21 @@ import (
 	exampleOrderExampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/exampleuser"
 	exampleProduct "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct"
 	exampleUser "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser"
+	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 // ============================================================================
 // Functions
 // ============================================================================
 
-func InitModules(app *fiber.App, db *gorm.DB) {
+func InitModules(app *fiber.App, db *gorm.DB, tokenService sharedDomain.TokenService, authMiddleware fiber.Handler) {
 	// Services exposed by other modules and consumed by exampleOrder
-	exampleUserService := exampleUser.Init(app, db)
-	exampleProductService := exampleProduct.Init(app, db)
+	exampleUserService := exampleUser.Init(app, db, tokenService)
+	exampleProductService := exampleProduct.Init(app, db, authMiddleware)
 
 	// Cross-module adapters: exampleOrder consumes the exampleUser and exampleProduct services
 	exampleOrderUserReader := exampleOrderExampleUser.NewExampleOrderUserReader(exampleUserService)
 	exampleOrderProductReader := exampleOrderExampleProduct.NewExampleOrderProductReader(exampleProductService)
 
-	exampleOrder.Init(app, db, exampleOrderUserReader, exampleOrderProductReader)
+	exampleOrder.Init(app, db, exampleOrderUserReader, exampleOrderProductReader, authMiddleware)
 }

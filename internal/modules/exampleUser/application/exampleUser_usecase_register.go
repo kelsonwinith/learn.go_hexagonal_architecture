@@ -11,6 +11,7 @@ import (
 // ============================================================================
 
 type ExampleUserUsecaseRegister struct {
+	exampleUserPasswordHasher exampleUserDomain.ExampleUserPasswordHasher
 	exampleUserCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate
 }
 
@@ -18,8 +19,14 @@ type ExampleUserUsecaseRegister struct {
 // Constructors
 // ============================================================================
 
-func NewExampleUserUsecaseRegister(exampleUserCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate) exampleUserDomain.ExampleUserUsecaseRegister {
-	return &ExampleUserUsecaseRegister{exampleUserCreatePostgres: exampleUserCreatePostgres}
+func NewExampleUserUsecaseRegister(
+	exampleUserPasswordHasher exampleUserDomain.ExampleUserPasswordHasher,
+	exampleUserCreatePostgres exampleUserDomain.ExampleUserPostgresqlCreate,
+) exampleUserDomain.ExampleUserUsecaseRegister {
+	return &ExampleUserUsecaseRegister{
+		exampleUserPasswordHasher: exampleUserPasswordHasher,
+		exampleUserCreatePostgres: exampleUserCreatePostgres,
+	}
 }
 
 // ============================================================================
@@ -31,6 +38,12 @@ func (uc *ExampleUserUsecaseRegister) Execute(ctx context.Context, input example
 	if err != nil {
 		return nil, err
 	}
+
+	hashedPassword, err := uc.exampleUserPasswordHasher.Execute(exampleUser.Password)
+	if err != nil {
+		return nil, err
+	}
+	exampleUser.Password = hashedPassword
 
 	if err := uc.exampleUserCreatePostgres.Execute(ctx, exampleUser); err != nil {
 		return nil, err

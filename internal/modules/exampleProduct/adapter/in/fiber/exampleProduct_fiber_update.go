@@ -33,7 +33,7 @@ func NewExampleProductFiberUpdate(useCase exampleProductDomain.ExampleProductUse
 // @Tags Example Product
 // @Accept json
 // @Produce json
-// @Security UserIdAuth
+// @Security BearerAuth
 // @Param id path string true "Example ID"
 // @Param example body exampleProductDto.UpdateExampleProductRequest true "Update Example"
 // @Success 200 {object} exampleProductDto.ExampleProductResponse

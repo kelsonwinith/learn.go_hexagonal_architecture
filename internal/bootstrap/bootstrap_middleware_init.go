@@ -16,7 +16,7 @@ func InitMiddleware(app *fiber.App) {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization", "example-user-id"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 	}))
 	app.Get("/swagger/*", swaggo.HandlerDefault)
 }

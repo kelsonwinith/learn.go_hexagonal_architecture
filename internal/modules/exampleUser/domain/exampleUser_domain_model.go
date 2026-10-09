@@ -25,8 +25,8 @@ type ExampleUser struct {
 	Name      string
 	Email     string
 	Password  string
-	CreatedBy int64
-	UpdatedBy int64
+	CreatedBy string
+	UpdatedBy string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -35,7 +35,7 @@ type ExampleUser struct {
 // Constructors
 // ============================================================================
 
-func NewExampleUser(name, email, password string, createdBy int64) (*ExampleUser, error) {
+func NewExampleUser(name, email, password string, createdBy string) (*ExampleUser, error) {
 	name, email, password, err := validateExampleUser(name, email, password)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func NewExampleUser(name, email, password string, createdBy int64) (*ExampleUser
 // Methods
 // ============================================================================
 
-func (u *ExampleUser) IsOwnedBy(userID int64) bool {
+func (u *ExampleUser) IsOwnedBy(userID string) bool {
 	return u.CreatedBy == userID
 }
 

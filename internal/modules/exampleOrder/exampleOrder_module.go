@@ -7,7 +7,6 @@ import (
 	exampleOrderPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/adapter/out/postgresql"
 	exampleOrderUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/application"
 	exampleOrderDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleOrder/domain"
-	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 	gorm "gorm.io/gorm"
 )
@@ -16,7 +15,7 @@ import (
 // Functions
 // ============================================================================
 
-func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrderUserReader, productReader exampleOrderDomain.ExampleOrderProductReader) {
+func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrderUserReader, productReader exampleOrderDomain.ExampleOrderProductReader, authMiddleware fiber.Handler) {
 	// Adapters Out - PostgreSQL
 	postgresql := sharedPostgresql.NewPostgresql(db)
 	postgresqlTransaction := sharedPostgresql.NewPostgresqlTransaction(postgresql)
@@ -35,8 +34,6 @@ func Init(app *fiber.App, db *gorm.DB, userReader exampleOrderDomain.ExampleOrde
 	exampleOrderUsecaseGetPaginated := exampleOrderUseCase.NewExampleOrderUsecaseGetPaginated(exampleOrderGetPaginatedPostgres)
 
 	// Adapters In - Fiber
-	authMiddleware := sharedFiber.NewAuth()
-
 	exampleOrderFiberCreate := exampleOrderFiber.NewExampleOrderFiberCreate(exampleOrderUsecaseCreate)
 	exampleOrderFiberGetByID := exampleOrderFiber.NewExampleOrderFiberGetByID(exampleOrderUsecaseGetByID)
 	exampleOrderFiberGetPaginated := exampleOrderFiber.NewExampleOrderFiberGetPaginated(exampleOrderUsecaseGetPaginated)

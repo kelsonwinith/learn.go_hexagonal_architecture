@@ -9,6 +9,6 @@ import (
 // ============================================================================
 
 type DeleteModel struct {
-	DeletedBy int64          `gorm:"column:deleted_by;type:bigint"`
+	DeletedBy string         `gorm:"column:deleted_by;type:varchar(255)"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index"`
 }

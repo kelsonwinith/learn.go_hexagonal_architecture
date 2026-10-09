@@ -5,6 +5,7 @@ import (
 	strings "strings"
 
 	exampleUserDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleUser/domain"
+	sharedDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/domain"
 )
 
 // ============================================================================
@@ -12,31 +13,45 @@ import (
 // ============================================================================
 
 type ExampleUserUsecaseLogin struct {
+	exampleUserPasswordComparer   exampleUserDomain.ExampleUserPasswordComparer
 	exampleUserGetByEmailPostgres exampleUserDomain.ExampleUserPostgresqlGetByEmail
+	exampleUserTokenService       sharedDomain.TokenService
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUserUsecaseLogin(exampleUserGetByEmailPostgres exampleUserDomain.ExampleUserPostgresqlGetByEmail) exampleUserDomain.ExampleUserUsecaseLogin {
-	return &ExampleUserUsecaseLogin{exampleUserGetByEmailPostgres: exampleUserGetByEmailPostgres}
+func NewExampleUserUsecaseLogin(
+	exampleUserPasswordComparer exampleUserDomain.ExampleUserPasswordComparer,
+	exampleUserGetByEmailPostgres exampleUserDomain.ExampleUserPostgresqlGetByEmail,
+	exampleUserTokenService sharedDomain.TokenService,
+) exampleUserDomain.ExampleUserUsecaseLogin {
+	return &ExampleUserUsecaseLogin{
+		exampleUserPasswordComparer:   exampleUserPasswordComparer,
+		exampleUserGetByEmailPostgres: exampleUserGetByEmailPostgres,
+		exampleUserTokenService:       exampleUserTokenService,
+	}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (uc *ExampleUserUsecaseLogin) Execute(ctx context.Context, email, password string) (*exampleUserDomain.ExampleUser, error) {
+func (uc *ExampleUserUsecaseLogin) Execute(ctx context.Context, email, password string) (string, error) {
 	exampleUser, err := uc.exampleUserGetByEmailPostgres.Execute(ctx, strings.ToLower(strings.TrimSpace(email)))
 	if err != nil {
-		return nil, exampleUserDomain.ExampleUserErrInvalidCredentials
+		return "", exampleUserDomain.ExampleUserErrInvalidCredentials
 	}
 
-	// Mock authentication: plain comparison, no hashing.
-	if exampleUser.Password != password {
-		return nil, exampleUserDomain.ExampleUserErrInvalidCredentials
+	if !uc.exampleUserPasswordComparer.Execute(exampleUser.Password, password) {
+		return "", exampleUserDomain.ExampleUserErrInvalidCredentials
 	}
 
-	return exampleUser, nil
+	token, err := uc.exampleUserTokenService.Generate(ctx, exampleUser.ID)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

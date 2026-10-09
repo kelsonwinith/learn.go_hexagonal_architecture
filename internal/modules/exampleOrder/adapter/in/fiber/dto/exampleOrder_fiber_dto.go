@@ -16,8 +16,8 @@ type ExampleOrderResponse struct {
 	Description string                        `json:"description"`
 	UserID      string                        `json:"user_id"`
 	Products    []ExampleOrderProductResponse `json:"products"`
-	CreatedBy   int64                         `json:"created_by"`
-	UpdatedBy   int64                         `json:"updated_by"`
+	CreatedBy   string                        `json:"created_by"`
+	UpdatedBy   string                        `json:"updated_by"`
 	CreatedAt   time.Time                     `json:"created_at"`
 	UpdatedAt   time.Time                     `json:"updated_at"`
 }
@@ -28,8 +28,8 @@ type ExampleOrderProductResponse struct {
 	ProductID string    `json:"product_id"`
 	Name      string    `json:"name"`
 	Quantity  int       `json:"quantity"`
-	CreatedBy int64     `json:"created_by"`
-	UpdatedBy int64     `json:"updated_by"`
+	CreatedBy string    `json:"created_by"`
+	UpdatedBy string    `json:"updated_by"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -60,7 +60,7 @@ type ExampleOrderProductCreateRequest struct {
 // Methods
 // ============================================================================
 
-func (r ExampleOrderCreateRequest) ToDomain(createdBy int64) exampleOrderDomain.ExampleOrder {
+func (r ExampleOrderCreateRequest) ToDomain(createdBy string) exampleOrderDomain.ExampleOrder {
 	products := make([]*exampleOrderDomain.ExampleOrderProduct, len(r.Products))
 	for i, orderProduct := range r.Products {
 		products[i] = &exampleOrderDomain.ExampleOrderProduct{

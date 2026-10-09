@@ -7,10 +7,16 @@ package config
 type Config struct {
 	App        App
 	PostgreSQL PostgreSQL
+	JWT        JWT
 }
 
 type App struct {
 	Port string `envconfig:"APP_PORT" default:"8080"`
+}
+
+type JWT struct {
+	Secret      string `envconfig:"JWT_SECRET" required:"true"`
+	ExpiryHours int    `envconfig:"JWT_EXPIRY_HOURS" default:"24"`
 }
 
 type PostgreSQL struct {

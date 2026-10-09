@@ -33,7 +33,7 @@ func NewExampleProductFiberCreate(useCase exampleProductDomain.ExampleProductUse
 // @Tags Example Product
 // @Accept json
 // @Produce json
-// @Security UserIdAuth
+// @Security BearerAuth
 // @Param example body exampleProductDto.ExampleProductCreateRequest true "Create Example"
 // @Success 201 {object} exampleProductDto.ExampleProductResponse
 // @Failure 400 {object} map[string]string

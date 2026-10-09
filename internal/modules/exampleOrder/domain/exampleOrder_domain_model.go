@@ -27,8 +27,8 @@ type ExampleOrder struct {
 	Description string
 	UserID      string
 	Products    []*ExampleOrderProduct
-	CreatedBy   int64
-	UpdatedBy   int64
+	CreatedBy   string
+	UpdatedBy   string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -39,8 +39,8 @@ type ExampleOrderProduct struct {
 	ProductID string
 	Name      string
 	Quantity  int
-	CreatedBy int64
-	UpdatedBy int64
+	CreatedBy string
+	UpdatedBy string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -49,7 +49,7 @@ type ExampleOrderProduct struct {
 // Constructors
 // ============================================================================
 
-func NewExampleOrder(name, description, userID string, products []*ExampleOrderProduct, createdBy int64) (*ExampleOrder, error) {
+func NewExampleOrder(name, description, userID string, products []*ExampleOrderProduct, createdBy string) (*ExampleOrder, error) {
 	name = strings.TrimSpace(name)
 	if name == "" || utf8.RuneCountInString(name) > ExampleOrderNameMaxLength {
 		return nil, ExampleOrderErrInvalidName
@@ -92,7 +92,7 @@ func NewExampleOrder(name, description, userID string, products []*ExampleOrderP
 	}, nil
 }
 
-func NewExampleOrderProduct(productID, name string, quantity int, createdBy int64) (*ExampleOrderProduct, error) {
+func NewExampleOrderProduct(productID, name string, quantity int, createdBy string) (*ExampleOrderProduct, error) {
 	name = strings.TrimSpace(name)
 	if name == "" || utf8.RuneCountInString(name) > ExampleOrderProductNameMaxLength {
 		return nil, ExampleOrderErrInvalidProductName
@@ -124,6 +124,6 @@ func NewExampleOrderProduct(productID, name string, quantity int, createdBy int6
 // Methods
 // ============================================================================
 
-func (o *ExampleOrder) IsOwnedBy(userID int64) bool {
+func (o *ExampleOrder) IsOwnedBy(userID string) bool {
 	return o.CreatedBy == userID
 }

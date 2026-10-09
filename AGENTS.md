@@ -87,7 +87,7 @@ Identity module (register, login, profile). Keep it small: it exists to show aut
 | Use case (`application/`) | Endpoint | Showcases |
 | --- | --- | --- |
 | `ExampleUserUsecaseRegister` | `POST /api/v1/exampleuser/register` | Validation through the `NewExampleUser` domain constructor (name, email, password), then a single insert |
-| `ExampleUserUsecaseLogin` | `POST /api/v1/exampleuser/login` | Mock login: lookup by email through `ExampleUserPostgresqlGetByEmail`, credential check, mock token returned by the handler |
+| `ExampleUserUsecaseLogin` | `POST /api/v1/exampleuser/login` | Login: lookup by email through `ExampleUserPostgresqlGetByEmail`, bcrypt password check (`ExampleUserPasswordComparer`), then a signed JWT issued through `sharedDomain.TokenService` |
 | `ExampleUserUsecaseGetByID` | `GET /api/v1/exampleuser/:id` | Read with `gorm.ErrRecordNotFound` mapped to `ExampleUserErrNotFound`; also the service `exampleOrder` consumes cross-module |
 
 ### Example Product (`internal/modules/exampleProduct`)
@@ -226,6 +226,7 @@ func helper() string {
 - Add validation tags to request DTOs where needed. The shared validator is configured in `internal/bootstrap/bootstrap_app_init.go` and supports `json`, `query`, `params`, and `uri` tags.
 - Reusable response envelopes (for example pagination via `sharedFiber.ResponsePaginated`) belong in `internal/shared/adapter/in/fiber`, not in a module DTO package. Map the domain page items to response DTOs first, then pass them with the `sharedDomain.Pagination` and total.
 - Use `sharedDomain.NewPagination` for page/page-size defaulting and max clamping instead of reimplementing it in each use case. Pass `sharedDomain.PaginationLimits` to override the shared defaults; omit it to fall back to `DefaultPageSize`/`MaxPageSize`.
+- Authentication is JWT bearer. `exampleUser.Login` issues an HS256 token through `sharedDomain.TokenService` (implemented by `internal/shared/adapter/out/jwt`), and `sharedFiber.NewAuth` validates the `Authorization: Bearer <token>` header. Read the authenticated subject with `sharedFiber.GetAuthUserID(c)` (the user UUID string) and use it as the domain `CreatedBy`/`UpdatedBy` and for ownership checks; never read auth headers directly in handlers.
 - Keep Swagger comments on handlers up to date when adding or changing endpoints.
 
 ### Swagger Annotation Template
@@ -239,7 +240,7 @@ Place this block directly above every `Handle` method: the `Methods` banner, a b
 // @Tags Example Product
 // @Accept json
 // @Produce json
-// @Security UserIdAuth
+// @Security BearerAuth
 // @Param example body exampleProductDto.ExampleProductCreateRequest true "Create ExampleProduct"
 // @Success 201 {object} exampleProductDto.ExampleProductResponse
 // @Failure 400 {object} map[string]string
@@ -255,8 +256,8 @@ Rules:
 - `@Router` keeps the lowercase module path (`/api/v1/exampleproduct`) even though the tag is `Example Product`.
 - Use the module DTO package alias for types: `exampleProductDto.ExampleProductResponse`.
 - For paginated reads use `@Success 200 {object} sharedFiber.ResponsePaginatedData[exampleProductDto.ExampleProductResponse]`.
-- Add `@Security UserIdAuth` only on endpoints guarded by the auth middleware. Do not add a per-route `example-user-id` header `@Param`: the Swagger UI Authorize button (from the single `@securityDefinitions.apikey UserIdAuth` block in `cmd/main.go`) supplies the header for every secured operation.
-- A module-wide default is not used on purpose: a global `@security UserIdAuth` in `cmd/main.go` would also mark public endpoints (register, login, reads) as secured.
+- Add `@Security BearerAuth` only on endpoints guarded by the auth middleware. Do not add a per-route `Authorization` header `@Param`: the Swagger UI Authorize button (from the single `@securityDefinitions.apikey BearerAuth` block in `cmd/main.go`) supplies `Authorization: Bearer <token>` for every secured operation.
+- A module-wide default is not used on purpose: a global `@security BearerAuth` in `cmd/main.go` would also mark public endpoints (register, login, reads) as secured.
 
 ## Error Handling
 

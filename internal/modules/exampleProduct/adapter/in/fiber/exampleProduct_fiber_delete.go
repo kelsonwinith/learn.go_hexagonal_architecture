@@ -32,7 +32,7 @@ func NewExampleProductFiberDelete(useCase exampleProductDomain.ExampleProductUse
 // @Description Delete an example by ID
 // @Tags Example Product
 // @Produce json
-// @Security UserIdAuth
+// @Security BearerAuth
 // @Param id path string true "Example ID"
 // @Success 204
 // @Failure 401 {object} map[string]string

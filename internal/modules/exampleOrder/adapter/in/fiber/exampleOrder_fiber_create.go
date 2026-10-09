@@ -33,7 +33,7 @@ func NewExampleOrderFiberCreate(useCase exampleOrderDomain.ExampleOrderUsecaseCr
 // @Tags Example Order
 // @Accept json
 // @Produce json
-// @Security UserIdAuth
+// @Security BearerAuth
 // @Param order body exampleOrderDto.ExampleOrderCreateRequest true "Create ExampleOrder With Products"
 // @Success 201 {object} exampleOrderDto.ExampleOrderResponse
 // @Failure 400 {object} map[string]string

@@ -45,10 +45,10 @@ func (h *ExampleUserFiberLogin) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.Body.Email, req.Body.Password)
+	token, err := h.useCase.Execute(c.Context(), req.Body.Email, req.Body.Password)
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	return sharedFiber.ResponseSuccess(c, exampleUserDto.ToExampleUserLoginResponse(res))
+	return sharedFiber.ResponseSuccess(c, exampleUserDto.ExampleUserLoginResponse{Token: token})
 }

@@ -15,8 +15,8 @@ type ExampleProductResponse struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Price       int64     `json:"price"`
-	CreatedBy   int64     `json:"created_by"`
-	UpdatedBy   int64     `json:"updated_by"`
+	CreatedBy   string    `json:"created_by"`
+	UpdatedBy   string    `json:"updated_by"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -51,7 +51,7 @@ type UpdateExampleProductRequest struct {
 // Methods
 // ============================================================================
 
-func (e ExampleProductCreateRequest) ToDomain(createdBy int64) exampleProductDomain.ExampleProduct {
+func (e ExampleProductCreateRequest) ToDomain(createdBy string) exampleProductDomain.ExampleProduct {
 	return exampleProductDomain.ExampleProduct{
 		Name:        e.Name,
 		Description: e.Description,
@@ -61,7 +61,7 @@ func (e ExampleProductCreateRequest) ToDomain(createdBy int64) exampleProductDom
 	}
 }
 
-func (r ExampleProductCreateMultipleRequest) ToDomain(createdBy int64) []exampleProductDomain.ExampleProduct {
+func (r ExampleProductCreateMultipleRequest) ToDomain(createdBy string) []exampleProductDomain.ExampleProduct {
 	examples := make([]exampleProductDomain.ExampleProduct, len(r.ExampleProducts))
 	for i, e := range r.ExampleProducts {
 		examples[i] = e.ToDomain(createdBy)
@@ -69,7 +69,7 @@ func (r ExampleProductCreateMultipleRequest) ToDomain(createdBy int64) []example
 	return examples
 }
 
-func (e UpdateExampleProductRequest) ToDomain(updatedBy int64) exampleProductDomain.ExampleProduct {
+func (e UpdateExampleProductRequest) ToDomain(updatedBy string) exampleProductDomain.ExampleProduct {
 	return exampleProductDomain.ExampleProduct{
 		Name:        e.Name,
 		Description: e.Description,

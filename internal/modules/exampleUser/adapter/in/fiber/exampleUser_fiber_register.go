@@ -44,7 +44,7 @@ func (h *ExampleUserFiberRegister) Handle(c fiber.Ctx) error {
 		return sharedFiber.ResponseError(c, err)
 	}
 
-	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(0))
+	res, err := h.useCase.Execute(c.Context(), req.Body.ToDomain(""))
 	if err != nil {
 		return sharedFiber.ResponseError(c, err)
 	}

@@ -13,7 +13,7 @@ type ExampleUserUsecaseRegister interface {
 }
 
 type ExampleUserUsecaseLogin interface {
-	Execute(ctx context.Context, email, password string) (*ExampleUser, error)
+	Execute(ctx context.Context, email, password string) (string, error)
 }
 
 type ExampleUserUsecaseGetByID interface {
@@ -34,4 +34,16 @@ type ExampleUserPostgresqlGetByID interface {
 
 type ExampleUserPostgresqlGetByEmail interface {
 	Execute(ctx context.Context, email string) (*ExampleUser, error)
+}
+
+// ============================================================================
+// Security Ports
+// ============================================================================
+
+type ExampleUserPasswordHasher interface {
+	Execute(password string) (string, error)
+}
+
+type ExampleUserPasswordComparer interface {
+	Execute(hashedPassword, password string) bool
 }

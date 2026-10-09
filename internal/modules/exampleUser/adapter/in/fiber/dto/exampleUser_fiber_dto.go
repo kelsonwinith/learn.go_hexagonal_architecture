@@ -14,15 +14,14 @@ type ExampleUserResponse struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
-	CreatedBy int64     `json:"created_by"`
-	UpdatedBy int64     `json:"updated_by"`
+	CreatedBy string    `json:"created_by"`
+	UpdatedBy string    `json:"updated_by"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type ExampleUserLoginResponse struct {
-	User  ExampleUserResponse `json:"user"`
-	Token string              `json:"token"`
+	Token string `json:"token"`
 }
 
 type ExampleUserRequestParams struct {
@@ -44,7 +43,7 @@ type ExampleUserLoginRequest struct {
 // Methods
 // ============================================================================
 
-func (r ExampleUserRegisterRequest) ToDomain(createdBy int64) exampleUserDomain.ExampleUser {
+func (r ExampleUserRegisterRequest) ToDomain(createdBy string) exampleUserDomain.ExampleUser {
 	return exampleUserDomain.ExampleUser{
 		Name:      r.Name,
 		Email:     r.Email,
@@ -67,13 +66,5 @@ func ToExampleUserResponse(exampleUser *exampleUserDomain.ExampleUser) ExampleUs
 		UpdatedBy: exampleUser.UpdatedBy,
 		CreatedAt: exampleUser.CreatedAt,
 		UpdatedAt: exampleUser.UpdatedAt,
-	}
-}
-
-func ToExampleUserLoginResponse(exampleUser *exampleUserDomain.ExampleUser) ExampleUserLoginResponse {
-	return ExampleUserLoginResponse{
-		User: ToExampleUserResponse(exampleUser),
-		// Mock token: not a real JWT, just a placeholder for the login flow.
-		Token: "mock-token-" + exampleUser.ID,
 	}
 }

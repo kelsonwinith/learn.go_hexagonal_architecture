@@ -23,10 +23,10 @@ import (
 // @host localhost:8080
 // @BasePath /
 
-// @securityDefinitions.apikey UserIdAuth
+// @securityDefinitions.apikey BearerAuth
 // @in header
-// @name example-user-id
-// @description Pass the user ID as integer (e.g. 1).
+// @name Authorization
+// @description Type "Bearer" followed by a space and the JWT token.
 func main() {
 	// Config
 	config := bootstrap.InitConfig()
@@ -41,8 +41,11 @@ func main() {
 	// Middleware
 	bootstrap.InitMiddleware(app)
 
+	// Auth (JWT token service + bearer middleware)
+	tokenService, authMiddleware := bootstrap.InitAuth(config)
+
 	// Modules
-	bootstrap.InitModules(app, db)
+	bootstrap.InitModules(app, db, tokenService, authMiddleware)
 
 	// Server
 	bootstrap.RunServer(app, config)

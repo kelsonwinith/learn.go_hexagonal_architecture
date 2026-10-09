@@ -33,7 +33,7 @@ func NewExampleProductUsecaseDelete(
 // Methods
 // ============================================================================
 
-func (uc *ExampleProductUsecaseDelete) Execute(ctx context.Context, id string, userID int64) error {
+func (uc *ExampleProductUsecaseDelete) Execute(ctx context.Context, id string, userID string) error {
 	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, id)
 	if err != nil {
 		return err

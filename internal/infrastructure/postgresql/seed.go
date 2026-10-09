@@ -22,7 +22,7 @@ func allSeeds() []func() any {
 
 func RunSeeders(db *gorm.DB) {
 	for _, seed := range allSeeds() {
-		if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(seed()).Error; err != nil {
+		if err := db.Clauses(clause.OnConflict{UpdateAll: true}).Create(seed()).Error; err != nil {
 			log.Fatalf("Seeders failed to run: %v", err)
 		}
 	}

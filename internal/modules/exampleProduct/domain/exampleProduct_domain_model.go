@@ -25,8 +25,8 @@ type ExampleProduct struct {
 	Name        string
 	Description string
 	Price       int64
-	CreatedBy   int64
-	UpdatedBy   int64
+	CreatedBy   string
+	UpdatedBy   string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -35,7 +35,7 @@ type ExampleProduct struct {
 // Constructors
 // ============================================================================
 
-func NewExampleProduct(name, description string, price int64, createdBy int64) (*ExampleProduct, error) {
+func NewExampleProduct(name, description string, price int64, createdBy string) (*ExampleProduct, error) {
 	name, description, price, err := validateExampleProduct(name, description, price)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func NewExampleProduct(name, description string, price int64, createdBy int64) (
 // Methods
 // ============================================================================
 
-func (e *ExampleProduct) UpdateExampleProduct(name, description string, price int64, updatedBy int64) error {
+func (e *ExampleProduct) UpdateExampleProduct(name, description string, price int64, updatedBy string) error {
 	name, description, price, err := validateExampleProduct(name, description, price)
 	if err != nil {
 		return err
@@ -73,7 +73,7 @@ func (e *ExampleProduct) UpdateExampleProduct(name, description string, price in
 	return nil
 }
 
-func (e *ExampleProduct) IsOwnedBy(userID int64) bool {
+func (e *ExampleProduct) IsOwnedBy(userID string) bool {
 	return e.CreatedBy == userID
 }
 

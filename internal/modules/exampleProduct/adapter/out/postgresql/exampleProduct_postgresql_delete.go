@@ -28,7 +28,7 @@ func NewExampleProductPostgresqlDelete(p *sharedPostgresql.Postgresql) *ExampleP
 // Methods
 // ============================================================================
 
-func (e *ExampleProductPostgresqlDelete) Execute(ctx context.Context, id string, deletedBy int64) error {
+func (e *ExampleProductPostgresqlDelete) Execute(ctx context.Context, id string, deletedBy string) error {
 	result := e.GetExecutor(ctx).
 		Model(&postgresqlModel.ExampleProductModel{}).
 		Where("id = ?", id).

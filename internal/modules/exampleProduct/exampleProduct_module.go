@@ -6,7 +6,6 @@ import (
 	exampleProductPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/adapter/out/postgresql"
 	exampleProductUseCase "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/application"
 	exampleProductDomain "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/modules/exampleProduct/domain"
-	sharedFiber "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/in/fiber"
 	sharedPostgresql "github.com/kelsonwinith/learn.go-hexagonal-architecture/internal/shared/adapter/out/postgresql"
 	gorm "gorm.io/gorm"
 )
@@ -15,7 +14,7 @@ import (
 // Functions
 // ============================================================================
 
-func Init(app *fiber.App, db *gorm.DB) exampleProductDomain.ExampleProductUsecaseGetByID {
+func Init(app *fiber.App, db *gorm.DB, authMiddleware fiber.Handler) exampleProductDomain.ExampleProductUsecaseGetByID {
 	// Adapters Out - PostgreSQL
 	postgresql := sharedPostgresql.NewPostgresql(db)
 
@@ -33,8 +32,6 @@ func Init(app *fiber.App, db *gorm.DB) exampleProductDomain.ExampleProductUsecas
 	exampleProductUsecaseDelete := exampleProductUseCase.NewExampleProductUsecaseDelete(exampleProductPostgresqlDelete, exampleProductPostgresqlGetByID)
 
 	// Adapters In - Fiber
-	authMiddleware := sharedFiber.NewAuth()
-
 	exampleProductFiberCreate := exampleProductFiber.NewExampleProductFiberCreate(exampleProductUsecaseCreate)
 	exampleProductFiberGetByID := exampleProductFiber.NewExampleProductFiberGetByID(exampleProductUsecaseGetByID)
 	exampleProductFiberGetPaginated := exampleProductFiber.NewExampleProductFiberGetPaginated(exampleProductUsecaseGetPaginated)

@@ -27,7 +27,7 @@ type ExampleProductUsecaseUpdate interface {
 }
 
 type ExampleProductUsecaseDelete interface {
-	Execute(ctx context.Context, id string, userID int64) error
+	Execute(ctx context.Context, id string, userID string) error
 }
 
 // ============================================================================
@@ -43,7 +43,7 @@ type ExampleProductPostgresqlUpdate interface {
 }
 
 type ExampleProductPostgresqlDelete interface {
-	Execute(ctx context.Context, id string, deletedBy int64) error
+	Execute(ctx context.Context, id string, deletedBy string) error
 }
 
 type ExampleProductPostgresqlGetByID interface {
