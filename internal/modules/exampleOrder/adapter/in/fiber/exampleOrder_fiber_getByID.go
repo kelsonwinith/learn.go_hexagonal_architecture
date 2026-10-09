@@ -29,7 +29,7 @@ func NewExampleOrderFiberGetByID(useCase exampleOrderDomain.ExampleOrderUsecaseG
 
 // Handle GetExampleOrderByID
 // @Summary Get an example order by ID
-// @Description Returns a order aggregate with its products preloaded
+// @Description Returns an order aggregate with its products preloaded
 // @Tags Example Order
 // @Produce json
 // @Param id path string true "ExampleOrder ID"

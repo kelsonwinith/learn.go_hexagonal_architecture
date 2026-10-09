@@ -33,8 +33,8 @@ func NewExampleUserUsecaseRegister(
 // Methods
 // ============================================================================
 
-func (uc *ExampleUserUsecaseRegister) Execute(ctx context.Context, input exampleUserDomain.ExampleUser) (*exampleUserDomain.ExampleUser, error) {
-	exampleUser, err := exampleUserDomain.NewExampleUser(input.Name, input.Email, input.Password, input.CreatedBy)
+func (uc *ExampleUserUsecaseRegister) Execute(ctx context.Context, exampleUserInput exampleUserDomain.ExampleUser) (*exampleUserDomain.ExampleUser, error) {
+	exampleUser, err := exampleUserDomain.NewExampleUser(exampleUserInput.Name, exampleUserInput.Email, exampleUserInput.Password, exampleUserInput.CreatedBy)
 	if err != nil {
 		return nil, err
 	}

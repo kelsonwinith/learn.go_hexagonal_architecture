@@ -11,18 +11,18 @@ import (
 // ============================================================================
 
 type ExampleProductUsecaseUpdate struct {
-	exampleUpdatePostgres  exampleProductDomain.ExampleProductPostgresqlUpdate
-	exampleGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID
+	exampleProductUpdatePostgres  exampleProductDomain.ExampleProductPostgresqlUpdate
+	exampleProductGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleProductUsecaseUpdate(update exampleProductDomain.ExampleProductPostgresqlUpdate, getByID exampleProductDomain.ExampleProductPostgresqlGetByID) exampleProductDomain.ExampleProductUsecaseUpdate {
+func NewExampleProductUsecaseUpdate(exampleProductUpdatePostgres exampleProductDomain.ExampleProductPostgresqlUpdate, exampleProductGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID) exampleProductDomain.ExampleProductUsecaseUpdate {
 	return &ExampleProductUsecaseUpdate{
-		exampleUpdatePostgres:  update,
-		exampleGetByIDPostgres: getByID,
+		exampleProductUpdatePostgres:  exampleProductUpdatePostgres,
+		exampleProductGetByIDPostgres: exampleProductGetByIDPostgres,
 	}
 }
 
@@ -30,23 +30,23 @@ func NewExampleProductUsecaseUpdate(update exampleProductDomain.ExampleProductPo
 // Methods
 // ============================================================================
 
-func (uc *ExampleProductUsecaseUpdate) Execute(ctx context.Context, input exampleProductDomain.ExampleProduct) (*exampleProductDomain.ExampleProduct, error) {
-	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, input.ID)
+func (uc *ExampleProductUsecaseUpdate) Execute(ctx context.Context, exampleProductInput exampleProductDomain.ExampleProduct) (*exampleProductDomain.ExampleProduct, error) {
+	exampleProduct, err := uc.exampleProductGetByIDPostgres.Execute(ctx, exampleProductInput.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	if !existing.IsOwnedBy(input.UpdatedBy) {
+	if !exampleProduct.IsOwnedBy(exampleProductInput.UpdatedBy) {
 		return nil, exampleProductDomain.ExampleProductErrForbidden
 	}
 
-	if err := existing.UpdateExampleProduct(input.Name, input.Description, input.Price, input.UpdatedBy); err != nil {
+	if err := exampleProduct.UpdateExampleProduct(exampleProductInput.Name, exampleProductInput.Description, exampleProductInput.Price, exampleProductInput.UpdatedBy); err != nil {
 		return nil, err
 	}
 
-	if err := uc.exampleUpdatePostgres.Execute(ctx, existing); err != nil {
+	if err := uc.exampleProductUpdatePostgres.Execute(ctx, exampleProduct); err != nil {
 		return nil, err
 	}
 
-	return existing, nil
+	return exampleProduct, nil
 }

@@ -11,15 +11,15 @@ import (
 // ============================================================================
 
 type ExampleUserUsecaseGetByID struct {
-	exampleGetByIDPostgres exampleUserDomain.ExampleUserPostgresqlGetByID
+	exampleUserGetByIDPostgres exampleUserDomain.ExampleUserPostgresqlGetByID
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleUserUsecaseGetByID(exampleGetByIDPostgres exampleUserDomain.ExampleUserPostgresqlGetByID) exampleUserDomain.ExampleUserUsecaseGetByID {
-	return &ExampleUserUsecaseGetByID{exampleGetByIDPostgres: exampleGetByIDPostgres}
+func NewExampleUserUsecaseGetByID(exampleUserGetByIDPostgres exampleUserDomain.ExampleUserPostgresqlGetByID) exampleUserDomain.ExampleUserUsecaseGetByID {
+	return &ExampleUserUsecaseGetByID{exampleUserGetByIDPostgres: exampleUserGetByIDPostgres}
 }
 
 // ============================================================================
@@ -27,5 +27,5 @@ func NewExampleUserUsecaseGetByID(exampleGetByIDPostgres exampleUserDomain.Examp
 // ============================================================================
 
 func (uc *ExampleUserUsecaseGetByID) Execute(ctx context.Context, id string) (*exampleUserDomain.ExampleUser, error) {
-	return uc.exampleGetByIDPostgres.Execute(ctx, id)
+	return uc.exampleUserGetByIDPostgres.Execute(ctx, id)
 }

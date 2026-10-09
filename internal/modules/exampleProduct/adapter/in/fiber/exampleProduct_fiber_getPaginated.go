@@ -28,8 +28,8 @@ func NewExampleProductFiberGetPaginated(useCase exampleProductDomain.ExampleProd
 // ============================================================================
 
 // Handle GetPaginatedExampleProducts
-// @Summary Get examples with pagination
-// @Description Get a page of examples ordered by creation date
+// @Summary Get example products with pagination
+// @Description Get a page of example products ordered by creation date
 // @Tags Example Product
 // @Produce json
 // @Param page query int false "Page number (default 1)"

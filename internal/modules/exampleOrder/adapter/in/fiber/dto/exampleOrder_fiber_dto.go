@@ -46,7 +46,7 @@ type ExampleOrderGetPaginatedQuery struct {
 
 type ExampleOrderCreateRequest struct {
 	Name        string                             `json:"name" validate:"required,max=255"`
-	Description string                             `json:"description" validate:"omproductpty,max=255"`
+	Description string                             `json:"description" validate:"omitempty,max=255"`
 	UserID      string                             `json:"user_id" validate:"required,uuid4"`
 	Products    []ExampleOrderProductCreateRequest `json:"products" validate:"required,min=1,dive"`
 }
@@ -60,22 +60,22 @@ type ExampleOrderProductCreateRequest struct {
 // Methods
 // ============================================================================
 
-func (r ExampleOrderCreateRequest) ToDomain(createdBy string) exampleOrderDomain.ExampleOrder {
-	products := make([]*exampleOrderDomain.ExampleOrderProduct, len(r.Products))
-	for i, orderProduct := range r.Products {
-		products[i] = &exampleOrderDomain.ExampleOrderProduct{
-			ProductID: orderProduct.ProductID,
-			Quantity:  orderProduct.Quantity,
+func (request ExampleOrderCreateRequest) ToDomain(createdBy string) exampleOrderDomain.ExampleOrder {
+	exampleOrderProducts := make([]*exampleOrderDomain.ExampleOrderProduct, len(request.Products))
+	for i, productRequest := range request.Products {
+		exampleOrderProducts[i] = &exampleOrderDomain.ExampleOrderProduct{
+			ProductID: productRequest.ProductID,
+			Quantity:  productRequest.Quantity,
 			CreatedBy: createdBy,
 			UpdatedBy: createdBy,
 		}
 	}
 
 	return exampleOrderDomain.ExampleOrder{
-		Name:        r.Name,
-		Description: r.Description,
-		UserID:      r.UserID,
-		Products:    products,
+		Name:        request.Name,
+		Description: request.Description,
+		UserID:      request.UserID,
+		Products:    exampleOrderProducts,
 		CreatedBy:   createdBy,
 		UpdatedBy:   createdBy,
 	}
@@ -85,42 +85,42 @@ func (r ExampleOrderCreateRequest) ToDomain(createdBy string) exampleOrderDomain
 // Functions
 // ============================================================================
 
-func ToExampleOrderResponse(order *exampleOrderDomain.ExampleOrder) ExampleOrderResponse {
+func ToExampleOrderResponse(exampleOrder *exampleOrderDomain.ExampleOrder) ExampleOrderResponse {
 	return ExampleOrderResponse{
-		ID:          order.ID,
-		Name:        order.Name,
-		Description: order.Description,
-		UserID:      order.UserID,
-		Products:    ToExampleOrderProductResponses(order.Products),
-		CreatedBy:   order.CreatedBy,
-		UpdatedBy:   order.UpdatedBy,
-		CreatedAt:   order.CreatedAt,
-		UpdatedAt:   order.UpdatedAt,
+		ID:          exampleOrder.ID,
+		Name:        exampleOrder.Name,
+		Description: exampleOrder.Description,
+		UserID:      exampleOrder.UserID,
+		Products:    ToExampleOrderProductResponses(exampleOrder.Products),
+		CreatedBy:   exampleOrder.CreatedBy,
+		UpdatedBy:   exampleOrder.UpdatedBy,
+		CreatedAt:   exampleOrder.CreatedAt,
+		UpdatedAt:   exampleOrder.UpdatedAt,
 	}
 }
 
-func ToExampleOrderResponses(orders []*exampleOrderDomain.ExampleOrder) []ExampleOrderResponse {
-	res := make([]ExampleOrderResponse, len(orders))
-	for i, order := range orders {
-		res[i] = ToExampleOrderResponse(order)
+func ToExampleOrderResponses(exampleOrders []*exampleOrderDomain.ExampleOrder) []ExampleOrderResponse {
+	res := make([]ExampleOrderResponse, len(exampleOrders))
+	for i, exampleOrder := range exampleOrders {
+		res[i] = ToExampleOrderResponse(exampleOrder)
 	}
 
 	return res
 }
 
-func ToExampleOrderProductResponses(products []*exampleOrderDomain.ExampleOrderProduct) []ExampleOrderProductResponse {
-	res := make([]ExampleOrderProductResponse, len(products))
-	for i, orderProduct := range products {
+func ToExampleOrderProductResponses(exampleOrderProducts []*exampleOrderDomain.ExampleOrderProduct) []ExampleOrderProductResponse {
+	res := make([]ExampleOrderProductResponse, len(exampleOrderProducts))
+	for i, exampleOrderProduct := range exampleOrderProducts {
 		res[i] = ExampleOrderProductResponse{
-			ID:        orderProduct.ID,
-			OrderID:   orderProduct.OrderID,
-			ProductID: orderProduct.ProductID,
-			Name:      orderProduct.Name,
-			Quantity:  orderProduct.Quantity,
-			CreatedBy: orderProduct.CreatedBy,
-			UpdatedBy: orderProduct.UpdatedBy,
-			CreatedAt: orderProduct.CreatedAt,
-			UpdatedAt: orderProduct.UpdatedAt,
+			ID:        exampleOrderProduct.ID,
+			OrderID:   exampleOrderProduct.OrderID,
+			ProductID: exampleOrderProduct.ProductID,
+			Name:      exampleOrderProduct.Name,
+			Quantity:  exampleOrderProduct.Quantity,
+			CreatedBy: exampleOrderProduct.CreatedBy,
+			UpdatedBy: exampleOrderProduct.UpdatedBy,
+			CreatedAt: exampleOrderProduct.CreatedAt,
+			UpdatedAt: exampleOrderProduct.UpdatedAt,
 		}
 	}
 

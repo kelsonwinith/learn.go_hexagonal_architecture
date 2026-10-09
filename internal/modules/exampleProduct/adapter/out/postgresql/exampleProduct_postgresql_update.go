@@ -28,15 +28,15 @@ func NewExampleProductPostgresqlUpdate(p *sharedPostgresql.Postgresql) *ExampleP
 // Methods
 // ============================================================================
 
-func (e *ExampleProductPostgresqlUpdate) Execute(ctx context.Context, example *exampleProductDomain.ExampleProduct) error {
+func (e *ExampleProductPostgresqlUpdate) Execute(ctx context.Context, exampleProduct *exampleProductDomain.ExampleProduct) error {
 	result := e.GetExecutor(ctx).
 		Model(&postgresqlModel.ExampleProductModel{}).
-		Where("id = ?", example.ID).
+		Where("id = ?", exampleProduct.ID).
 		Updates(map[string]interface{}{
-			"name":        example.Name,
-			"description": example.Description,
-			"updated_by":  example.UpdatedBy,
-			"updated_at":  example.UpdatedAt,
+			"name":        exampleProduct.Name,
+			"description": exampleProduct.Description,
+			"updated_by":  exampleProduct.UpdatedBy,
+			"updated_at":  exampleProduct.UpdatedAt,
 		})
 	if result.Error != nil {
 		return result.Error

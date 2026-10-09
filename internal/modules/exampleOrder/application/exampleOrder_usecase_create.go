@@ -11,12 +11,12 @@ import (
 // ============================================================================
 
 type ExampleOrderUsecaseCreate struct {
-	userReader             exampleOrderDomain.ExampleOrderUserReader
-	productReader          exampleOrderDomain.ExampleOrderProductReader
-	postgresqlTransaction  exampleOrderDomain.ExampleOrderPostgresqlTransaction
-	createPostgres         exampleOrderDomain.ExampleOrderPostgresqlCreate
-	createProductsPostgres exampleOrderDomain.ExampleOrderProductPostgresqlCreateMultiple
-	eventPublisher         exampleOrderDomain.ExampleOrderEventPublisher
+	exampleOrderUserReader             exampleOrderDomain.ExampleOrderUserReader
+	exampleOrderProductReader          exampleOrderDomain.ExampleOrderProductReader
+	exampleOrderPostgresqlTransaction  exampleOrderDomain.ExampleOrderPostgresqlTransaction
+	exampleOrderCreatePostgres         exampleOrderDomain.ExampleOrderPostgresqlCreate
+	exampleOrderCreateProductsPostgres exampleOrderDomain.ExampleOrderProductPostgresqlCreateMultiple
+	exampleOrderEventPublisher         exampleOrderDomain.ExampleOrderEventPublisher
 }
 
 // ============================================================================
@@ -24,20 +24,20 @@ type ExampleOrderUsecaseCreate struct {
 // ============================================================================
 
 func NewExampleOrderUsecaseCreate(
-	userReader exampleOrderDomain.ExampleOrderUserReader,
-	productReader exampleOrderDomain.ExampleOrderProductReader,
-	postgresqlTransaction exampleOrderDomain.ExampleOrderPostgresqlTransaction,
-	createPostgres exampleOrderDomain.ExampleOrderPostgresqlCreate,
-	createProductsPostgres exampleOrderDomain.ExampleOrderProductPostgresqlCreateMultiple,
-	eventPublisher exampleOrderDomain.ExampleOrderEventPublisher,
+	exampleOrderUserReader exampleOrderDomain.ExampleOrderUserReader,
+	exampleOrderProductReader exampleOrderDomain.ExampleOrderProductReader,
+	exampleOrderPostgresqlTransaction exampleOrderDomain.ExampleOrderPostgresqlTransaction,
+	exampleOrderCreatePostgres exampleOrderDomain.ExampleOrderPostgresqlCreate,
+	exampleOrderCreateProductsPostgres exampleOrderDomain.ExampleOrderProductPostgresqlCreateMultiple,
+	exampleOrderEventPublisher exampleOrderDomain.ExampleOrderEventPublisher,
 ) exampleOrderDomain.ExampleOrderUsecaseCreate {
 	return &ExampleOrderUsecaseCreate{
-		userReader:             userReader,
-		productReader:          productReader,
-		postgresqlTransaction:  postgresqlTransaction,
-		createPostgres:         createPostgres,
-		createProductsPostgres: createProductsPostgres,
-		eventPublisher:         eventPublisher,
+		exampleOrderUserReader:             exampleOrderUserReader,
+		exampleOrderProductReader:          exampleOrderProductReader,
+		exampleOrderPostgresqlTransaction:  exampleOrderPostgresqlTransaction,
+		exampleOrderCreatePostgres:         exampleOrderCreatePostgres,
+		exampleOrderCreateProductsPostgres: exampleOrderCreateProductsPostgres,
+		exampleOrderEventPublisher:         exampleOrderEventPublisher,
 	}
 }
 
@@ -45,45 +45,45 @@ func NewExampleOrderUsecaseCreate(
 // Methods
 // ============================================================================
 
-func (uc *ExampleOrderUsecaseCreate) Execute(ctx context.Context, input exampleOrderDomain.ExampleOrder) (*exampleOrderDomain.ExampleOrder, error) {
+func (uc *ExampleOrderUsecaseCreate) Execute(ctx context.Context, exampleOrderInput exampleOrderDomain.ExampleOrder) (*exampleOrderDomain.ExampleOrder, error) {
 	// Cross-module: ensure the referenced user exists.
-	if _, err := uc.userReader.Execute(ctx, input.UserID); err != nil {
+	if _, err := uc.exampleOrderUserReader.Execute(ctx, exampleOrderInput.UserID); err != nil {
 		return nil, err
 	}
 
 	// Cross-module: resolve each referenced product and use its name.
-	for _, orderProduct := range input.Products {
-		product, err := uc.productReader.Execute(ctx, orderProduct.ProductID)
+	for _, exampleOrderProduct := range exampleOrderInput.Products {
+		exampleOrderProductInfo, err := uc.exampleOrderProductReader.Execute(ctx, exampleOrderProduct.ProductID)
 		if err != nil {
 			return nil, err
 		}
-		orderProduct.Name = product.Name
+		exampleOrderProduct.Name = exampleOrderProductInfo.Name
 	}
 
-	order, err := exampleOrderDomain.NewExampleOrder(input.Name, input.Description, input.UserID, input.Products, input.CreatedBy)
+	exampleOrder, err := exampleOrderDomain.NewExampleOrder(exampleOrderInput.Name, exampleOrderInput.Description, exampleOrderInput.UserID, exampleOrderInput.Products, exampleOrderInput.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
 
-	err = uc.postgresqlTransaction.WithinTransaction(ctx, func(ctx context.Context) error {
-		if err := uc.createPostgres.Execute(ctx, order); err != nil {
+	err = uc.exampleOrderPostgresqlTransaction.WithinTransaction(ctx, func(ctx context.Context) error {
+		if err := uc.exampleOrderCreatePostgres.Execute(ctx, exampleOrder); err != nil {
 			return err
 		}
 
-		for _, orderProduct := range order.Products {
-			orderProduct.OrderID = order.ID
+		for _, exampleOrderProduct := range exampleOrder.Products {
+			exampleOrderProduct.OrderID = exampleOrder.ID
 		}
 
-		return uc.createProductsPostgres.Execute(ctx, order.Products)
+		return uc.exampleOrderCreateProductsPostgres.Execute(ctx, exampleOrder.Products)
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	event := exampleOrderDomain.NewEvent(exampleOrderDomain.EventTypeOrderCreated, order.ID)
-	if err := uc.eventPublisher.Execute(ctx, event); err != nil {
+	exampleOrderEvent := exampleOrderDomain.NewEvent(exampleOrderDomain.EventTypeOrderCreated, exampleOrder.ID)
+	if err := uc.exampleOrderEventPublisher.Execute(ctx, exampleOrderEvent); err != nil {
 		return nil, err
 	}
 
-	return order, nil
+	return exampleOrder, nil
 }

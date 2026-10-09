@@ -26,7 +26,7 @@ func NewExampleOrderEventLogPublisher() *ExampleOrderEventLogPublisher {
 // Methods
 // ============================================================================
 
-func (p *ExampleOrderEventLogPublisher) Execute(ctx context.Context, event exampleOrderDomain.Event) error {
-	log.Printf("example order event published: type=%s order_id=%s occurred_at=%s", event.Type, event.OrderID, event.OccurredAt.Format(time.RFC3339))
+func (p *ExampleOrderEventLogPublisher) Execute(ctx context.Context, exampleOrderEvent exampleOrderDomain.Event) error {
+	log.Printf("example order event published: type=%s order_id=%s occurred_at=%s", exampleOrderEvent.Type, exampleOrderEvent.OrderID, exampleOrderEvent.OccurredAt.Format(time.RFC3339))
 	return nil
 }

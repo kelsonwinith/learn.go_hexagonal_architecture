@@ -43,11 +43,11 @@ type ExampleUserLoginRequest struct {
 // Methods
 // ============================================================================
 
-func (r ExampleUserRegisterRequest) ToDomain(createdBy string) exampleUserDomain.ExampleUser {
+func (request ExampleUserRegisterRequest) ToDomain(createdBy string) exampleUserDomain.ExampleUser {
 	return exampleUserDomain.ExampleUser{
-		Name:      r.Name,
-		Email:     r.Email,
-		Password:  r.Password,
+		Name:      request.Name,
+		Email:     request.Email,
+		Password:  request.Password,
 		CreatedBy: createdBy,
 		UpdatedBy: createdBy,
 	}

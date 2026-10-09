@@ -30,13 +30,13 @@ func NewExampleOrderUsecaseGetPaginated(exampleOrderGetPaginatedPostgres example
 func (uc *ExampleOrderUsecaseGetPaginated) Execute(ctx context.Context, page, pageSize int, search string) (*sharedDomain.Page[*exampleOrderDomain.ExampleOrder], error) {
 	pagination := sharedDomain.NewPagination(page, pageSize)
 
-	orders, total, err := uc.exampleOrderGetPaginatedPostgres.Execute(ctx, pagination.Limit(), pagination.Offset(), search)
+	exampleOrders, total, err := uc.exampleOrderGetPaginatedPostgres.Execute(ctx, pagination.Limit(), pagination.Offset(), search)
 	if err != nil {
 		return nil, err
 	}
 
 	return &sharedDomain.Page[*exampleOrderDomain.ExampleOrder]{
-		Items:      orders,
+		Items:      exampleOrders,
 		Pagination: pagination,
 		Total:      total,
 	}, nil

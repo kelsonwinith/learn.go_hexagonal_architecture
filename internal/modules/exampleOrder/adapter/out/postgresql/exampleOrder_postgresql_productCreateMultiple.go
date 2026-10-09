@@ -28,16 +28,16 @@ func NewExampleOrderProductPostgresqlCreateMultiple(p *sharedPostgresql.Postgres
 // Methods
 // ============================================================================
 
-func (e *ExampleOrderProductPostgresqlCreateMultiple) Execute(ctx context.Context, products []*exampleOrderDomain.ExampleOrderProduct) error {
-	entities := exampleOrderMapper.ToExampleOrderProductModels(products)
+func (e *ExampleOrderProductPostgresqlCreateMultiple) Execute(ctx context.Context, exampleOrderProducts []*exampleOrderDomain.ExampleOrderProduct) error {
+	entities := exampleOrderMapper.ToExampleOrderProductModels(exampleOrderProducts)
 	if err := e.GetExecutor(ctx).Create(entities).Error; err != nil {
 		return err
 	}
 
 	for i := range entities {
-		products[i].ID = entities[i].ID
-		products[i].CreatedAt = entities[i].CreatedAt
-		products[i].UpdatedAt = entities[i].UpdatedAt
+		exampleOrderProducts[i].ID = entities[i].ID
+		exampleOrderProducts[i].CreatedAt = entities[i].CreatedAt
+		exampleOrderProducts[i].UpdatedAt = entities[i].UpdatedAt
 	}
 
 	return nil

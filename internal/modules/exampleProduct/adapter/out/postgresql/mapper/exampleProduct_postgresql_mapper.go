@@ -10,25 +10,25 @@ import (
 // Functions
 // ============================================================================
 
-func ToExampleProductModel(example *exampleProductDomain.ExampleProduct) *postgresqlModel.ExampleProductModel {
+func ToExampleProductModel(exampleProduct *exampleProductDomain.ExampleProduct) *postgresqlModel.ExampleProductModel {
 	return &postgresqlModel.ExampleProductModel{
 		BaseModel: defaultModel.BaseModel{
-			ID:        example.ID,
-			CreatedAt: example.CreatedAt,
-			UpdatedAt: example.UpdatedAt,
-			CreatedBy: example.CreatedBy,
-			UpdatedBy: example.UpdatedBy,
+			ID:        exampleProduct.ID,
+			CreatedAt: exampleProduct.CreatedAt,
+			UpdatedAt: exampleProduct.UpdatedAt,
+			CreatedBy: exampleProduct.CreatedBy,
+			UpdatedBy: exampleProduct.UpdatedBy,
 		},
-		Name:        example.Name,
-		Description: example.Description,
-		Price:       example.Price,
+		Name:        exampleProduct.Name,
+		Description: exampleProduct.Description,
+		Price:       exampleProduct.Price,
 	}
 }
 
-func ToExampleProductModels(examples []*exampleProductDomain.ExampleProduct) []*postgresqlModel.ExampleProductModel {
-	entities := make([]*postgresqlModel.ExampleProductModel, len(examples))
-	for i, example := range examples {
-		entities[i] = ToExampleProductModel(example)
+func ToExampleProductModels(exampleProducts []*exampleProductDomain.ExampleProduct) []*postgresqlModel.ExampleProductModel {
+	entities := make([]*postgresqlModel.ExampleProductModel, len(exampleProducts))
+	for i, exampleProduct := range exampleProducts {
+		entities[i] = ToExampleProductModel(exampleProduct)
 	}
 
 	return entities
@@ -48,9 +48,9 @@ func ToExampleProductDomain(entity *postgresqlModel.ExampleProductModel) *exampl
 }
 
 func ToExampleProductDomains(entities []*postgresqlModel.ExampleProductModel) []*exampleProductDomain.ExampleProduct {
-	examples := make([]*exampleProductDomain.ExampleProduct, len(entities))
+	exampleProducts := make([]*exampleProductDomain.ExampleProduct, len(entities))
 	for i, entity := range entities {
-		examples[i] = ToExampleProductDomain(entity)
+		exampleProducts[i] = ToExampleProductDomain(entity)
 	}
-	return examples
+	return exampleProducts
 }

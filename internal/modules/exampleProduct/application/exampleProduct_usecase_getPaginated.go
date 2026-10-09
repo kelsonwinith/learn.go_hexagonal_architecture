@@ -12,15 +12,15 @@ import (
 // ============================================================================
 
 type ExampleProductUsecaseGetPaginated struct {
-	exampleGetPaginatedPostgres exampleProductDomain.ExampleProductPostgresqlGetPaginated
+	exampleProductGetPaginatedPostgres exampleProductDomain.ExampleProductPostgresqlGetPaginated
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleProductUsecaseGetPaginated(exampleGetPaginatedPostgres exampleProductDomain.ExampleProductPostgresqlGetPaginated) exampleProductDomain.ExampleProductUsecaseGetPaginated {
-	return &ExampleProductUsecaseGetPaginated{exampleGetPaginatedPostgres: exampleGetPaginatedPostgres}
+func NewExampleProductUsecaseGetPaginated(exampleProductGetPaginatedPostgres exampleProductDomain.ExampleProductPostgresqlGetPaginated) exampleProductDomain.ExampleProductUsecaseGetPaginated {
+	return &ExampleProductUsecaseGetPaginated{exampleProductGetPaginatedPostgres: exampleProductGetPaginatedPostgres}
 }
 
 // ============================================================================
@@ -30,13 +30,13 @@ func NewExampleProductUsecaseGetPaginated(exampleGetPaginatedPostgres examplePro
 func (uc *ExampleProductUsecaseGetPaginated) Execute(ctx context.Context, page, pageSize int, search string) (*sharedDomain.Page[*exampleProductDomain.ExampleProduct], error) {
 	pagination := sharedDomain.NewPagination(page, pageSize)
 
-	examples, total, err := uc.exampleGetPaginatedPostgres.Execute(ctx, pagination.Limit(), pagination.Offset(), search)
+	exampleProducts, total, err := uc.exampleProductGetPaginatedPostgres.Execute(ctx, pagination.Limit(), pagination.Offset(), search)
 	if err != nil {
 		return nil, err
 	}
 
 	return &sharedDomain.Page[*exampleProductDomain.ExampleProduct]{
-		Items:      examples,
+		Items:      exampleProducts,
 		Pagination: pagination,
 		Total:      total,
 	}, nil

@@ -49,7 +49,7 @@ type ExampleOrderProduct struct {
 // Constructors
 // ============================================================================
 
-func NewExampleOrder(name, description, userID string, products []*ExampleOrderProduct, createdBy string) (*ExampleOrder, error) {
+func NewExampleOrder(name, description, userID string, exampleOrderProducts []*ExampleOrderProduct, createdBy string) (*ExampleOrder, error) {
 	name = strings.TrimSpace(name)
 	if name == "" || utf8.RuneCountInString(name) > ExampleOrderNameMaxLength {
 		return nil, ExampleOrderErrInvalidName
@@ -65,17 +65,17 @@ func NewExampleOrder(name, description, userID string, products []*ExampleOrderP
 		return nil, ExampleOrderErrInvalidUserID
 	}
 
-	if len(products) == 0 {
+	if len(exampleOrderProducts) == 0 {
 		return nil, ExampleOrderErrNoProducts
 	}
 
-	validatedProducts := make([]*ExampleOrderProduct, len(products))
-	for i, orderProduct := range products {
-		validated, err := NewExampleOrderProduct(orderProduct.ProductID, orderProduct.Name, orderProduct.Quantity, createdBy)
+	exampleOrderValidatedProducts := make([]*ExampleOrderProduct, len(exampleOrderProducts))
+	for i, exampleOrderProduct := range exampleOrderProducts {
+		validated, err := NewExampleOrderProduct(exampleOrderProduct.ProductID, exampleOrderProduct.Name, exampleOrderProduct.Quantity, createdBy)
 		if err != nil {
 			return nil, err
 		}
-		validatedProducts[i] = validated
+		exampleOrderValidatedProducts[i] = validated
 	}
 
 	now := time.Now().UTC()
@@ -84,7 +84,7 @@ func NewExampleOrder(name, description, userID string, products []*ExampleOrderP
 		Name:        name,
 		Description: description,
 		UserID:      userID,
-		Products:    validatedProducts,
+		Products:    exampleOrderValidatedProducts,
 		CreatedBy:   createdBy,
 		UpdatedBy:   createdBy,
 		CreatedAt:   now,

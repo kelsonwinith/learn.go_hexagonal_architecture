@@ -11,30 +11,30 @@ import (
 // ============================================================================
 
 type ExampleProductUsecaseCreate struct {
-	exampleCreatePostgres exampleProductDomain.ExampleProductPostgresqlCreate
+	exampleProductCreatePostgres exampleProductDomain.ExampleProductPostgresqlCreate
 }
 
 // ============================================================================
 // Constructors
 // ============================================================================
 
-func NewExampleProductUsecaseCreate(exampleCreatePostgres exampleProductDomain.ExampleProductPostgresqlCreate) exampleProductDomain.ExampleProductUsecaseCreate {
-	return &ExampleProductUsecaseCreate{exampleCreatePostgres: exampleCreatePostgres}
+func NewExampleProductUsecaseCreate(exampleProductCreatePostgres exampleProductDomain.ExampleProductPostgresqlCreate) exampleProductDomain.ExampleProductUsecaseCreate {
+	return &ExampleProductUsecaseCreate{exampleProductCreatePostgres: exampleProductCreatePostgres}
 }
 
 // ============================================================================
 // Methods
 // ============================================================================
 
-func (uc *ExampleProductUsecaseCreate) Execute(ctx context.Context, input exampleProductDomain.ExampleProduct) (*exampleProductDomain.ExampleProduct, error) {
-	example, err := exampleProductDomain.NewExampleProduct(input.Name, input.Description, input.Price, input.CreatedBy)
+func (uc *ExampleProductUsecaseCreate) Execute(ctx context.Context, exampleProductInput exampleProductDomain.ExampleProduct) (*exampleProductDomain.ExampleProduct, error) {
+	exampleProduct, err := exampleProductDomain.NewExampleProduct(exampleProductInput.Name, exampleProductInput.Description, exampleProductInput.Price, exampleProductInput.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := uc.exampleCreatePostgres.Execute(ctx, example); err != nil {
+	if err := uc.exampleProductCreatePostgres.Execute(ctx, exampleProduct); err != nil {
 		return nil, err
 	}
 
-	return example, nil
+	return exampleProduct, nil
 }

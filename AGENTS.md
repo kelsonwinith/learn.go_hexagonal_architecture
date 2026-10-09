@@ -119,7 +119,16 @@ Aggregate relations, a transaction, more than one output port, and cross-module 
 - Constructors should be named `New<Type>` and return the interface when exposing a port implementation from the application layer.
 - Use `Execute` for use case and output adapter methods, as defined by the domain port interfaces.
 - Keep import aliases consistent with the project style, such as `exampleUserDomain`, `exampleOrderPostgresql`, and `sharedFiber`.
-- Prefix every identifier and variable declared inside a module with the module name: exported names use PascalCase (`ExampleUserUsecaseRegister`, `ExampleOrderPostgresqlCreate`) and unexported or local names use camelCase (`exampleUserPostgresqlCreate`, `exampleOrderCreatePostgres`). Shared packages are the exception and use the `shared` prefix instead, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
+- Prefix every identifier declared inside a module with the module token: exported names use PascalCase (`ExampleUserUsecaseRegister`, `ExampleOrderPostgresqlCreate`) and unexported names use camelCase.
+
+### Variable Naming
+
+- Prefix every struct field, constructor parameter, and local variable with the module token: `exampleProductCreatePostgres`, `exampleOrderUserReader`.
+- Name injected collaborators as `<module><Operation><Adapter>`: `exampleProductCreatePostgres`, `exampleOrderEventPublisher`, `exampleUserPasswordHasher`, `exampleOrderUserReader`.
+- Name domain values `<module>` (singular), `<module>s` (slice), or `<module><Sub>` (sub-entity): `exampleOrder`, `exampleOrders`, `exampleOrderProduct`, `exampleProductInput`.
+- Keep Go idioms and primitive/audit parameters unprefixed: `ctx`, `err`, `ok`, `i`, `id`, `email`, `password`, `createdBy`, `updatedBy`, `page`, `pageSize`, `search`, `total`, `pagination`.
+- Keep receivers short (`uc`, `h`, `e`, `p`, `r`); name DTO method receivers `request`.
+- Shared packages are the exception and use the `shared` prefix for their import aliases, for example `sharedDomain`, `sharedFiber`, and `sharedPostgresql`.
 
 ## Imports
 

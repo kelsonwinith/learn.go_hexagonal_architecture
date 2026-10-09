@@ -10,48 +10,48 @@ import (
 // Functions
 // ============================================================================
 
-func ToExampleOrderModel(order *exampleOrderDomain.ExampleOrder) *postgresqlModel.ExampleOrderModel {
+func ToExampleOrderModel(exampleOrder *exampleOrderDomain.ExampleOrder) *postgresqlModel.ExampleOrderModel {
 	return &postgresqlModel.ExampleOrderModel{
 		BaseModel: defaultModel.BaseModel{
-			ID:        order.ID,
-			CreatedAt: order.CreatedAt,
-			UpdatedAt: order.UpdatedAt,
-			CreatedBy: order.CreatedBy,
-			UpdatedBy: order.UpdatedBy,
+			ID:        exampleOrder.ID,
+			CreatedAt: exampleOrder.CreatedAt,
+			UpdatedAt: exampleOrder.UpdatedAt,
+			CreatedBy: exampleOrder.CreatedBy,
+			UpdatedBy: exampleOrder.UpdatedBy,
 		},
-		Name:        order.Name,
-		Description: order.Description,
-		UserID:      order.UserID,
+		Name:        exampleOrder.Name,
+		Description: exampleOrder.Description,
+		UserID:      exampleOrder.UserID,
 	}
 }
 
-func ToExampleOrderProductModel(orderProduct *exampleOrderDomain.ExampleOrderProduct) *postgresqlModel.ExampleOrderProductModel {
+func ToExampleOrderProductModel(exampleOrderProduct *exampleOrderDomain.ExampleOrderProduct) *postgresqlModel.ExampleOrderProductModel {
 	return &postgresqlModel.ExampleOrderProductModel{
 		BaseModel: defaultModel.BaseModel{
-			ID:        orderProduct.ID,
-			CreatedAt: orderProduct.CreatedAt,
-			UpdatedAt: orderProduct.UpdatedAt,
-			CreatedBy: orderProduct.CreatedBy,
-			UpdatedBy: orderProduct.UpdatedBy,
+			ID:        exampleOrderProduct.ID,
+			CreatedAt: exampleOrderProduct.CreatedAt,
+			UpdatedAt: exampleOrderProduct.UpdatedAt,
+			CreatedBy: exampleOrderProduct.CreatedBy,
+			UpdatedBy: exampleOrderProduct.UpdatedBy,
 		},
-		OrderID:   orderProduct.OrderID,
-		ProductID: orderProduct.ProductID,
-		Name:      orderProduct.Name,
-		Quantity:  orderProduct.Quantity,
+		OrderID:   exampleOrderProduct.OrderID,
+		ProductID: exampleOrderProduct.ProductID,
+		Name:      exampleOrderProduct.Name,
+		Quantity:  exampleOrderProduct.Quantity,
 	}
 }
 
-func ToExampleOrderProductModels(products []*exampleOrderDomain.ExampleOrderProduct) []*postgresqlModel.ExampleOrderProductModel {
-	entities := make([]*postgresqlModel.ExampleOrderProductModel, len(products))
-	for i, orderProduct := range products {
-		entities[i] = ToExampleOrderProductModel(orderProduct)
+func ToExampleOrderProductModels(exampleOrderProducts []*exampleOrderDomain.ExampleOrderProduct) []*postgresqlModel.ExampleOrderProductModel {
+	entities := make([]*postgresqlModel.ExampleOrderProductModel, len(exampleOrderProducts))
+	for i, exampleOrderProduct := range exampleOrderProducts {
+		entities[i] = ToExampleOrderProductModel(exampleOrderProduct)
 	}
 
 	return entities
 }
 
 func ToExampleOrderDomain(entity *postgresqlModel.ExampleOrderModel) *exampleOrderDomain.ExampleOrder {
-	order := &exampleOrderDomain.ExampleOrder{
+	exampleOrder := &exampleOrderDomain.ExampleOrder{
 		ID:          entity.ID,
 		Name:        entity.Name,
 		Description: entity.Description,
@@ -63,22 +63,22 @@ func ToExampleOrderDomain(entity *postgresqlModel.ExampleOrderModel) *exampleOrd
 	}
 
 	if entity.Products != nil {
-		order.Products = make([]*exampleOrderDomain.ExampleOrderProduct, len(entity.Products))
-		for i, orderProduct := range entity.Products {
-			order.Products[i] = ToExampleOrderProductDomain(orderProduct)
+		exampleOrder.Products = make([]*exampleOrderDomain.ExampleOrderProduct, len(entity.Products))
+		for i, exampleOrderProduct := range entity.Products {
+			exampleOrder.Products[i] = ToExampleOrderProductDomain(exampleOrderProduct)
 		}
 	}
 
-	return order
+	return exampleOrder
 }
 
 func ToExampleOrderDomains(entities []*postgresqlModel.ExampleOrderModel) []*exampleOrderDomain.ExampleOrder {
-	orders := make([]*exampleOrderDomain.ExampleOrder, len(entities))
+	exampleOrders := make([]*exampleOrderDomain.ExampleOrder, len(entities))
 	for i, entity := range entities {
-		orders[i] = ToExampleOrderDomain(entity)
+		exampleOrders[i] = ToExampleOrderDomain(entity)
 	}
 
-	return orders
+	return exampleOrders
 }
 
 func ToExampleOrderProductDomain(entity *postgresqlModel.ExampleOrderProductModel) *exampleOrderDomain.ExampleOrderProduct {

@@ -28,15 +28,15 @@ func NewExampleOrderPostgresqlCreate(p *sharedPostgresql.Postgresql) *ExampleOrd
 // Methods
 // ============================================================================
 
-func (e *ExampleOrderPostgresqlCreate) Execute(ctx context.Context, order *exampleOrderDomain.ExampleOrder) error {
-	entity := exampleOrderMapper.ToExampleOrderModel(order)
+func (e *ExampleOrderPostgresqlCreate) Execute(ctx context.Context, exampleOrder *exampleOrderDomain.ExampleOrder) error {
+	entity := exampleOrderMapper.ToExampleOrderModel(exampleOrder)
 	if err := e.GetExecutor(ctx).Create(entity).Error; err != nil {
 		return err
 	}
 
-	order.ID = entity.ID
-	order.CreatedAt = entity.CreatedAt
-	order.UpdatedAt = entity.UpdatedAt
+	exampleOrder.ID = entity.ID
+	exampleOrder.CreatedAt = entity.CreatedAt
+	exampleOrder.UpdatedAt = entity.UpdatedAt
 
 	return nil
 }

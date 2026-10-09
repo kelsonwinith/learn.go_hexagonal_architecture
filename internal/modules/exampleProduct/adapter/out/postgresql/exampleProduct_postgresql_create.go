@@ -28,13 +28,13 @@ func NewExampleProductPostgresqlCreate(p *sharedPostgresql.Postgresql) *ExampleP
 // Methods
 // ============================================================================
 
-func (e *ExampleProductPostgresqlCreate) Execute(ctx context.Context, example *exampleProductDomain.ExampleProduct) error {
-	entity := exampleProductMapper.ToExampleProductModel(example)
+func (e *ExampleProductPostgresqlCreate) Execute(ctx context.Context, exampleProduct *exampleProductDomain.ExampleProduct) error {
+	entity := exampleProductMapper.ToExampleProductModel(exampleProduct)
 	if err := e.GetExecutor(ctx).Create(entity).Error; err != nil {
 		return err
 	}
 
-	*example = *exampleProductMapper.ToExampleProductDomain(entity)
+	*exampleProduct = *exampleProductMapper.ToExampleProductDomain(entity)
 
 	return nil
 }

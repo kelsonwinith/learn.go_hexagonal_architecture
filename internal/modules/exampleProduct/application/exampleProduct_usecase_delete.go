@@ -11,8 +11,8 @@ import (
 // ============================================================================
 
 type ExampleProductUsecaseDelete struct {
-	exampleDeletePostgres  exampleProductDomain.ExampleProductPostgresqlDelete
-	exampleGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID
+	exampleProductDeletePostgres  exampleProductDomain.ExampleProductPostgresqlDelete
+	exampleProductGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID
 }
 
 // ============================================================================
@@ -20,12 +20,12 @@ type ExampleProductUsecaseDelete struct {
 // ============================================================================
 
 func NewExampleProductUsecaseDelete(
-	exampleDeletePostgres exampleProductDomain.ExampleProductPostgresqlDelete,
-	exampleGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID,
+	exampleProductDeletePostgres exampleProductDomain.ExampleProductPostgresqlDelete,
+	exampleProductGetByIDPostgres exampleProductDomain.ExampleProductPostgresqlGetByID,
 ) exampleProductDomain.ExampleProductUsecaseDelete {
 	return &ExampleProductUsecaseDelete{
-		exampleDeletePostgres:  exampleDeletePostgres,
-		exampleGetByIDPostgres: exampleGetByIDPostgres,
+		exampleProductDeletePostgres:  exampleProductDeletePostgres,
+		exampleProductGetByIDPostgres: exampleProductGetByIDPostgres,
 	}
 }
 
@@ -34,14 +34,14 @@ func NewExampleProductUsecaseDelete(
 // ============================================================================
 
 func (uc *ExampleProductUsecaseDelete) Execute(ctx context.Context, id string, userID string) error {
-	existing, err := uc.exampleGetByIDPostgres.Execute(ctx, id)
+	exampleProduct, err := uc.exampleProductGetByIDPostgres.Execute(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	if !existing.IsOwnedBy(userID) {
+	if !exampleProduct.IsOwnedBy(userID) {
 		return exampleProductDomain.ExampleProductErrForbidden
 	}
 
-	return uc.exampleDeletePostgres.Execute(ctx, id, userID)
+	return uc.exampleProductDeletePostgres.Execute(ctx, id, userID)
 }
