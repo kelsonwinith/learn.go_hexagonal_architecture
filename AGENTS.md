@@ -240,7 +240,6 @@ Place this block directly above every `Handle` method: the `Methods` banner, a b
 // @Accept json
 // @Produce json
 // @Security UserIdAuth
-// @Param example-user-id header int true "Authenticated User ID"
 // @Param example body exampleProductDto.ExampleProductCreateRequest true "Create ExampleProduct"
 // @Success 201 {object} exampleProductDto.ExampleProductResponse
 // @Failure 400 {object} map[string]string
@@ -256,7 +255,8 @@ Rules:
 - `@Router` keeps the lowercase module path (`/api/v1/exampleproduct`) even though the tag is `Example Product`.
 - Use the module DTO package alias for types: `exampleProductDto.ExampleProductResponse`.
 - For paginated reads use `@Success 200 {object} sharedFiber.ResponsePaginatedData[exampleProductDto.ExampleProductResponse]`.
-- Include `@Security UserIdAuth` and the `example-user-id` header param only on endpoints guarded by the auth middleware.
+- Add `@Security UserIdAuth` only on endpoints guarded by the auth middleware. Do not add a per-route `example-user-id` header `@Param`: the Swagger UI Authorize button (from the single `@securityDefinitions.apikey UserIdAuth` block in `cmd/main.go`) supplies the header for every secured operation.
+- A module-wide default is not used on purpose: a global `@security UserIdAuth` in `cmd/main.go` would also mark public endpoints (register, login, reads) as secured.
 
 ## Error Handling
 

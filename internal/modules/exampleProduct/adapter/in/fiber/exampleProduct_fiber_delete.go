@@ -33,7 +33,6 @@ func NewExampleProductFiberDelete(useCase exampleProductDomain.ExampleProductUse
 // @Tags Example Product
 // @Produce json
 // @Security UserIdAuth
-// @Param example-user-id header int true "Authenticated User ID"
 // @Param id path string true "Example ID"
 // @Success 204
 // @Failure 401 {object} map[string]string
